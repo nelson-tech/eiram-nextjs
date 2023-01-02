@@ -22,7 +22,7 @@ export default async function handler(
 
 	const authData = await checkAuthAPI({ cookies, tokens: data.tokens })
 
-	const { tokens } = authData
+	let { tokens } = authData
 
 	// Set user from authCheck or from cookie/token
 	const user = authData.user ? authData.user : tokens.user ? JSON.parse(tokens.user) : null
@@ -35,12 +35,38 @@ export default async function handler(
 
 	let newCookies: string[] = [].concat(authData.newCookies)
 
+	const setUserOrders = async (user?: WP_AUTH_UserDataType) => {
+		const response = await fetch(FRONTEND_BASE + "/api/orders", {
+			method: "POST",
+			body: JSON.stringify({ tokens }),
+		})
+
+		const data: WC_Order[] = await response.json()
+
+		const orderCount = data.length
+		const openOrders = data.filter((order) => order.status.toLowerCase() === "processing")
+
+		if (body.user) {
+			body.user.orderCount = orderCount
+			body.user.openOrders = openOrders
+		} else if (user) {
+			body.user = { ...user, orderCount, openOrders }
+		}
+	}
+
+	const setNewResponse = async (response: API_AuthCheckResultType) => {
+		response.tokens && (tokens = response.tokens)
+		response.isAuth && (body.isAuth = response.isAuth)
+		response.user && (await setUserOrders(response.user))
+
+		response.newCookies && (newCookies = newCookies.concat(response.newCookies))
+	}
+
 	switch (data.action) {
 		case "LOGIN":
 			const response = await loginOrRefresh({ tokens, loginInput: data.input })
 
-			response.newCookies && (newCookies = newCookies.concat(response.newCookies))
-
+			await setNewResponse(response)
 			// TODO - Handle errors
 
 			break
@@ -78,8 +104,7 @@ export default async function handler(
 						password: registerInput.password,
 					},
 				})
-
-				response.newCookies && (newCookies = newCookies.concat(response.newCookies))
+				await setNewResponse(response)
 			}
 
 			break
@@ -126,15 +151,7 @@ export default async function handler(
 				cartData.cart && (body["cart"] = cartData.cart)
 
 				// Get orders
-				const response = await fetch(FRONTEND_BASE + "/api/orders", {
-					method: "POST",
-					body: JSON.stringify({ tokens }),
-				})
-
-				const data: WC_Order[] = await response.json()
-
-				body.user.orderCount = data.length
-				body.user.openOrders = data.filter((order) => order.status.toLowerCase() === "processing")
+				await setUserOrders()
 			}
 
 			if (newCookies.length > 0) {

@@ -1,6 +1,6 @@
 "use client"
 
-import { Menu, Popover, Transition } from "@headlessui/react"
+import { Popover, Transition } from "@headlessui/react"
 import UserIcon from "@icons/User"
 import AuthMenu from "./authMenu"
 import GuestMenu from "./guestMenu"
@@ -8,10 +8,9 @@ import LoadingSpinner from "@components/LoadingSpinner"
 import useAuth from "@lib/hooks/useAuth"
 
 const UserMenu = () => {
-	const { processing, isAuth, status } = useAuth()
-
+	const { processing, isAuth } = useAuth()
 	return (
-		<div className="hidden md:flex">
+		<div className="flex">
 			<Popover as="div" className="relative font-sans h-full">
 				<Popover.Button
 					className={

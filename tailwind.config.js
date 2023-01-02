@@ -42,7 +42,7 @@ module.exports = {
 				},
 				teal: "#32de8a",
 				green: { main: "var(--green)" },
-				red: "var(--red)",
+				red: { main: "var(--red)" },
 				white: "var(--white)",
 				accent: "var(--accent)",
 				"accent-light": "var(--accent-light)",

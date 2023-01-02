@@ -20,6 +20,7 @@ const getOrders = async () => {
 const OrdersPage = async () => {
 	const orders = await getOrders()
 
+	// TODO - Add pagination
 	return (
 		<>
 			<AuthChecker redirect="/shop" />

@@ -53,7 +53,7 @@ const Checkout = ({ hidePrices = false, discounts = false, stripeData }: Checkou
 						<div className="mt-10 flex space-x-3 justify-center">
 							<Link
 								href="/shop"
-								className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-main hover:bg-green-main focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+								className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-accent hover:bg-highlight focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-highlight"
 							>
 								Visit our shop.
 							</Link>
