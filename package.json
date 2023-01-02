@@ -7,7 +7,16 @@
 		"dev": "next dev -p 8141",
 		"build": "next build",
 		"start": "next start -p 8141",
-		"lint": "next lint"
+		"lint": "next lint",
+		"pm2-dev": "pm2 start npm --name \"Eiram NextJS Dev\" -- run dev",
+		"pm2-dev-stop": "pm2 stop \"Eiram NextJS Dev\" && pm2 delete \"Eiram NextJS Dev\"",
+		"pm2-dev-restart": "pm2 restart \"Eiram NextJS Dev\"",
+		"pm2-start": "pm2 start npm --name \"Eiram NextJS Production\" -- run start",
+		"pm2-stop": "pm2 stop \"Eiram NextJS Production\" && pm2 delete \"Eiram NextJS Production\"",
+		"pm2-restart": "pm2 restart \"Eiram NextJS Production\"",
+		"pm2-node-start": "PORT=8141 pm2 start --name \"Eiram Node\" node dist/index.js",
+		"pm2-node-stop": "pm2 stop --name \"Eiram Node\" && pm2 delete \"Eiram Node\"",
+		"pm2-node-restart": "pm2 restart \"Eiram Node\""
 	},
 	"dependencies": {
 		"@headlessui/react": "^1.7.7",
