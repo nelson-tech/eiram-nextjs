@@ -24,7 +24,9 @@ const Lookbook = ({ lookbook }: LookbookInputType) => {
 							return (
 								<div
 									key={image.id}
-									className={`w-full ${i % 2 == 0 ? "aspect-video" : "aspect-square"}  relative `}
+									className={`w-full ${
+										i % 2 == 0 ? "aspect-square" : "aspect-video"
+									}  relative break-inside-avoid`}
 								>
 									<Image
 										src={image?.source_url}
