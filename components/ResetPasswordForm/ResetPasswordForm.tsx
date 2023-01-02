@@ -11,6 +11,7 @@ import { EnvelopeIcon, KeyIcon, LockClosedIcon } from "@heroicons/react/20/solid
 import { useRouter, useSearchParams } from "next/navigation"
 import useAuth from "@lib/hooks/useAuth"
 import { REST_BASE } from "@lib/constants"
+import useAlerts from "@lib/hooks/useAlerts"
 
 type ResetPasswordFormInputType = {
 	detectedEmail: string | null
@@ -24,7 +25,8 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 
-	const { isAuth, send } = useAuth()
+	const { login } = useAuth()
+	const { openAlert } = useAlerts()
 
 	const [email, setEmail] = useState<string | null>(searchParams.get("email") ?? detectedEmail)
 	const [key, setKey] = useState<string | null>(searchParams.get("key"))
@@ -59,17 +61,26 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 
 	const onSendEmailSubmit: SubmitHandler<FieldValues> = async (data) => {
 		if (email && data.email === email) {
+			console.log("SENDING", email)
+
 			const requestResetResponse = await fetch(REST_BASE + "/bdpwr/v1/reset-password", {
 				method: "POST",
+				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ email }),
 			})
 			const requestResetData: WP_Reset_ResponseBodyType = await requestResetResponse.json()
 
 			if (requestResetData.data.status === 200) {
 				setSentEmail(true)
-				// TODO - Set success alert
+				openAlert({ kind: "success", primary: "Password Reset Email Sent" })
 			} else {
-				// TODO - Set error alert
+				console.log("STUFF", requestResetData)
+
+				openAlert({
+					kind: "error",
+					primary: requestResetData.message,
+				})
+				setError(requestResetData.message)
 			}
 		}
 	}
@@ -79,6 +90,7 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 			if (validPassword && key && email && password) {
 				const resetResponse = await fetch(REST_BASE + "/bdpwr/v1/set-password", {
 					method: "POST",
+					headers: { "content-type": "application/json" },
 					body: JSON.stringify({ email, code: key, password }),
 				})
 				const resetData: WP_Reset_ResponseBodyType = await resetResponse.json()
@@ -91,9 +103,7 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 						password,
 					}
 
-					const newState = await send("LOGIN", {
-						input,
-					})
+					const newState = await login(input)
 					// TODO - Set success alert
 				} else {
 					// TODO - Set error alert
@@ -206,12 +216,7 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 								<ErrorField name="email" />
 								<ErrorField name="password" />
 								<ErrorField name="passwordConfirm" />
-								{error && <p className="text-red-main text-sm pt-2 pl-2">{error}</p>}
-								{/* {resetError && (
-                  <p className="text-red-main text-sm pt-2 pl-2">
-                    {resetError}
-                  </p>
-                )} */}
+								{/* {error && <p className="text-red-main text-sm pt-2 pl-2">{error}</p>} */}
 							</div>
 							<div className="text-sm text-center">
 								<MenuLink href="/login" className="font-medium text-accent hover:text-highlight">
@@ -267,12 +272,7 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 										/>
 									</div>
 									<ErrorField name="email" />
-									{error && <p className="text-red-main text-sm pt-2 pl-2">{error}</p>}
-									{/* {resetError && (
-                  <p className="text-red-main text-sm pt-2 pl-2">
-                    {resetError}
-                  </p>
-                )} */}
+									{/* {error && <p className="text-red-main text-sm pt-2 pl-2">{error}</p>} */}
 								</div>
 
 								<div className="text-sm text-center">
@@ -329,23 +329,15 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 												<input
 													id="reset-key"
 													type="text"
-													{...register("reset-key", {
-														required: "Reset key is required.",
-														onChange: (e) => {
-															setKey(e.target.value)
-														},
-													})}
+													onChange={(e) => {
+														setKey(e.target.value)
+													}}
 													value={key || ""}
 													className="appearance-none text-center relative block w-full px-3 py-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-accent focus:border-accent focus:z-10 text-lg"
 												/>
 											</div>
 											<ErrorField name="reset-key" />
-											{error && <p className="text-red-main text-sm pt-2 pl-2">{error}</p>}
-											{/* {resetError && (
-                  <p className="text-red-main text-sm pt-2 pl-2">
-                    {resetError}
-                  </p>
-                )} */}
+											{/* {key && error && <p className="text-red-main text-sm pt-2 pl-2">{error}</p>} */}
 										</div>
 
 										<div>

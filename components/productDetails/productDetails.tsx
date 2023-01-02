@@ -14,7 +14,10 @@ type ProductDetailsProps = {
 	product: WC_ProductType
 }
 const ProductDetails = ({ product }: ProductDetailsProps) => {
-	const { send, loading: processing } = useCart()
+	const {
+		state: { loading: processing },
+		addToCart,
+	} = useCart()
 
 	const [loading, setLoading] = useState(false)
 	const [selectedAttributes, setSelectedAttribute] = useState<{ [key: string]: string }>({})
@@ -41,7 +44,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 				variation,
 			}
 
-			await send("ADDITEM", { input })
+			await addToCart(input)
 		}
 
 		setLoading(false)

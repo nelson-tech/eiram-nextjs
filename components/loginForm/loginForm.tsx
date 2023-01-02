@@ -7,7 +7,6 @@ import { ErrorMessage } from "@hookform/error-message"
 
 import useAuth from "@lib/hooks/useAuth"
 import LockClosedIcon from "@icons/LockClosed"
-import useModals from "@lib/hooks/useModals"
 import Link from "@components/Link"
 
 import LoadingSpinner from "@components/LoadingSpinner"
@@ -24,8 +23,7 @@ const LoginForm = ({ firstFocusRef, closeModal }: LoginFormProps) => {
 	const redirect = params.get("redirect")
 	const router = useRouter()
 
-	const { processing, send, matches } = useAuth()
-	const { send: modalsSend } = useModals()
+	const { processing, login, matches } = useAuth()
 
 	const {
 		formState: { errors },
@@ -53,10 +51,7 @@ const LoginForm = ({ firstFocusRef, closeModal }: LoginFormProps) => {
 				password,
 			}
 
-			const newState = await send("LOGIN", {
-				input,
-				modalsSend,
-			})
+			const newState = await login(input, closeModal)
 		}
 		setLoading(false)
 	}

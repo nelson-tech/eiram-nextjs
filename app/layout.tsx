@@ -10,6 +10,7 @@ import RootClientContext from "./RootClientContext"
 import Header from "@components/layout/header"
 import Modals from "@components/layout/modals"
 import Footer from "@components/layout/footer"
+import Alerts from "@components/Alerts"
 
 export async function getMainMenu() {
 	const { fetchMenu } = useAPI()
@@ -65,6 +66,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 					<div className="min-h-screen bg-white z-0">{children}</div>
 					<Footer socialMedia={socialMedia} />
 					<Modals menuItems={menuItems} />
+					<Alerts />
 				</body>
 			</RootClientContext>
 		</html>

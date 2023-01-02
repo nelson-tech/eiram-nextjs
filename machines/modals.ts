@@ -1,12 +1,5 @@
-import {
-	createMachine,
-	interpret,
-	Interpreter,
-	type AnyEventObject,
-	type BaseActionObject,
-	type ResolveTypegenMeta,
-	type ServiceMap,
-} from "xstate"
+import { createMachine } from "xstate"
+
 import type { Typegen0 } from "./modals.typegen"
 
 interface ModalsContext {

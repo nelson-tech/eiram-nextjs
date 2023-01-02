@@ -2,15 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import {
-	CardNumberElement,
-	CardExpiryElement,
-	CardCvcElement,
-	useElements,
-	useStripe,
-	PaymentElement,
-	CardElement,
-} from "@stripe/react-stripe-js"
+import { useElements, useStripe, CardElement } from "@stripe/react-stripe-js"
 import { SubmitHandler, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
@@ -18,9 +10,9 @@ import schema from "./formSchema"
 import LoadingSpinner from "@components/LoadingSpinner"
 import FormField from "./formField"
 import DocumentDuplicateIcon from "@icons/DocumentDuplicate"
-import { confirmCardPayment, createPaymentIntent } from "@lib/stripe"
 import { CART_ENDPOINT } from "@lib/constants"
 import useCart from "@lib/hooks/useCart"
+import useAlerts from "@lib/hooks/useAlerts"
 
 // ####
 // #### Types
@@ -57,7 +49,9 @@ type CheckoutFormProps = {
 
 const CheckoutForm = ({ cart }: CheckoutFormProps) => {
 	const router = useRouter()
-	const { send } = useCart()
+	const { fetchCart } = useCart()
+
+	const { openAlert } = useAlerts()
 
 	const [loading, setLoading] = useState(false)
 
@@ -143,6 +137,13 @@ const CheckoutForm = ({ cart }: CheckoutFormProps) => {
 		// 	redirect: "if_required",
 		// })
 
+		openAlert({
+			kind: "info",
+			primary: "Processing Order",
+			secondary: "Sending payment request to Stripe...",
+			timeout: 40000,
+		})
+
 		const stripeResult = await stripe.createSource(
 			// @ts-ignore
 			elements.getElement(CardElement),
@@ -152,6 +153,11 @@ const CheckoutForm = ({ cart }: CheckoutFormProps) => {
 		if (stripeResult.error?.message) {
 			// TODO - Handle error
 			console.warn(stripeResult.error.message)
+			openAlert({
+				kind: "error",
+				primary: "Payment Error",
+				secondary: stripeResult.error.message,
+			})
 		} else {
 			input["payment_data"] = [
 				{
@@ -178,6 +184,13 @@ const CheckoutForm = ({ cart }: CheckoutFormProps) => {
 
 			const checkoutInput: WC_API_Cart_CheckoutInputType = { action: "CHECKOUT", input }
 
+			openAlert({
+				kind: "info",
+				primary: "Processing Order",
+				secondary: "Processing payment and creating order...",
+				timeout: 40000,
+			})
+
 			const checkoutResponse = await fetch(CART_ENDPOINT, {
 				method: "POST",
 				body: JSON.stringify(checkoutInput),
@@ -185,7 +198,13 @@ const CheckoutForm = ({ cart }: CheckoutFormProps) => {
 
 			const checkoutData: API_CartResponseType = await checkoutResponse?.json()
 
-			send("FETCHCART")
+			await fetchCart()
+
+			openAlert({
+				kind: "success",
+				primary: "Order Complete",
+				secondary: "Thank you for your order!",
+			})
 
 			checkoutData.checkout.order_id &&
 				router.push(

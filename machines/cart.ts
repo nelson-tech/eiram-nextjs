@@ -1,13 +1,9 @@
 import { assign, createMachine } from "xstate"
 
 import { CART_ENDPOINT } from "@lib/constants"
-
-import type { Typegen0 } from "./cart.typegen"
 import getCart from "@lib/wp/api/getCart"
 
-// const getAuthToken = async () => {
-//   const data = await fetch(REST_AUTH_URI, "")
-// }
+import type { Typegen0 } from "./cart.typegen"
 
 export const cartMachine =
 	/** @xstate-layout N4IgpgJg5mDOIC5QEMCuAXAFgOjVsAdugJYDGyJBUAxBAPYFjbEEBudA1k3pgMKZhSXAE6JQABzqxiJBmJAAPRAFYA7AA5s6gCwBGZQCYAnEd0A2M6oDMAGhABPRAFpdB7KpMHtq3etUAGKx0rMwBfULseXAwBIjIKFhowYWE6YWxxABsKADM0gFtorH5BEXlJaVkCeSUEXV0rLSN-M39lNSNVAytAu0cEA2VGqy9dI0srKw9tbWVwyJjsaShGCABJAmoAZTWAcQA5AHkAVQAVcqkZYjkkRURdf0fsI20WowMP-3rrPsQzK2U2FcJm0Blc-jBRis8xAUWWq0OGG2e32a32F0q12qt1qym0mhCJlUFjGZlB6l+CEMZi0oyhgW0ZheBhhcOIK0SG1oDCYLHYXCW7IIGwxVxuoFq6imtOMyjaBi6Y1UlLB2G0U386vGUKM7SMrMW8M5m2SqXSWVyBUFKxFtwqYuxEsQxO0aqhGkMBnU+gpDmcuuwZm66jB6jM3sZynUBqw1oIiUR6G5jGYbE4THhidFVXk-VUXXc7weJma+e0dlqrm62C99KmQY8gRjOCNVET1FNaQy2XQeWEhUzGGzWJq9w+jVrPXrCuatj9CC6ro8YP8Jf8ZfCERABDoEDg8iiPEIJHIlCgw-FdwQemeJfUYZ8crlZmUlJc-kL7xC-nUnSmPTCLc2RWSBbQkS4cxxRAjB0Z5lH+LwzF8KxfF0SldCXR5iQsHQow8VQ5iAw0hUgRNsE4C9HSvDDdCBAj8weMtrBeSkCKMbBAgeIYwSsTxtGbONSIwbAcmQYhMlQYQwEo0c6hvXR6J8ddVG8Xjy3nb1ASmB51EeJlGVcAT4SE9AZKguoFLotQlKYtTKXDGlAlXX96gaf5AIWWNWygMCQHtSCnQQf4PyDBSg2-AF1xVdpsBGPQdB8BTfG6IyhQTIc7QgkdzKhNxjCQ3iAghWdWILZdixMZT+KIrAzMCyySxgh99DaFpX3nFxw0DYMwUse9jHXTdQiAA */
@@ -133,7 +129,10 @@ export const cartMachine =
 						return null
 					}
 				},
-				addItem: async (ctx, event: { input: WC_Cart_AddToCartInputType }) => {
+				addItem: async (
+					ctx,
+					event: { input: WC_Cart_AddToCartInputType; callback: () => void },
+				) => {
 					const { input } = event
 
 					try {
@@ -146,6 +145,8 @@ export const cartMachine =
 								} as WP_API_Cart_AddItemInputType),
 							})
 						).json()
+
+						event.callback && (await event.callback())
 
 						return data.cart
 					} catch (error) {

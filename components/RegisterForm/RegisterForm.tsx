@@ -17,7 +17,7 @@ type RegisterFormInputType = {
 const RegisterForm = ({ redirect }: RegisterFormInputType) => {
 	const [loading, setLoading] = useState(false)
 
-	const { send } = useAuth()
+	const { register: registerUser } = useAuth()
 
 	const {
 		formState: { errors },
@@ -50,9 +50,7 @@ const RegisterForm = ({ redirect }: RegisterFormInputType) => {
 			password,
 		}
 
-		const newState = await send("REGISTER", {
-			input,
-		})
+		const newState = await registerUser(input)
 
 		setLoading(false)
 	}
@@ -150,7 +148,7 @@ const RegisterForm = ({ redirect }: RegisterFormInputType) => {
 							<button
 								type="submit"
 								// disabled={loading}
-								className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium hover:font-bold rounded-md text-white bg-accent hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-main"
+								className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-accent hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-main"
 							>
 								<span className="absolute left-0 inset-y-0 flex items-center pl-3 ">
 									{loading ? (

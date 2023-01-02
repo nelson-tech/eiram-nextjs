@@ -43,7 +43,7 @@ export const authMachine = (initialState: string) =>
 					invoke: {
 						src: "login",
 						id: "login",
-						onDone: [{ target: "authenticating" }],
+						onDone: [{ actions: "setToken", target: "loggedIn" }],
 						onError: [{ target: "loggedOut" }],
 					},
 				},
@@ -59,7 +59,7 @@ export const authMachine = (initialState: string) =>
 					invoke: {
 						src: "register",
 						id: "register",
-						onDone: [{ target: "loggedIn" }],
+						onDone: [{ actions: "setToken", target: "loggedIn" }],
 						onError: [{ target: "loggedOut" }],
 					},
 				},
@@ -67,6 +67,12 @@ export const authMachine = (initialState: string) =>
 			schema: {
 				services: {} as {
 					authChecker: {
+						data: API_AuthResponseType
+					}
+					login: {
+						data: API_AuthResponseType
+					}
+					register: {
 						data: API_AuthResponseType
 					}
 				},
@@ -103,10 +109,7 @@ export const authMachine = (initialState: string) =>
 
 					throw new Error("Unauthorized")
 				},
-				login: async (
-					_,
-					event: { input: WP_AUTH_LoginInputType; modalsSend: (action: string) => "string" },
-				) => {
+				login: async (_, event: { input: WP_AUTH_LoginInputType }) => {
 					const { input } = event
 
 					const response = await fetch(AUTH_ENDPOINT, {
@@ -115,11 +118,9 @@ export const authMachine = (initialState: string) =>
 						body: JSON.stringify({ action: "LOGIN", input }),
 					})
 
-					const data = (await response.json()) as API_AuthResponseType
+					const data: API_AuthResponseType = await response.json()
 
-					data && event.modalsSend("close")
-
-					if (data.isAuth) return true
+					if (data.isAuth) return data
 
 					throw new Error("Unauthorized")
 				},
@@ -142,7 +143,7 @@ export const authMachine = (initialState: string) =>
 						body: JSON.stringify(reqBody),
 					})
 
-					const data = await response.json()
+					const data: API_AuthResponseType = await response.json()
 
 					return data
 				},

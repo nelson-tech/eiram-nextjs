@@ -24,7 +24,7 @@ type CheckoutProps = {
 const Checkout = ({ hidePrices = false, discounts = false, stripeData }: CheckoutProps) => {
 	const { isAuth } = useAuth()
 
-	const { cart, loading: cartLoading } = useCart()
+	const { cart, loading: cartLoading } = useCart().state
 
 	const stripePromise = getStripe()
 

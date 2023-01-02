@@ -17,7 +17,7 @@ type ShoppingCartProps = {
 }
 
 const ShoppingCart = ({ closeModal }: ShoppingCartProps) => {
-	const { cart, loading } = useCart()
+	const { cart, loading } = useCart().state
 
 	const handleClearCart = async () => {
 		// await clearCart()

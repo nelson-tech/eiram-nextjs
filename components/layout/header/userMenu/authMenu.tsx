@@ -11,11 +11,11 @@ import Link from "@components/Link"
 import LogoutIcon from "@icons/Logout"
 
 const AuthMenu = () => {
-	const { send, matches, context } = useAuth()
+	const { logout, matches, context } = useAuth()
 	const router = useRouter()
 
 	const handleLogout = async () => {
-		await send("LOGOUT")
+		await logout()
 	}
 
 	useEffect(() => {
@@ -50,7 +50,7 @@ const AuthMenu = () => {
 			<div>
 				<Popover.Button
 					as="button"
-					className="transition flex cursor-pointer w-full items-center outline-none ring-transparent text-red px-4 py-2 text-sm hover:bg-red hover:text-white"
+					className="transition flex cursor-pointer w-full items-center outline-none ring-transparent text-red-main px-4 py-2 text-sm hover:bg-red-main hover:text-white"
 					onClick={handleLogout}
 				>
 					<LogoutIcon size={4} styling="mr-1.5" />

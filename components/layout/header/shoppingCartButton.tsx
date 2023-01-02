@@ -8,7 +8,7 @@ import useModals from "@lib/hooks/useModals"
 const ShoppingCartButton = () => {
 	const modalsSend = useModals().send
 
-	const { cart, loading } = useCart()
+	const { cart, loading } = useCart().state
 
 	return (
 		<button

@@ -2,6 +2,7 @@
 
 import { AUTH_ENDPOINT } from "@lib/constants"
 import { AuthProvider } from "machines/authContext"
+import { AlertsProvider } from "machines/alertsContext"
 import { CartProvider } from "machines/cartContext"
 import { ModalsProvider } from "machines/modalsContext"
 
@@ -24,11 +25,13 @@ const RootClientContext = ({ children, colors, authData }: RootClientContextProp
 
 	return (
 		<AuthProvider isAuth={isAuth} user={user} authToken={tokens.auth}>
-			<CartProvider cart={cart}>
-				<ModalsProvider>
-					<RootStyleRegistry colors={colors}>{children}</RootStyleRegistry>
-				</ModalsProvider>
-			</CartProvider>
+			<AlertsProvider>
+				<CartProvider cart={cart}>
+					<ModalsProvider>
+						<RootStyleRegistry colors={colors}>{children}</RootStyleRegistry>
+					</ModalsProvider>
+				</CartProvider>
+			</AlertsProvider>
 		</AuthProvider>
 	)
 }

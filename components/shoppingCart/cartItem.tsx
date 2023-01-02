@@ -18,7 +18,12 @@ type CartItemProps = {
 
 const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 	const [loading, setLoading] = useState(false)
-	const { itemLoading, send } = useCart()
+
+	const {
+		state: { itemLoading },
+		updateItem,
+		removeItem,
+	} = useCart()
 
 	let quantity = lineItem?.quantity
 	let variations = lineItem.variation
@@ -33,7 +38,7 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 		newQuantity && (quantity = newQuantity)
 
 		if (quantity && lineItem?.key) {
-			const data = await send("UPDATEITEM", {
+			await updateItem({
 				itemKey: lineItem.key,
 				quantity,
 			})
@@ -42,7 +47,7 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 
 	const handleRemoveItem = async (key: string) => {
 		setLoading(true)
-		const data = await send("REMOVEITEM", {
+		await removeItem({
 			itemKey: lineItem.key,
 		})
 	}
