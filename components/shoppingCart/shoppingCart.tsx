@@ -103,7 +103,7 @@ const ShoppingCart = ({ closeModal }: ShoppingCartProps) => {
 						>
 							<div className="flex justify-between text-base pb-2 font-medium text-gray-600">
 								<p>Subtotal</p>
-								<p>{formatCurrencyString(cart?.totals.total_items)}</p>
+								<p>{formatCurrencyString(cart?.totals?.total_items)}</p>
 							</div>
 							<div className="mt-2">
 								<Link

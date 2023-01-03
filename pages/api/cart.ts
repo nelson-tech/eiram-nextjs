@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
 
-import { CART_TOKEN_KEY, REST_CART, AUTH_ENDPOINT } from "@lib/constants"
+import { CART_NONCE_KEY, REST_CART, CART_TOKEN_KEY } from "@lib/constants"
 import checkAuthAPI from "@lib/wp/utils/checkAuthAPI"
 
 export default async function handler(
@@ -16,7 +16,8 @@ export default async function handler(
 	const authData = await checkAuthAPI({ cookies, tokens: inputData.tokens })
 
 	const { tokens } = authData
-	let incomingCartKey = tokens.cart
+	let incomingCartNonce = tokens.nonce
+	let incomingCartToken = tokens.cart
 
 	let body: API_CartResponseType = { authData, cart: null }
 
@@ -33,11 +34,14 @@ export default async function handler(
 	}) => {
 		const headers = { "content-type": "application/json" }
 
-		// Add authTokens if present
+		// Add auth token if present
 		tokens.auth && (headers["Authorization"] = `Bearer ${tokens.auth}`)
 
-		// Add cartKey if present
-		tokens.cart && (headers["Nonce"] = tokens.cart)
+		// Add cart token if present
+		tokens.cart && (headers["Cart-Token"] = tokens.cart)
+
+		// Add cart nonce if present
+		tokens.nonce && (headers["Nonce"] = tokens.nonce)
 
 		const uri = REST_CART + cartPath
 
@@ -62,9 +66,11 @@ export default async function handler(
 				console.warn(e),
 			)
 
-			incomingCartKey = addResponse && addResponse.headers.get("nonce")
+			incomingCartNonce = addResponse && addResponse.headers.get("nonce")
+			incomingCartToken = addResponse && addResponse.headers.get("cart-token")
 
 			const data: WC_CartType = addResponse && (await addResponse?.json())
+			console.log("ADDING", addParams.fetchParams, addResponse && addResponse.headers)
 
 			body.cart = data
 
@@ -84,7 +90,8 @@ export default async function handler(
 
 			const updatedResponse = await fetch(updateParams.uri, updateParams.fetchParams)
 
-			incomingCartKey = updatedResponse.headers.get("nonce")
+			incomingCartNonce = updatedResponse && updatedResponse.headers.get("nonce")
+			incomingCartToken = updatedResponse && updatedResponse.headers.get("cart-token")
 
 			const updatedCart: WC_CartType = await updatedResponse?.json()
 
@@ -103,7 +110,8 @@ export default async function handler(
 
 			const removeResponse = await fetch(removeParams.uri, removeParams.fetchParams)
 
-			incomingCartKey = removeResponse.headers.get("nonce")
+			incomingCartNonce = removeResponse && removeResponse.headers.get("nonce")
+			incomingCartToken = removeResponse && removeResponse.headers.get("cart-token")
 
 			const status: WC_CartType = await removeResponse?.json()
 
@@ -129,7 +137,10 @@ export default async function handler(
 
 			const cartResponse = await fetch(uri, fetchParams)
 
-			incomingCartKey = cartResponse.headers.get("nonce")
+			incomingCartNonce = cartResponse && cartResponse.headers.get("nonce")
+			incomingCartToken = cartResponse && cartResponse.headers.get("cart-token")
+
+			console.log("Fetching", fetchParams, cartResponse.headers)
 
 			const cart: WC_CartType = await cartResponse.json()
 
@@ -140,10 +151,18 @@ export default async function handler(
 			break
 	}
 
-	if (tokens.cart != incomingCartKey) {
+	if (tokens.nonce != incomingCartNonce) {
 		newCookies.push(
-			`${CART_TOKEN_KEY}=${incomingCartKey}; HttpOnly; Path=/; SameSite=None; Secure; expires=${new Date(
-				Date.now() + 120 * 24 * 60 * 60 * 1000,
+			`${CART_NONCE_KEY}=${incomingCartNonce}; HttpOnly; Path=/; SameSite=None; Secure; expires=${new Date(
+				Date.now() + 120 * 24 * 60 * 60 * 1000, // 120 Days
+			).toUTCString()}`,
+		)
+	}
+
+	if (tokens.cart != incomingCartToken) {
+		newCookies.push(
+			`${CART_TOKEN_KEY}=${incomingCartToken}; HttpOnly; Path=/; SameSite=None; Secure; expires=${new Date(
+				Date.now() + 2 * 24 * 60 * 60 * 1000, // 2 Days
 			).toUTCString()}`,
 		)
 	}

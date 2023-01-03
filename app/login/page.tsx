@@ -1,10 +1,10 @@
 import AuthChecker from "@components/AuthChecker"
 import LoginForm from "@components/loginForm"
 
-const LoginPage = () => {
+const LoginPage = ({ searchParams }: { searchParams?: { redirect: string } }) => {
 	return (
 		<>
-			<AuthChecker forceGuest redirect="/shop" />
+			<AuthChecker forceGuest redirect={`/${searchParams.redirect ?? "shop"}`} />
 			<LoginForm />
 		</>
 	)

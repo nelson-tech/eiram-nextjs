@@ -124,14 +124,12 @@ export const authMachine = (initialState: string) =>
 
 					throw new Error("Unauthorized")
 				},
-				logout: async (_, event: { modalsSend: (action: string) => "string" }) => {
+				logout: async (_) => {
 					const data = await fetch(AUTH_ENDPOINT, {
 						method: "POST",
 						credentials: "include",
 						body: JSON.stringify({ action: "LOGOUT" }),
 					})
-
-					data && event.modalsSend("close")
 
 					return data
 				},

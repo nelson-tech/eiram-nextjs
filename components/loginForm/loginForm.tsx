@@ -14,7 +14,6 @@ import LoadingSpinner from "@components/LoadingSpinner"
 type LoginFormProps = {
 	firstFocusRef?: MutableRefObject<HTMLInputElement> | MutableRefObject<null> | null
 	closeModal?: () => void
-	redirect?: string
 }
 
 const LoginForm = ({ firstFocusRef, closeModal }: LoginFormProps) => {
@@ -68,7 +67,7 @@ const LoginForm = ({ firstFocusRef, closeModal }: LoginFormProps) => {
 
 	useEffect(() => {
 		if (matches("loggedIn") && router) {
-			router.push("/")
+			router.push(`/${redirect ?? ""}`)
 		}
 	}, [matches, router])
 
@@ -138,7 +137,7 @@ const LoginForm = ({ firstFocusRef, closeModal }: LoginFormProps) => {
 
 					<div className="text-sm text-center pt-2">
 						<Link
-							href="/reset-password"
+							href={`/reset-password${redirect ? `?redirect=${redirect}` : ""}`}
 							className="font-medium text-accent hover:text-highlight"
 							title="Reset your password."
 							onClick={() => closeModal && closeModal()}

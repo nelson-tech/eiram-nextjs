@@ -131,12 +131,6 @@ const CheckoutForm = ({ cart }: CheckoutFormProps) => {
 			shipping_address: shipToDifferentAddress ? shipping_address : billing_address,
 		}
 
-		// const stripeResult = await stripe.confirmPayment({
-		// 	elements,
-		// 	confirmParams: { return_url: "" },
-		// 	redirect: "if_required",
-		// })
-
 		openAlert({
 			kind: "info",
 			primary: "Processing Order",

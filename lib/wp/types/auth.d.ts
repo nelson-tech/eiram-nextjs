@@ -35,6 +35,7 @@ type WP_AuthTokensType = {
 	refresh?: string | null | undefined
 	user?: string | null | undefined
 	cart?: string | null | undefined
+	nonce?: string | null | undefined
 }
 
 type WP_RegisterUserInputType = {

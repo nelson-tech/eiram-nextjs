@@ -18,7 +18,7 @@ const Lookbook = ({ lookbook }: LookbookInputType) => {
 				/>
 			)}
 			{lookbook?.images && (
-				<div className="columns-3xs gap-4 max-w-5xl space-y-5 ">
+				<div className="columns-3xs gap-4 max-w-5xl space-y-5 mt-8">
 					{lookbook.images.map((image, i) => {
 						if (image.source_url)
 							return (

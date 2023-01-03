@@ -1,6 +1,7 @@
-import { CartContext } from "machines/cartContext"
 import { useContext, useEffect, useState } from "react"
 import { useActor } from "@xstate/react"
+
+import { CartContext } from "machines/cartContext"
 import useAuth from "./useAuth"
 import useModals from "./useModals"
 

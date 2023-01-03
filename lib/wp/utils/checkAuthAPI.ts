@@ -1,4 +1,10 @@
-import { AUTH_TOKEN_KEY, CART_TOKEN_KEY, REFRESH_TOKEN_KEY, USER_TOKEN_KEY } from "@lib/constants"
+import {
+	AUTH_TOKEN_KEY,
+	CART_NONCE_KEY,
+	CART_TOKEN_KEY,
+	REFRESH_TOKEN_KEY,
+	USER_TOKEN_KEY,
+} from "@lib/constants"
 import { isTokenValid } from "@lib/validateToken"
 import loginOrRefresh from "../api/loginOrRefresh"
 
@@ -17,6 +23,7 @@ const checkAuthAPI = async ({
 		auth: cookies[AUTH_TOKEN_KEY] ?? incomingTokens?.auth,
 		refresh: cookies[REFRESH_TOKEN_KEY] ?? incomingTokens?.refresh,
 		cart: cookies[CART_TOKEN_KEY] ?? incomingTokens?.cart,
+		nonce: cookies[CART_NONCE_KEY] ?? incomingTokens?.nonce,
 		user: cookies[USER_TOKEN_KEY] ?? incomingTokens?.user,
 	}
 

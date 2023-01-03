@@ -1,5 +1,6 @@
 export const AUTH_TOKEN_KEY: string = `auth_token`
 export const REFRESH_TOKEN_KEY: string = `refresh_token`
+export const CART_NONCE_KEY: string = `cart_nonce`
 export const CART_TOKEN_KEY: string = `cart_key`
 export const USER_TOKEN_KEY: string = `user_token`
 export const CLIENT_MUTATION_KEY: string = `clientMutation`

@@ -1,12 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import {
-	AUTH_ENDPOINT,
-	AUTH_TOKEN_KEY,
-	CART_ENDPOINT,
-	CART_TOKEN_KEY,
-	REFRESH_TOKEN_KEY,
-} from "@lib/constants"
 import { Stripe } from "stripe"
+
+import { CART_ENDPOINT } from "@lib/constants"
 import checkAuthAPI from "@lib/wp/utils/checkAuthAPI"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2022-11-15" })

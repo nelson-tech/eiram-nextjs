@@ -4,9 +4,10 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import {
 	AUTH_TOKEN_KEY,
 	REFRESH_TOKEN_KEY,
-	CART_TOKEN_KEY,
+	CART_NONCE_KEY,
 	REST_WP,
 	FRONTEND_BASE,
+	USER_TOKEN_KEY,
 } from "@lib/constants"
 import getCart from "@lib/wp/api/getCart"
 import checkAuthAPI from "@lib/wp/utils/checkAuthAPI"
@@ -115,6 +116,7 @@ export default async function handler(
 			newCookies.push(
 				`${AUTH_TOKEN_KEY}=deleted; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT`,
 				`${REFRESH_TOKEN_KEY}=deleted; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT`,
+				`${USER_TOKEN_KEY}=deleted; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT`,
 			)
 			tokens.auth = null
 			tokens.refresh = null
@@ -127,7 +129,7 @@ export default async function handler(
 			newCartKey &&
 				newCartKey != tokens.cart &&
 				newCookies.push(
-					`${CART_TOKEN_KEY}=${newCartKey}; HttpOnly; Path=/; SameSite=None; Secure; expires=${new Date(
+					`${CART_NONCE_KEY}=${newCartKey}; HttpOnly; Path=/; SameSite=None; Secure; expires=${new Date(
 						Date.now() + 120 * 24 * 60 * 60 * 1000,
 					).toUTCString()}`,
 				)
@@ -144,15 +146,14 @@ export default async function handler(
 			if (body.user?.id) {
 				// User exists. Get data.
 
-				// Get cart
-				const cartData = await getCart(tokens)
-				cartData.authData.newCookies &&
-					(newCookies = newCookies.concat(cartData.authData.newCookies))
-				cartData.cart && (body["cart"] = cartData.cart)
-
 				// Get orders
 				await setUserOrders()
 			}
+
+			// Get cart
+			const cartData = await getCart(tokens)
+			cartData.authData.newCookies && (newCookies = newCookies.concat(cartData.authData.newCookies))
+			cartData.cart && (body["cart"] = cartData.cart)
 
 			if (newCookies.length > 0) {
 				// Initial call can't set cookies because the server is calling (not client)

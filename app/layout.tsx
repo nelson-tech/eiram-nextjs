@@ -4,7 +4,7 @@ import localFont from "@next/font/local"
 
 import useAPI from "@lib/hooks/useAPI"
 import getTokens from "@lib/utils/getTokens"
-import { AUTH_ENDPOINT, CART_ENDPOINT } from "@lib/constants"
+import { AUTH_ENDPOINT } from "@lib/constants"
 
 import RootClientContext from "./RootClientContext"
 import Header from "@components/layout/header"
