@@ -27,7 +27,7 @@ const ShoppingCart = ({ closeModal }: ShoppingCartProps) => {
 	return (
 		<Dialog.Panel
 			className="fixed inset-y-0 right-0 md:max-w-full flex"
-			style={{ maxWidth: "389px" }}
+			style={{ maxWidth: "350px" }}
 		>
 			<Transition.Child
 				as={Fragment}
@@ -46,9 +46,9 @@ const ShoppingCart = ({ closeModal }: ShoppingCartProps) => {
 					)}
 
 					<div className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
-						<div className="flex-1 py-6 overflow-y-auto px-4 sm:px-6">
+						<div className="flex-1 py-6 overflow-y-auto px-2">
 							<div className="flex items-start justify-between">
-								<Dialog.Title className="text-lg font-extrabold text-gray-900">
+								<Dialog.Title className="text-lg font-extrabold text-gray-900 pl-2">
 									Shopping Cart
 								</Dialog.Title>
 								<div className="ml-3 h-7 flex items-center">

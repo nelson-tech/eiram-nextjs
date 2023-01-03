@@ -19,7 +19,7 @@
 }
 
 .custom-img {
-	object-fit: cover;
+	object-fit: contain;
 	width: 100% !important;
 	position: relative !important;
 }

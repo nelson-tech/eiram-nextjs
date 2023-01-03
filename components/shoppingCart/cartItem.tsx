@@ -10,6 +10,7 @@ import formatCurrencyString from "@lib/utils/formatCurrencyString"
 import LoadingSpinner from "@components/LoadingSpinner"
 import MinusIcon from "@icons/Minus"
 import PlusIcon from "@icons/Plus"
+import { TrashIcon } from "@heroicons/react/20/solid"
 
 type CartItemProps = {
 	lineItem: WC_CartType["items"][0]
@@ -58,19 +59,19 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 				<li className="flex items-center">
 					{featuredImage && (
 						<div
-							className={`flex-shrink-0 w-16 h-16 md:w-24 md:h-24 border border-gray-200 rounded-md overflow-hidden relative`}
+							className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 border border-gray-200 rounded-md overflow-hidden relative`}
 						>
 							<Image
 								src={featuredImage.src || ""}
 								alt={(featuredImage.alt ?? featuredImage.name) || ""}
 								fill
-								className="object-contain"
+								className="object-cover"
 								sizes="33vw"
 							/>
 						</div>
 					)}
 
-					<div className="ml-4 flex-1 flex flex-col mb-1 justify-between">
+					<div className="ml-3 flex-1 flex flex-col mb-1 justify-between">
 						<div className="flex justify-between items-center ">
 							<h3 onClick={() => closeModal && closeModal()}>
 								<Link href={`/shop/${lineItem?.sku}`} className="font-bold text-sm text-gray-900">
@@ -79,7 +80,7 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 							</h3>
 							<p className="ml-4 text-xs text-gray-500">{total}</p>
 						</div>
-						<div className="flex gap-8 mt-1 text-sm text-gray-500">
+						<div className="flex gap-8 mt-4 text-sm text-gray-500">
 							{
 								variations &&
 									variations.map((attribute, i) => (
@@ -97,7 +98,7 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 							}
 						</div>
 
-						<div className="flex-1 flex items-center justify-between text-sm mt-3">
+						<div className="flex-1 flex items-center justify-between text-sm mt-4">
 							{quantity && (
 								<div className="flex items-center space-x-2 text-xs text-gray-600">
 									<label htmlFor="quantity" className="pr-2">
@@ -141,10 +142,10 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 									<button
 										type="button"
 										title="Remove"
-										className="font-medium text-accent hover:text-red transition"
+										className="text-accent hover:text-red-main transition-all"
 										onClick={async () => lineItem?.key && (await handleRemoveItem(lineItem.key))}
 									>
-										Remove
+										<TrashIcon className="h-5 w-5" />
 									</button>
 								)}
 							</div>

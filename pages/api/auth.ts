@@ -37,21 +37,25 @@ export default async function handler(
 	let newCookies: string[] = [].concat(authData.newCookies)
 
 	const setUserOrders = async (user?: WP_AUTH_UserDataType) => {
-		const response = await fetch(FRONTEND_BASE + "/api/orders", {
-			method: "POST",
-			body: JSON.stringify({ tokens }),
-		})
+		try {
+			const response = await fetch(FRONTEND_BASE + "/api/orders", {
+				method: "POST",
+				body: JSON.stringify({ tokens }),
+			})
 
-		const data: WC_Order[] = await response.json()
+			const data: WC_Order[] = await response.json()
 
-		const orderCount = data.length
-		const openOrders = data.filter((order) => order.status.toLowerCase() === "processing")
+			const orderCount = data.length
+			const openOrders = data.filter((order) => order.status.toLowerCase() === "processing")
 
-		if (body.user) {
-			body.user.orderCount = orderCount
-			body.user.openOrders = openOrders
-		} else if (user) {
-			body.user = { ...user, orderCount, openOrders }
+			if (body.user) {
+				body.user.orderCount = orderCount
+				body.user.openOrders = openOrders
+			} else if (user) {
+				body.user = { ...user, orderCount, openOrders }
+			}
+		} catch (error) {
+			console.warn(error)
 		}
 	}
 

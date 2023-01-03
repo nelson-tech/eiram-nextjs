@@ -59,12 +59,12 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 						{/* <!-- Image selector --> */}
 						<div className="mx-auto mt-6 px-8 sm:px-0 w-full max-w-2xl sm:block lg:max-w-none">
 							<Tab.List className="grid grid-cols-4 gap-6">
-								{product.images.slice(1).map(
+								{product.images.map(
 									(image, i) =>
 										image.src && (
 											<Tab
 												key={image.src + i + "thumbs"}
-												className="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
+												className="relative flex h-24 cursor-pointer items-center justify-center rounded-md focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-accent focus:ring-offset-4"
 											>
 												<span className="sr-only"> {image.alt} </span>
 												<span className="absolute inset-0 overflow-hidden rounded-md">
@@ -90,7 +90,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 						</div>
 
 						<Tab.Panels className=" aspect-square object-contain w-full relative" as="div">
-							{product.images.slice(1).map(
+							{product.images.map(
 								(image, i) =>
 									image.src && (
 										<Tab.Panel key={i + image.src + "main"}>
@@ -99,7 +99,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 													src={image.src}
 													alt={image.alt}
 													fill
-													sizes="33vw"
+													sizes="100vw"
 													className="custom-img"
 												/>
 											</div>
@@ -112,10 +112,20 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
 				{/* <!-- Product Info --> */}
 				<div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+					{product.on_sale && (
+						<span className="inline-flex items-center rounded-md bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800">
+							SALE!
+						</span>
+					)}
 					<h1 className="text-3xl font-bold tracking-tight text-gray-900">{product.name}</h1>
 
-					<div className="mt-3">
+					<div className="mt-3 flex items-center">
 						<h2 className="sr-only">Product information</h2>
+						{product.on_sale && (
+							<p className="text-2xl tracking-tight text-gray-400 line-through mr-2">
+								{formatCurrencyString(product.prices.regular_price)}
+							</p>
+						)}
 						<p className="text-3xl tracking-tight text-gray-500">
 							{formatCurrencyString(product.prices.price)}
 						</p>
