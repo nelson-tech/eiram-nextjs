@@ -17,14 +17,15 @@ type RootClientContextProps = {
 const RootClientContext = ({ children, colors, authData }: RootClientContextProps) => {
 	const { needsRefresh, isAuth, cart, user, tokens } = authData
 	if (needsRefresh) {
-		// Make refresh call on client
+		// Make refresh call on client to set cookies
+		// Remove this once next.js supports setting cookies from within the layout call
 		const body: API_SetInputType = { action: "SET", newCookies: needsRefresh }
 
 		fetch(AUTH_ENDPOINT, { method: "POST", body: JSON.stringify(body) })
 	}
 
 	return (
-		<AuthProvider isAuth={isAuth} user={user} authToken={tokens.auth}>
+		<AuthProvider isAuth={isAuth} user={user} authToken={tokens?.auth}>
 			<AlertsProvider>
 				<CartProvider cart={cart}>
 					<ModalsProvider>

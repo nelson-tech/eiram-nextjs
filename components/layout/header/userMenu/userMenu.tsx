@@ -15,7 +15,7 @@ const UserMenu = () => {
 				<Popover.Button
 					className={
 						(isAuth ? "text-accent" : "text-gray-400") +
-						" p-2 hover:text-gray-500" +
+						" py-2 hover:text-gray-500" +
 						" font-bold text-sm h-full outline-none transition-all"
 					}
 				>

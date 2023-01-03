@@ -70,7 +70,6 @@ export default async function handler(
 			incomingCartToken = addResponse && addResponse.headers.get("cart-token")
 
 			const data: WC_CartType = addResponse && (await addResponse?.json())
-			console.log("ADDING", addParams.fetchParams, addResponse && addResponse.headers)
 
 			body.cart = data
 
@@ -139,8 +138,6 @@ export default async function handler(
 
 			incomingCartNonce = cartResponse && cartResponse.headers.get("nonce")
 			incomingCartToken = cartResponse && cartResponse.headers.get("cart-token")
-
-			console.log("Fetching", fetchParams, cartResponse.headers)
 
 			const cart: WC_CartType = await cartResponse.json()
 

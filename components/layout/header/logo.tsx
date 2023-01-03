@@ -4,7 +4,7 @@ import Image from "next/image"
 const Logo = ({ mobile }: { mobile?: boolean }) => {
 	if (mobile) {
 		return (
-			<div className="flex items-center w-full justify-center lg:hidden">
+			<div className="flex-1 -ml-6 items-center w-full justify-center lg:hidden">
 				<Link href="/" className="lg:hidden">
 					<span className="sr-only">Workflow</span>
 					<Image

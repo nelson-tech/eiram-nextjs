@@ -14,7 +14,7 @@ const getTokens = (): { tokens: WP_AuthTokensType } => {
 	const authToken = cookies.get(AUTH_TOKEN_KEY)?.value
 	const refreshToken = cookies.get(REFRESH_TOKEN_KEY)?.value
 	const nonce = cookies.get(CART_NONCE_KEY)?.value
-	const cartToken = cookies.get(CART_TOKEN_KEY).value
+	const cartToken = cookies.get(CART_TOKEN_KEY)?.value
 	const userToken = cookies.get(USER_TOKEN_KEY)?.value
 
 	return {
