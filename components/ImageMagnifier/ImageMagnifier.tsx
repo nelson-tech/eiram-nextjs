@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { Ref, useEffect, useRef, useState } from "react"
 import Image from "next/image"
 
 type ImageMagnifierInputType = {
@@ -25,7 +25,19 @@ const ImageMagnifier = ({
 	const [[x, y], setXY] = useState([0, 0])
 	const [[imgWidth, imgHeight], setSize] = useState([0, 0])
 	const [showMagnifier, setShowMagnifier] = useState(false)
-	const imgRef = useRef()
+	const imgRef = useRef<HTMLImageElement>()
+
+	useEffect(() => {
+		if (imgRef.current) {
+			imgRef.current.addEventListener(
+				"touchmove",
+				(e) => {
+					e.preventDefault()
+				},
+				{ passive: false },
+			)
+		}
+	})
 
 	return (
 		<>
@@ -48,7 +60,6 @@ const ImageMagnifier = ({
 						setShowMagnifier(true)
 					}}
 					onTouchMove={(e) => {
-						e.preventDefault()
 						// update cursor position
 						const elem = e.currentTarget
 						const { top, left } = elem.getBoundingClientRect()
