@@ -43,7 +43,7 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 									menuItems.map((menuItem) => {
 										if (menuItem && !menuItem.post_parent && menuItem.child_items?.length > 0) {
 											return (
-												<div className="flow-root pt-1">
+												<div className="flow-root pt-2">
 													<div className={bigLinkStyle} title={menuItem.title}>
 														{menuItem.title}
 													</div>

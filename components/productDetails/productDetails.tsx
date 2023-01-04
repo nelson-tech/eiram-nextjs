@@ -9,6 +9,7 @@ import formatCurrencyString from "@lib/utils/formatCurrencyString"
 import Link from "@components/Link"
 
 import LoadingSpinner from "@components/LoadingSpinner"
+import ImageMagnifier from "@components/ImageMagnifier"
 
 type ProductDetailsProps = {
 	product: WC_ProductType
@@ -94,15 +95,12 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 								(image, i) =>
 									image.src && (
 										<Tab.Panel key={i + image.src + "main"}>
-											<div className="unset-img aspect-square rounded-md overflow-hidden">
-												<Image
-													src={image.src}
-													alt={image.alt}
-													fill
-													sizes="100vw"
-													className="custom-img"
-												/>
-											</div>
+											<ImageMagnifier
+												src={image.src}
+												zoomLevel={2}
+												magnifieWidth={350}
+												magnifierHeight={350}
+											/>
 										</Tab.Panel>
 									),
 							)}

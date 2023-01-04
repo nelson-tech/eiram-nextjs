@@ -86,6 +86,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
 					<div className="px-4 pb-2 flex-1 flex flex-col justify-end">
 						{/*  <p className="text-sm italic text-gray-500">{product.options}</p> */}
+						{product.on_sale && (
+							<div className="flex">
+								<span className="text-center items-center sm:hidden rounded-md bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800">
+									SALE!
+								</span>
+							</div>
+						)}
 						<div className="flex">
 							{product.on_sale && (
 								<p className="text-sm text-gray-400 mr-2 line-through">
@@ -96,7 +103,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 								{formatCurrencyString(product.prices.price)}
 							</p>
 							{product.on_sale && (
-								<span className="inline-flex items-center rounded-md bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800">
+								<span className="hidden sm:inline-flex items-center rounded-md bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800">
 									SALE!
 								</span>
 							)}
