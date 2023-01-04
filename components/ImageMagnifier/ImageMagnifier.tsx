@@ -48,6 +48,7 @@ const ImageMagnifier = ({
 						setShowMagnifier(true)
 					}}
 					onTouchMove={(e) => {
+						e.preventDefault()
 						// update cursor position
 						const elem = e.currentTarget
 						const { top, left } = elem.getBoundingClientRect()
