@@ -13,6 +13,7 @@ import DocumentDuplicateIcon from "@icons/DocumentDuplicate"
 import { CART_ENDPOINT } from "@lib/constants"
 import useCart from "@lib/hooks/useCart"
 import useAlerts from "@lib/hooks/useAlerts"
+import { LockClosedIcon } from "@heroicons/react/20/solid"
 
 // ####
 // #### Types
@@ -41,13 +42,14 @@ type FormDataType = {
 
 type CheckoutFormProps = {
 	cart: WC_CartType
+	colors: WP_MENU["acf"]["colors"]
 }
 
 // ####
 // #### Component
 // ####
 
-const CheckoutForm = ({ cart }: CheckoutFormProps) => {
+const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 	const router = useRouter()
 	const { fetchCart } = useCart()
 
@@ -192,17 +194,48 @@ const CheckoutForm = ({ cart }: CheckoutFormProps) => {
 
 			const checkoutData: API_CartResponseType = await checkoutResponse?.json()
 
-			await fetchCart()
+			console.log("Checkout Data", checkoutData.checkout.status)
 
-			openAlert({
-				kind: "success",
-				primary: "Order Complete",
-				secondary: "Thank you for your order!",
-			})
+			switch (checkoutData.checkout.status) {
+				case "processing":
+					// Payment was successful
+
+					openAlert({
+						kind: "success",
+						primary: "Order Placed Successfully!",
+					})
+
+					break
+				case "pending":
+					// Payment requires authorization
+
+					openAlert({
+						kind: "warning",
+						primary: "Payment Incomplete.",
+						timeout: 3000,
+					})
+
+					break
+				case "failed":
+					// Payment failed
+
+					openAlert({
+						kind: "error",
+						primary: "Payment Failed.",
+						timeout: 3000,
+					})
+
+					break
+
+				default:
+					break
+			}
+
+			await fetchCart()
 
 			checkoutData.checkout.order_id &&
 				router.push(
-					`/thanks${checkoutData.checkout.order_id ? `/${checkoutData.checkout.order_id}` : ""}`,
+					`/thanks${checkoutData.checkout.order_id ? `?id=${checkoutData.checkout.order_id}` : ""}`,
 				)
 		}
 
@@ -238,16 +271,6 @@ const CheckoutForm = ({ cart }: CheckoutFormProps) => {
 
 			<div className="max-w-2xl mx-auto lg:pt-16">
 				<form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
-					<div className="grid grid-cols-12 gap-y-6 gap-x-4">
-						<h2 className="col-span-full text-xl font-semibold">Payment Details</h2>
-						<div className="col-span-full grid gap-y-6 md:grid-cols-2 gap-6 pb-8 font-actor">
-							{/* <CardNumberElement className="font-actor text-accent" />
-							<CardExpiryElement />
-							<CardCvcElement /> */}
-							<CardElement />
-							{/* <PaymentElement /> */}
-						</div>
-					</div>
 					<div className="grid grid-cols-12 gap-y-6 gap-x-4">
 						<h2 className="col-span-full text-xl font-semibold">Billing Details</h2>
 						<div className="col-span-full grid gap-y-6 md:grid-cols-2 gap-6">
@@ -497,6 +520,34 @@ const CheckoutForm = ({ cart }: CheckoutFormProps) => {
 							</div>
 						</>
 					)}
+
+					<div className="my-8 py-6 border-gray-300 border-t border-b">
+						<h2 className="col-span-full text-xl font-semibold pb-2">Payment Details</h2>
+						<p className="pb-8 text-sm text-gray-300 flex items-center">
+							<LockClosedIcon className="h-4 w-4 mr-1" />
+							Payments are securely processed by&nbsp;
+							<a
+								href="https://stripe.com"
+								target="_blank"
+								title="Visit Stripe to learn more."
+								style={{ color: "rgba(85, 108, 214,0.6)" }}
+								className="hover:underline transition-all"
+							>
+								stripe
+							</a>
+							.
+						</p>
+						<div className="col-span-full grid gap-y-6 gap-6 pb-8">
+							<CardElement
+								options={{
+									style: {
+										base: { iconColor: colors.accent },
+									},
+								}}
+								className=" border border-gray-300 focus:ring-accent focus:border-accent p-2 rounded-md font-sans"
+							/>
+						</div>
+					</div>
 
 					<button
 						type="submit"

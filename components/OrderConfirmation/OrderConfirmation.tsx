@@ -1,4 +1,5 @@
 import OrderDetails from "@components/OrderDetails"
+import { ExclamationCircleIcon, InformationCircleIcon } from "@heroicons/react/20/solid"
 import CheckIcon from "@icons/Check"
 
 type OrderConfirmationInputType = {
@@ -9,11 +10,59 @@ type OrderConfirmationInputType = {
 const OrderConfirmation = ({ order, orderNumber }: OrderConfirmationInputType) => {
 	return (
 		<>
-			<h2 className="text-4xl font-extrabold text-gray-800 text-center">Thank you!</h2>
-			<div className="flex items-center rounded bg-green-100 shadow w-fit p-2 mt-4 mx-auto">
-				<CheckIcon size={8} styling="text-green mr-2" />
-				<p className="text-gray-600">Order #{orderNumber} has been placed.</p>
-			</div>
+			<h2 className="text-4xl font-extrabold text-gray-800 text-center">
+				{order.status === "failed" ? "Uh oh..." : "Thank you!"}
+			</h2>
+
+			{order.status === "processing" ? (
+				<div className="flex items-center rounded bg-green-100 shadow w-fit p-2 mt-4 mx-auto">
+					<CheckIcon size={8} styling="text-green mr-2" />
+					<p className="text-gray-600">Order #{orderNumber} has been placed.</p>
+				</div>
+			) : order.status === "pending" ? (
+				<div className="flex items-center rounded bg-yellow-100 shadow w-fit p-2 mt-4 mx-auto">
+					<InformationCircleIcon className="h-8 w-8 text-green mr-2" />
+					<div>
+						<p className="text-gray-600">
+							Your payment requires further authorization before we can process your order.
+						</p>{" "}
+						<p className="text-gray-600">
+							Please{" "}
+							<a
+								href={`mailto:info@eiramknitwear.com?subject=Pending%20Payment%20%7c%20Order%20%23%20${order.id}`}
+								title="Contact Us"
+								className="text-accent underline hover:text-highlight transition-all"
+							>
+								contact us
+							</a>{" "}
+							with your order number (#
+							{order.id}) to complete your payment.
+						</p>
+					</div>
+				</div>
+			) : (
+				order.status === "failed" && (
+					<div className="flex items-center rounded bg-red-100 shadow w-fit p-2 mt-4 mx-auto">
+						<ExclamationCircleIcon className="h-8 w-8 text-green mr-2" />
+						<div>
+							<p className="text-gray-600">Your payment could not be processed.</p>{" "}
+							<p className="text-gray-600">
+								Please{" "}
+								<a
+									href={`mailto:info@eiramknitwear.com?subject=Pending%20Payment%20%7c%20Order%20%23%20${order.id}`}
+									title="Contact Us"
+									className="text-accent underline hover:text-highlight transition-all"
+								>
+									contact us
+								</a>{" "}
+								with your order number (#
+								{order.id}) to complete your payment.
+							</p>
+						</div>
+					</div>
+				)
+			)}
+
 			<div className="mt-6 pt-6 border-t">
 				{order ? (
 					<OrderDetails order={order} />

@@ -30,7 +30,7 @@ type PropsType = {
 export const containerStyling = "col-span-full"
 export const labelStyling = "block text-sm font-medium text-gray-700"
 export const inputStyling =
-	"mt-1 block w-full border-gray-300 border-b p-2 rounded-md shadow-sm outline-none focus:ring-blue-main focus:border-blue-main sm:text-sm"
+	"mt-1 block w-full border-gray-300 border-b p-2 rounded-md shadow-sm outline-none focus:ring-accent focus:border-accent sm:text-sm"
 export const errorStyling = "block text-red-main text-sm pt-2 pl-1"
 export const textAreaStyling = inputStyling
 

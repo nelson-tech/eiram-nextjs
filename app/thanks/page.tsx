@@ -16,14 +16,14 @@ const getOrder = async (id: string) => {
 	return data
 }
 
-const ThanksPage = async ({ params }: { params: { id: string } }) => {
-	const order = await getOrder(params.id)
+const ThanksPage = async ({ searchParams }: { searchParams?: { id: string } }) => {
+	const order = await getOrder(searchParams.id)
 
 	return (
 		<div className="max-w-7xl mx-auto">
 			<div className="py-8 px-6 w-full h-full">
 				{order ? (
-					<OrderConfirmation order={order} orderNumber={params.id} />
+					<OrderConfirmation order={order} orderNumber={searchParams.id} />
 				) : (
 					<>
 						<div>

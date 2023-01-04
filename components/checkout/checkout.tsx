@@ -20,8 +20,9 @@ type CheckoutProps = {
 	hidePrices?: boolean
 	discounts?: boolean
 	stripeData: STRIPE_PaymentIntentType
+	colors: WP_MENU["acf"]["colors"]
 }
-const Checkout = ({ hidePrices = false, discounts = false, stripeData }: CheckoutProps) => {
+const Checkout = ({ hidePrices = false, discounts = false, stripeData, colors }: CheckoutProps) => {
 	const { isAuth } = useAuth()
 
 	const { cart, loading: cartLoading } = useCart().state
@@ -96,7 +97,7 @@ const Checkout = ({ hidePrices = false, discounts = false, stripeData }: Checkou
 							</section>
 							{cart && stripeData.clientSecret ? (
 								<Elements stripe={stripePromise} options={stripeOptions}>
-									<CheckoutForm cart={cart} />
+									<CheckoutForm cart={cart} colors={colors} />
 								</Elements>
 							) : (
 								<div className="h-screen mt-48 mx-auto">
