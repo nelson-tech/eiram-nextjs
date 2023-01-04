@@ -37,6 +37,30 @@ const ImageMagnifier = ({
 					fill
 					sizes="(max-width: 800px) 100vw,50vw"
 					className="object-cover"
+					onTouchStart={(e) => {
+						// update image size and turn-on magnifier
+						const elem = e.currentTarget
+						const { width, height } = elem.getBoundingClientRect()
+
+						if (imgRef.current) {
+							setSize([width, height])
+						}
+						setShowMagnifier(true)
+					}}
+					onTouchMove={(e) => {
+						// update cursor position
+						const elem = e.currentTarget
+						const { top, left } = elem.getBoundingClientRect()
+
+						// calculate cursor position on the image
+						const x = e.touches.item(0).pageX - left - window.pageXOffset
+						const y = e.touches.item(0).pageY - top - window.pageYOffset
+						setXY([x, y])
+					}}
+					onTouchEnd={() => {
+						// close magnifier
+						setShowMagnifier(false)
+					}}
 					onMouseEnter={(e) => {
 						// update image size and turn-on magnifier
 						const elem = e.currentTarget
