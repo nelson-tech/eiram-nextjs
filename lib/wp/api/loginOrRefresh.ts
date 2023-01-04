@@ -17,8 +17,11 @@ const loginOrRefresh = async ({
 
 	const headers = { "content-type": "application/json" }
 
-	tokens.auth && (headers["Authorization"] = `Bearer ${tokens.auth}`)
-	tokens.refresh && (input[REFRESH_TOKEN_KEY] = tokens.refresh)
+	if (!loginInput) {
+		// Only add auth tokens if not authenticating with user/password
+		tokens.auth && (headers["Authorization"] = `Bearer ${tokens.auth}`)
+		tokens.refresh && (input[REFRESH_TOKEN_KEY] = tokens.refresh)
+	}
 
 	// Auth REST route will check for refresh token first.
 	// If found, it will return an authToken
@@ -45,8 +48,8 @@ const loginOrRefresh = async ({
 
 		const loginData: WP_AUTH_LoginResponseType = await loginResponse.json()
 
-		// Set user (without token) if retrieved
-		if (loginData?.data?.id) {
+		if (loginData?.data) {
+			// Set user (without token) if retrieved
 			const { token, ...retrievedUser } = loginData.data
 			user = retrievedUser
 			newCookies.push(
@@ -56,20 +59,22 @@ const loginOrRefresh = async ({
 					Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days
 				).toUTCString()}`,
 			)
-		}
 
-		// Set new authToken if retrieved
-		const newAuthToken = loginData?.data?.token ? loginData.data.token : null
-		if (newAuthToken) {
-			tokens.auth = newAuthToken
+			// Set new authToken if retrieved
+			const newAuthToken = token ? token : null
+			if (newAuthToken) {
+				tokens.auth = newAuthToken
 
-			newCookies.push(
-				`${AUTH_TOKEN_KEY}=${newAuthToken}; HttpOnly; Path=/; SameSite=None; Secure; expires=${new Date(
-					Date.now() + 10 * 60 * 1000, // 10 minutes
-				).toUTCString()}`,
-			)
+				newCookies.push(
+					`${AUTH_TOKEN_KEY}=${newAuthToken}; HttpOnly; Path=/; SameSite=None; Secure; expires=${new Date(
+						Date.now() + 10 * 60 * 1000, // 10 minutes
+					).toUTCString()}`,
+				)
 
-			isAuth = true
+				isAuth = true
+			}
+		} else {
+			// Error logging in
 		}
 	}
 	return { isAuth, newCookies, user, tokens }

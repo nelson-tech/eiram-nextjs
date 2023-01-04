@@ -27,14 +27,6 @@ const ImageMagnifier = ({
 	const [showMagnifier, setShowMagnifier] = useState(false)
 	const imgRef = useRef()
 
-	useEffect(() => {
-		if (imgRef.current) {
-			const width = (imgRef.current as any).clientWidth
-			const height = (imgRef.current as any).clientHeight
-			console.log("Settings", width, height)
-		}
-	})
-
 	return (
 		<>
 			<div className="relative aspect-square rounded-md overflow-hidden m-2 sm:m-0">
@@ -49,7 +41,6 @@ const ImageMagnifier = ({
 						// update image size and turn-on magnifier
 						const elem = e.currentTarget
 						const { width, height } = elem.getBoundingClientRect()
-						console.log("WH", width, height)
 
 						if (imgRef.current) {
 							setSize([width, height])

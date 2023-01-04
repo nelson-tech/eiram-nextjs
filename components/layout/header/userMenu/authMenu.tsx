@@ -18,11 +18,11 @@ const AuthMenu = () => {
 		await logout()
 	}
 
-	useEffect(() => {
-		if (matches("loggedOut")) {
-			router.push("/")
-		}
-	}, [matches, router])
+	// useEffect(() => {
+	// 	if (matches("loggedOut")) {
+	// 		router.push("/")
+	// 	}
+	// }, [matches, router])
 
 	return (
 		<>

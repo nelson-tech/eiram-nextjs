@@ -36,6 +36,16 @@ export default async function handler(
 
 	let newCookies: string[] = [].concat(authData.newCookies)
 
+	const removeAuthCookies = () => {
+		newCookies.push(
+			`${AUTH_TOKEN_KEY}=deleted; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT`,
+			`${REFRESH_TOKEN_KEY}=deleted; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT`,
+			`${USER_TOKEN_KEY}=deleted; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT`,
+		)
+		tokens.auth = null
+		tokens.refresh = null
+	}
+
 	const setUserOrders = async (user?: WP_AUTH_UserDataType) => {
 		try {
 			const response = await fetch(FRONTEND_BASE + "/api/orders", {
@@ -48,7 +58,7 @@ export default async function handler(
 			const orderCount = data.length
 			const openOrders = data.filter((order) => order.status.toLowerCase() === "processing")
 
-			if (body.user) {
+			if (body.user.id) {
 				body.user.orderCount = orderCount
 				body.user.openOrders = openOrders
 			} else if (user) {
@@ -60,11 +70,17 @@ export default async function handler(
 	}
 
 	const setNewResponse = async (response: API_AuthCheckResultType) => {
-		response.tokens && (tokens = response.tokens)
-		response.isAuth && (body.isAuth = response.isAuth)
-		response.user && (await setUserOrders(response.user))
+		if (response.isAuth) {
+			tokens = response.tokens
+			body.isAuth = response.isAuth
 
-		response.newCookies && (newCookies = newCookies.concat(response.newCookies))
+			await setUserOrders(response.user)
+
+			response.newCookies && (newCookies = newCookies.concat(response.newCookies))
+		} else {
+			// Authentication failed. Remove any lingering auth cookies
+			removeAuthCookies()
+		}
 	}
 
 	switch (data.action) {
@@ -116,14 +132,7 @@ export default async function handler(
 
 		case "LOGOUT":
 			// Expire auth cookies
-
-			newCookies.push(
-				`${AUTH_TOKEN_KEY}=deleted; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT`,
-				`${REFRESH_TOKEN_KEY}=deleted; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT`,
-				`${USER_TOKEN_KEY}=deleted; Path=/; SameSite=None; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT`,
-			)
-			tokens.auth = null
-			tokens.refresh = null
+			removeAuthCookies()
 
 			break
 

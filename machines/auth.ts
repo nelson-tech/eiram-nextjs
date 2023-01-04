@@ -51,7 +51,7 @@ export const authMachine = (initialState: string) =>
 					invoke: {
 						src: "logout",
 						id: "logout",
-						onDone: [{ target: "loggedOut" }],
+						onDone: [{ actions: "setToken", target: "loggedOut" }],
 						onError: [{ target: "loggedOut" }],
 					},
 				},
@@ -70,6 +70,9 @@ export const authMachine = (initialState: string) =>
 						data: API_AuthResponseType
 					}
 					login: {
+						data: API_AuthResponseType
+					}
+					logout: {
 						data: API_AuthResponseType
 					}
 					register: {
@@ -109,8 +112,14 @@ export const authMachine = (initialState: string) =>
 
 					throw new Error("Unauthorized")
 				},
-				login: async (_, event: { input: WP_AUTH_LoginInputType }) => {
-					const { input } = event
+				login: async (
+					_,
+					event: {
+						input: WP_AUTH_LoginInputType
+						callback?: (data?: API_AuthResponseType) => void
+					},
+				) => {
+					const { input, callback } = event
 
 					const response = await fetch(AUTH_ENDPOINT, {
 						method: "POST",
@@ -120,16 +129,24 @@ export const authMachine = (initialState: string) =>
 
 					const data: API_AuthResponseType = await response.json()
 
+					callback && (await callback(data))
+
 					if (data.isAuth) return data
 
 					throw new Error("Unauthorized")
 				},
-				logout: async (_) => {
-					const data = await fetch(AUTH_ENDPOINT, {
+				logout: async (_, event: { callback?: () => void }) => {
+					const { callback } = event
+
+					const response = await fetch(AUTH_ENDPOINT, {
 						method: "POST",
 						credentials: "include",
 						body: JSON.stringify({ action: "LOGOUT" }),
 					})
+
+					const data: API_AuthResponseType = await response.json()
+
+					callback && (await callback())
 
 					return data
 				},

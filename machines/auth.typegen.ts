@@ -42,7 +42,11 @@ export interface Typegen0 {
 		services: never
 	}
 	eventsCausingActions: {
-		setToken: "done.invoke.authChecker" | "done.invoke.login" | "done.invoke.register"
+		setToken:
+			| "done.invoke.authChecker"
+			| "done.invoke.login"
+			| "done.invoke.logout"
+			| "done.invoke.register"
 	}
 	eventsCausingDelays: {}
 	eventsCausingGuards: {}
