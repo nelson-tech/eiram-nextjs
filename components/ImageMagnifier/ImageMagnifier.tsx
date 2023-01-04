@@ -58,6 +58,12 @@ const ImageMagnifier = ({
 							setSize([width, height])
 						}
 						setShowMagnifier(true)
+						const { top, left } = elem.getBoundingClientRect()
+
+						// calculate cursor position on the image
+						const x = e.touches.item(0).pageX - left - window.pageXOffset
+						const y = e.touches.item(0).pageY - top - window.pageYOffset
+						setXY([x, y])
 					}}
 					onTouchMove={(e) => {
 						// update cursor position
