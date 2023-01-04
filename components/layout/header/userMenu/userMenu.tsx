@@ -10,7 +10,7 @@ import useAuth from "@lib/hooks/useAuth"
 const UserMenu = () => {
 	const { processing, isAuth } = useAuth()
 	return (
-		<div className="flex">
+		<div className="hidden lg:flex">
 			<Popover as="div" className="relative font-sans h-full">
 				<Popover.Button
 					className={

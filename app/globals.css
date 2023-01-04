@@ -82,17 +82,24 @@
 	margin-top: 2rem;
 	line-height: 2rem;
 	font-size: 1rem;
+	padding: 1rem;
 }
 
 .wp-container ul {
 	margin-top: 1rem;
+	margin-left: 2rem;
 	list-style-type: disc;
-	list-style-position: inside;
+	list-style-position: outside;
 }
 
 .wp-container a {
 	text-decoration-line: underline;
 	color: var(--accent);
+}
+
+.wp-container .wp-block-table {
+	overflow-x: scroll;
+	white-space: nowrap;
 }
 
 .wp-container table {

@@ -20,7 +20,7 @@ const OtherPage = async ({ params }: { params: { slug: string } }) => {
 	const pageData = data
 
 	return (
-		<div className="px-16 py-8 max-w-7xl mx-auto text-gray-500">
+		<div className="sm:px-16 py-8 max-w-7xl mx-auto text-gray-500">
 			<h2 className="text-4xl font-bold font-sans tracking-wide pb-8 text-center">
 				{pageData?.title?.rendered ?? "Oops..."}
 			</h2>

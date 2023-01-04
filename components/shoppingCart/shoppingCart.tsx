@@ -25,10 +25,7 @@ const ShoppingCart = ({ closeModal }: ShoppingCartProps) => {
 	}
 
 	return (
-		<Dialog.Panel
-			className="fixed inset-y-0 right-0 md:max-w-full flex"
-			style={{ maxWidth: "350px" }}
-		>
+		<Dialog.Panel className="fixed inset-y-0 right-0 md:max-w-full flex max-w-[350px] sm:max-w-lg">
 			<Transition.Child
 				as={Fragment}
 				enter="transform transition ease-in-out duration-300"
@@ -54,7 +51,7 @@ const ShoppingCart = ({ closeModal }: ShoppingCartProps) => {
 								<div className="ml-3 h-7 flex items-center">
 									<button
 										type="button"
-										className="-m-2 p-2 text-gray-400 hover:text-red-main outline-none ring-transparent"
+										className="-m-1 p-2 text-gray-400 hover:text-red-main outline-none ring-transparent"
 										onClick={() => closeModal && closeModal()}
 									>
 										<span className="sr-only">Close panel</span>
@@ -65,7 +62,7 @@ const ShoppingCart = ({ closeModal }: ShoppingCartProps) => {
 							<div className="mt-8 h-full">
 								<div className="flow-root h-full">
 									{cart?.items && cart.items.length > 0 ? (
-										<ul className="-my-6 divide-y divide-gray-200">
+										<ul className="-my-6 divide-y divide-gray-200 px-2">
 											{cart.items.map(
 												(lineItem) =>
 													lineItem && (

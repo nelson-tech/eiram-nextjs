@@ -29,7 +29,10 @@ const Header = ({ menuItems }: HeaderInputType) => {
 								<div className="flex items-center h-full">
 									<UserMenu />
 
-									<span className="block mx-2 h-6 w-px bg-gray-200 lg:mx-6" aria-hidden="true" />
+									<span
+										className="hidden lg:block mx-2 h-6 w-px bg-gray-200 lg:mx-6"
+										aria-hidden="true"
+									/>
 
 									<div className="flow-root">
 										<ShoppingCartButton />

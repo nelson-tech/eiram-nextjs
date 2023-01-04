@@ -12,7 +12,7 @@ import Modals from "@components/layout/modals"
 import Footer from "@components/layout/footer"
 import Alerts from "@components/Alerts"
 
-export async function getMainMenu() {
+const getMainMenu = async () => {
 	const { fetchMenu } = useAPI()
 
 	const data: WP_MENU = await (await fetchMenu())?.json()

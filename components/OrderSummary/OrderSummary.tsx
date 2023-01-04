@@ -49,7 +49,7 @@ const OrderSummary = ({ order, detailsLink = false }: OrderSummaryInputType) => 
 									Items: {order.line_items.length}
 								</div>
 							</div>
-							<div className="mt-4 flex">
+							<div className="mt-4 flex items-center">
 								<div className="flex items-center text-sm text-gray-500">
 									<CalendarIcon
 										className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
@@ -59,9 +59,16 @@ const OrderSummary = ({ order, detailsLink = false }: OrderSummaryInputType) => 
 										<time dateTime={order.date_created}>{orderDate}</time>
 									</p>
 								</div>
+								<div className=" sm:hidden">
+									<div className="flex -space-x-1 justify-center items-center h-full text-sm text-gray-500 overflow-hidden mr-8">
+										<p className="inline-flex rounded-full bg-green-100 ml-2 px-2 text-xs font-semibold text-gray-500 leading-5">
+											{order.status.toUpperCase()}
+										</p>
+									</div>
+								</div>
 							</div>
 						</div>
-						<div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
+						<div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5 hidden sm:block">
 							<div className="flex -space-x-1 justify-center items-center h-full text-sm text-gray-500 overflow-hidden mr-8">
 								<p className="inline-flex rounded-full bg-green-100 ml-2 px-2 text-xs font-semibold text-gray-500 leading-5">
 									{order.status.toUpperCase()}
