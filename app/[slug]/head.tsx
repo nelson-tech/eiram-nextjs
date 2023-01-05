@@ -1,15 +1,10 @@
-import getPageBySlug from "@lib/server/getPageBySlug"
-
 import DefaultTags from "../DefaultTags"
 
-const Head = async ({ params }: { params: { slug: string } }) => {
-	const data = await getPageBySlug(params.slug)
-
+const Head = () => {
 	return (
 		<>
 			<DefaultTags />
-			<title>{`${data.title.rendered} - Eiram Knitwear`}</title>
-			<meta name="description" content={data.content.rendered} />
+			<title>{`Eiram Knitwear`}</title>
 		</>
 	)
 }

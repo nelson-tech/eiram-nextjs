@@ -1,14 +1,10 @@
-import getOrderById from "@lib/server/getOrderById"
-
 import DefaultTags from "../../DefaultTags"
 
-const Head = async ({ params }: { params: { id: string } }) => {
-	const order = await getOrderById(params.id)
-
+const Head = () => {
 	return (
 		<>
 			<DefaultTags />
-			<title>{`Order #${order.id} - Eiram Knitwear`}</title>
+			<title>{`Order Details - Eiram Knitwear`}</title>
 		</>
 	)
 }

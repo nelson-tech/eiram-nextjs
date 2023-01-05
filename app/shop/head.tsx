@@ -1,6 +1,6 @@
 import DefaultTags from "../DefaultTags"
 
-const Head = async () => {
+const Head = () => {
 	return (
 		<>
 			<DefaultTags />
