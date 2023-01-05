@@ -23,6 +23,8 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 	const [loading, setLoading] = useState(false)
 	const [selectedAttributes, setSelectedAttribute] = useState<{ [key: string]: string }>({})
 
+	const readyToAdd = Object.keys(selectedAttributes).length === product.attributes.length
+
 	function classs(...classes: string[]) {
 		return classes.filter(Boolean).join(" ")
 	}
@@ -223,7 +225,11 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 							<div className="mt-10 flex">
 								<button
 									type="submit"
-									className="relative flex uppercase transition items-center justify-center rounded-sm border border-transparent bg-accent py-3 px-8 text-base font-medium text-white hover:bg-highlight focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-gray-50 w-full"
+									className={`relative flex uppercase transition items-center justify-center rounded-sm border border-transparent ${
+										readyToAdd ? "bg-accent hover:bg-highlight" : " bg-gray-300 cursor-not-allowed"
+									} text-white py-3 px-8 text-base font-medium focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-gray-50 w-full`}
+									disabled={!readyToAdd}
+									title={readyToAdd ? "Add to bag" : "Select your options before adding to bag"}
 								>
 									{(loading || processing) && (
 										<div className="absolute left-0 ml-6">

@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Link from "next/link"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { ErrorMessage } from "@hookform/error-message"
 
@@ -12,6 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import useAuth from "@lib/hooks/useAuth"
 import { REST_BASE } from "@lib/constants"
 import useAlerts from "@lib/hooks/useAlerts"
+import Link from "@components/Link"
 
 type ResetPasswordFormInputType = {
 	detectedEmail: string | null
