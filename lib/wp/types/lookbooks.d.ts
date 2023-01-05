@@ -22,9 +22,9 @@ type WP_LookbookType = {
 	template: string
 	acf: {
 		media: {
-			coverImage: number
-			images: number[]
-			video: number
+			coverImage: string
+			images: string[]
+			video: string
 		}
 	}
 	_links: {

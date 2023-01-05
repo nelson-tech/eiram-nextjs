@@ -1,7 +1,7 @@
 import Image from "next/image"
 
 type LookbookInputType = {
-	lookbook: WP_LookbookType & { images: WP_MediaType[]; video: WP_MediaType }
+	lookbook: WP_LookbookType
 }
 
 const Lookbook = ({ lookbook }: LookbookInputType) => {
@@ -17,20 +17,20 @@ const Lookbook = ({ lookbook }: LookbookInputType) => {
 					dangerouslySetInnerHTML={{ __html: lookbook?.content?.rendered }}
 				/>
 			)}
-			{lookbook?.images && (
-				<div className="columns-3xs gap-4 max-w-5xl space-y-5 mt-8 mx-auto">
-					{lookbook.images.map((image, i) => {
-						if (image.source_url)
+			{lookbook?.acf?.media?.images && (
+				<div className="columns-3xs gap-4 space-y-4 max-w-5xl mt-8 mx-auto">
+					{lookbook.acf.media.images.map((imageUrl, i) => {
+						if (imageUrl)
 							return (
 								<div
-									key={image.id}
+									key={imageUrl}
 									className={`w-full ${
 										i % 2 == 0 ? "aspect-square" : "aspect-video"
 									}  relative break-inside-avoid`}
 								>
 									<Image
-										src={image?.source_url}
-										alt={image?.alt_text}
+										src={imageUrl}
+										alt={""}
 										fill
 										sizes="(max-width: 400px) 100vw,(max-width: 768px) 50vw,33vw"
 										className=" object-cover rounded-sm"
@@ -57,10 +57,10 @@ const Lookbook = ({ lookbook }: LookbookInputType) => {
       )} */}
 				</div>
 			)}
-			{lookbook?.video?.source_url && (
+			{lookbook?.acf?.media?.video && (
 				<div className="w-full rounded-md pt-8 relative">
 					<video muted controls id="video" className="w-full rounded-md aspect-video">
-						<source src={lookbook.video.source_url} type={lookbook.video.mime_type} />
+						<source src={lookbook.acf.media.video} />
 					</video>
 				</div>
 			)}

@@ -7,28 +7,11 @@ import { REST_WP } from "@lib/constants"
 const getLookbooks = async () => {
 	const { fetchAPI } = useAPI()
 
-	const lookbooks: WP_LookbookType[] = await (
-		await fetchAPI({ url: REST_WP + "/lookbooks" })
-	).json()
+	const lookbooksResponse = await fetchAPI({ url: REST_WP + "/lookbooks?acf_format=standard" })
 
-	const look = await Promise.all(
-		lookbooks.map(async (lookbook) => {
-			const coverImage: WP_MediaType = await (
-				await fetchAPI({ url: REST_WP + "/media/" + lookbook?.acf?.media?.coverImage })
-			).json()
+	const lookbooksData: WP_LookbookType[] = await lookbooksResponse?.json()
 
-			return {
-				...lookbook,
-				coverImage: {
-					alt: coverImage?.alt_text,
-					url: coverImage?.source_url,
-					title: coverImage?.title?.rendered,
-				},
-			}
-		}),
-	)
-
-	return look
+	return lookbooksData
 }
 
 const LookbooksPage = async () => {
@@ -47,7 +30,7 @@ const LookbooksPage = async () => {
 					</div>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-2 md:mx-8 lg:mx-16 mt-12">
 						{lookbooks.map((lookbook) => {
-							const image = lookbook.coverImage
+							const imageUrl = lookbook.acf.media.coverImage
 
 							return (
 								<div
@@ -58,8 +41,8 @@ const LookbooksPage = async () => {
 								>
 									<Link href={`/lookbook/${lookbook?.slug}`} className="absolute  w-full h-full">
 										<Image
-											src={image?.url}
-											alt={image?.alt}
+											src={imageUrl}
+											alt={""}
 											fill
 											sizes="(max-width: 800px) 100vw,33vw"
 											className="absolute object-cover w-full h-full rounded-sm"

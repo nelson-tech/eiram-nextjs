@@ -6,35 +6,22 @@ import Lookbook from "@components/Lookbook"
 const getLookbook = async (slug: string) => {
 	const { fetchAPI } = useAPI()
 
-	const lookbookData: WP_LookbookType[] = await (
-		await fetchAPI({ url: REST_WP + "/lookbooks?slug=" + slug })
-	).json()
+	const lookbookResponse = await fetchAPI({
+		url: REST_WP + "/lookbooks?slug=" + slug + "&acf_format=standard",
+	})
 
-	const lookbook: WP_LookbookType = lookbookData[0]
+	const lookbookData: WP_LookbookType[] = await lookbookResponse?.json()
 
-	const imagesResponses = lookbook?.acf?.media?.images
-		? await Promise.all(
-				lookbook.acf.media.images.map((image) => fetchAPI({ url: REST_WP + "/media/" + image })),
-		  )
-		: null
-	const images: WP_MediaType[] = imagesResponses
-		? await Promise.all(imagesResponses.map((image) => image.json()))
-		: null
-	const video: WP_MediaType = lookbook?.acf?.media?.video
-		? await (await fetchAPI({ url: REST_WP + "/media/" + lookbook.acf.media.video })).json()
-		: null
+	const lookbook: WP_LookbookType | null =
+		lookbookData && lookbookData.length > 0 ? lookbookData[0] : null
 
-	return {
-		...lookbook,
-		images,
-		video,
-	}
+	return lookbook
 }
 
 const LookbookPage = async ({ params }: { params: { slug: string } }) => {
 	const lookbook = await getLookbook(params.slug)
 
-	return <Lookbook lookbook={lookbook} />
+	return lookbook ? <Lookbook lookbook={lookbook} /> : <></>
 }
 
 export default LookbookPage
