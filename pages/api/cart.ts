@@ -134,14 +134,18 @@ export default async function handler(
 
 			const { uri, fetchParams } = getFetchParams({ cartPath: "/cart" })
 
-			const cartResponse = await fetch(uri, fetchParams)
+			try {
+				const cartResponse = await fetch(uri, fetchParams)
 
-			incomingCartNonce = cartResponse && cartResponse.headers.get("nonce")
-			incomingCartToken = cartResponse && cartResponse.headers.get("cart-token")
+				incomingCartNonce = cartResponse && cartResponse.headers.get("nonce")
+				incomingCartToken = cartResponse && cartResponse.headers.get("cart-token")
 
-			const cart: WC_CartType = await cartResponse.json()
+				const cart: WC_CartType = await cartResponse.json()
 
-			body.cart = cart
+				body.cart = cart
+			} catch (error) {
+				console.warn("Error fetching cart", error)
+			}
 
 			break
 		default:

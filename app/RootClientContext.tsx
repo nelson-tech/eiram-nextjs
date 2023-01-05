@@ -7,6 +7,7 @@ import { CartProvider } from "machines/cartContext"
 import { ModalsProvider } from "machines/modalsContext"
 
 import RootStyleRegistry from "./RootStyleRegistry"
+import useNavigationEvent from "@lib/hooks/useNavigationEvent"
 
 type RootClientContextProps = {
 	children: React.ReactNode
@@ -15,6 +16,8 @@ type RootClientContextProps = {
 }
 
 const RootClientContext = ({ children, colors, authData }: RootClientContextProps) => {
+	useNavigationEvent()
+
 	const { needsRefresh, isAuth, cart, user, tokens } = authData
 	if (needsRefresh) {
 		// Make refresh call on client to set cookies

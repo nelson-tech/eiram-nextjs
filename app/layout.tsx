@@ -11,6 +11,7 @@ import Header from "@components/layout/header"
 import Modals from "@components/layout/modals"
 import Footer from "@components/layout/footer"
 import Alerts from "@components/Alerts"
+import ScrollToTop from "@components/ScrollToTop"
 
 const getMainMenu = async () => {
 	const { fetchMenu } = useAPI()
@@ -62,11 +63,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 			</head>
 			<RootClientContext colors={colors} authData={authData}>
 				<body>
+					<div id="top" />
 					<Header menuItems={menuItems} />
 					<div className="min-h-screen bg-white z-0">{children}</div>
 					<Footer socialMedia={socialMedia} />
 					<Modals menuItems={menuItems} />
 					<Alerts />
+					<ScrollToTop />
 				</body>
 			</RootClientContext>
 		</html>

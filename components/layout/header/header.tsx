@@ -1,14 +1,23 @@
+"use client"
+
 import Logo from "./logo"
 import MainMenu from "./mainMenu"
 import UserMenu from "./userMenu"
 import ShoppingCartButton from "./shoppingCartButton"
 import MobileMenuButton from "./mobileMenuButton"
+import useScrollDirection from "@lib/hooks/useScrollDirection"
 
 type HeaderInputType = { menuItems: MenuItem[] }
 
 const Header = ({ menuItems }: HeaderInputType) => {
+	const scrollDirection = useScrollDirection()
+
 	return (
-		<header className="relative z-10">
+		<header
+			className={`z-30 sticky ${
+				scrollDirection === "down" ? "-top-16" : "top-0"
+			} transition-all duration-500`}
+		>
 			<nav aria-label="Top">
 				<div className="bg-white bg-opacity-100">
 					<div className="border-b border-gray-200">

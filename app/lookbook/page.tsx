@@ -14,15 +14,15 @@ const getLookbooks = async () => {
 	const look = await Promise.all(
 		lookbooks.map(async (lookbook) => {
 			const coverImage: WP_MediaType = await (
-				await fetchAPI({ url: REST_WP + "/media/" + lookbook.acf.media.coverImage })
+				await fetchAPI({ url: REST_WP + "/media/" + lookbook?.acf?.media?.coverImage })
 			).json()
 
 			return {
 				...lookbook,
 				coverImage: {
-					alt: coverImage.alt_text,
-					url: coverImage.source_url,
-					title: coverImage.title.rendered,
+					alt: coverImage?.alt_text,
+					url: coverImage?.source_url,
+					title: coverImage?.title?.rendered,
 				},
 			}
 		}),
@@ -64,7 +64,7 @@ const LookbooksPage = async () => {
 											sizes="(max-width: 800px) 100vw,33vw"
 											className="absolute object-cover w-full h-full rounded-sm"
 										/>
-										<div className="absolute flex items-center w-full h-full bg-black bg-opacity-80 opacity-0 group-hover:opacity-100 transition-all rounded-sm overflow-hidden z-10">
+										<div className="absolute flex items-center w-full h-full bg-black bg-opacity-80 opacity-0 group-hover:opacity-80 transition-all rounded-sm overflow-hidden z-10">
 											<div
 												className="border border-white my-auto w-full mx-8 flex justify-center items-center"
 												style={{ height: "550px" }}

@@ -59,8 +59,6 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 												</div>
 												<div className="pt-2">
 													{menuItem.child_items.map((child) => {
-														if (child) console.log("CHILD", child)
-
 														return (
 															<div
 																className="font-bold text-sm text-gray-600 transition px-8 hover:bg-accent hover:text-white"
