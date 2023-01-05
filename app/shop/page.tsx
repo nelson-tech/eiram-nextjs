@@ -1,17 +1,13 @@
-import { cookies as nextCookies } from "next/headers"
-
 import ProductGrid from "@components/productGrid"
-import useAPI from "@lib/hooks/useAPI"
 import { REST_CART } from "@lib/constants"
 
 const getAllProducts = async () => {
-	const cookies = nextCookies()
+	const url = REST_CART + "/products"
+	const headers = { "content-type": "application/json" }
 
-	const { fetchAPI } = useAPI()
-
-	const response = await fetchAPI({
-		cookies,
-		url: REST_CART + "/products",
+	const response = await fetch(url, {
+		method: "GET",
+		headers,
 	})
 
 	const data: WC_ProductType[] = await response.json()

@@ -197,7 +197,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 															attribute.terms.length > 0 &&
 															attribute.terms.map((option, i) => (
 																<RadioGroup.Option
-																	key={option.id + i + option.name}
+																	key={option.id + i + option.name + "option"}
 																	value={option.slug}
 																	className={({ active, checked }) =>
 																		classs(

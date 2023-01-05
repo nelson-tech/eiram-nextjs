@@ -2,8 +2,8 @@ import "./globals.css"
 
 import localFont from "@next/font/local"
 
-import useAPI from "@lib/hooks/useAPI"
 import getTokens from "@lib/utils/getTokens"
+import getMenu from "@lib/server/getMenu"
 import { AUTH_ENDPOINT } from "@lib/constants"
 
 import RootClientContext from "./RootClientContext"
@@ -12,18 +12,7 @@ import Modals from "@components/layout/modals"
 import Footer from "@components/layout/footer"
 import Alerts from "@components/Alerts"
 import ScrollToTop from "@components/ScrollToTop"
-
-const getMainMenu = async () => {
-	const { fetchMenu } = useAPI()
-
-	const data: WP_MENU = await (await fetchMenu())?.json()
-
-	const colors = data?.acf?.colors ?? null
-	const menuItems = data?.items ?? null
-	const socialMedia = data?.acf?.footer?.socialMedia ?? null
-
-	return { colors, menuItems, socialMedia }
-}
+import Analytics from "@components/Analytics"
 
 const getAuthData = async (): Promise<API_AuthResponseType> => {
 	const { tokens } = getTokens()
@@ -48,7 +37,7 @@ const font = localFont({
 })
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-	const menuPromise = getMainMenu()
+	const menuPromise = getMenu()
 
 	const authPromise = getAuthData()
 
@@ -57,10 +46,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 	const { colors, menuItems, socialMedia } = menuData
 
 	return (
-		<html lang="en" className={font.className}>
-			<head>
-				<title>Next.js</title>
-			</head>
+		<html lang="en-us" className={font.className}>
 			<RootClientContext colors={colors} authData={authData}>
 				<body>
 					<div id="top" />
@@ -70,6 +56,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 					<Modals menuItems={menuItems} />
 					<Alerts />
 					<ScrollToTop />
+					<Analytics />
 				</body>
 			</RootClientContext>
 		</html>

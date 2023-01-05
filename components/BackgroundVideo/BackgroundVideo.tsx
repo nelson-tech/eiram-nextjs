@@ -1,7 +1,6 @@
 "use client"
 
 import isServer from "@lib/utils/isServer"
-import { WP_REST_API_Attachment } from "wp-types"
 
 type BackgrountVideoInputType = {
 	videoData: WP_ImageArrayType

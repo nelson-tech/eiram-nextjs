@@ -1,25 +1,12 @@
+import getOrderById from "@lib/server/getOrderById"
+
 import AuthChecker from "@components/AuthChecker"
 import Link from "@components/Link"
 import OrderDetails from "@components/OrderDetails"
 import ArrowLeftIcon from "@icons/ArrowLeft"
-import { FRONTEND_BASE } from "@lib/constants"
-import getTokens from "@lib/utils/getTokens"
-
-const getOrder = async (id: string) => {
-	const { tokens } = getTokens()
-
-	const response = await fetch(FRONTEND_BASE + "/api/orders", {
-		method: "POST",
-		body: JSON.stringify({ tokens, orderId: id }),
-	})
-
-	const data: WC_Order = await response.json()
-
-	return data
-}
 
 const OrderPage = async ({ params }: { params: { id: string } }) => {
-	const order = await getOrder(params.id)
+	const order = await getOrderById(params.id)
 
 	return (
 		<>

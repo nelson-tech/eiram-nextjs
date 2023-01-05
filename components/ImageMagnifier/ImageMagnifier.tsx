@@ -1,6 +1,6 @@
 "use client"
 
-import { Ref, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 
 type ImageMagnifierInputType = {
@@ -44,7 +44,7 @@ const ImageMagnifier = ({
 			<div className="relative aspect-square rounded-md overflow-hidden m-2 sm:m-0">
 				<Image
 					src={src}
-					alt={alt}
+					alt={alt ?? ""}
 					ref={imgRef}
 					fill
 					sizes="(max-width: 800px) 100vw,50vw"
@@ -105,39 +105,6 @@ const ImageMagnifier = ({
 					}}
 				/>
 
-				{/* <div
-				style={{
-					position: "relative",
-					height: height,
-					width: width,
-				}}
-			>
-				<img
-					src={src}
-					style={{ height: height, width: width }}
-					onMouseEnter={(e) => {
-						// update image size and turn-on magnifier
-						const elem = e.currentTarget
-						const { width, height } = elem.getBoundingClientRect()
-						setSize([width, height])
-						setShowMagnifier(true)
-					}}
-					onMouseMove={(e) => {
-						// update cursor position
-						const elem = e.currentTarget
-						const { top, left } = elem.getBoundingClientRect()
-
-						// calculate cursor position on the image
-						const x = e.pageX - left - window.pageXOffset
-						const y = e.pageY - top - window.pageYOffset
-						setXY([x, y])
-					}}
-					onMouseLeave={() => {
-						// close magnifier
-						setShowMagnifier(false)
-					}}
-					alt={"img"}
-				/> */}
 				<div
 					className="rounded-full overflow-hidden"
 					style={{

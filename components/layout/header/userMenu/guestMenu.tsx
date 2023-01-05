@@ -16,7 +16,7 @@ const GuestMenu = () => {
 					className="transition w-full cursor-pointer flex items-center outline-none ring-transparent text-highlight px-4 py-2 text-sm hover:bg-highlight hover:text-white"
 				>
 					<LoginIcon size={4} styling="mr-1.5" />
-					<div className="target">Sign in</div>
+					<div className="target">Log in</div>
 				</button>
 			</div>
 			<div>

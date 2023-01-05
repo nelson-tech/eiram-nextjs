@@ -114,14 +114,10 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 												</div>
 											)
 										})}{" "}
-										<div
-											onClick={handleLogout}
-											title="Sign out"
-											className="transition outline-none"
-										>
+										<div onClick={handleLogout} title="Logout" className="transition outline-none">
 											<div className="flex items-center w-full px-4 py-2 transition text-red-main hover:bg-red-main hover:text-white cursor-pointer">
 												<LogoutIcon size={6} styling="mr-3.5" />
-												Sign out
+												Logout
 											</div>
 										</div>
 									</>
@@ -140,11 +136,11 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 										<div onClick={() => closeModal && closeModal()} className="group">
 											<a
 												href="/login"
-												title="Sign in"
+												title="Log in"
 												className="transition flex items-center outline-none text-green-main px-4 py-2 hover:bg-green-main hover:text-white"
 											>
 												<LoginIcon size={6} styling="mr-3.5" />
-												<div>Sign in</div>
+												<div>Log in</div>
 											</a>
 										</div>
 									</>

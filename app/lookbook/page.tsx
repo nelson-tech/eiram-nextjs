@@ -1,26 +1,30 @@
 import Image from "next/image"
 
-import Link from "@components/Link"
-import useAPI from "@lib/hooks/useAPI"
 import { REST_WP } from "@lib/constants"
 
+import Link from "@components/Link"
+
 const getLookbooks = async () => {
-	const { fetchAPI } = useAPI()
+	const url = REST_WP + "/lookbooks?acf_format=standard"
 
-	const lookbooksResponse = await fetchAPI({ url: REST_WP + "/lookbooks?acf_format=standard" })
+	const headers = { "content-type": "application/json" }
 
-	const lookbooksData: WP_LookbookType[] = await lookbooksResponse?.json()
+	const response: Response = await fetch(url, {
+		method: "GET",
+		headers,
+	})
 
-	return lookbooksData
+	const lookbooksData: WP_LookbookType[] = await response?.json()
+
+	return lookbooksData && lookbooksData.length > 0 ? lookbooksData : null
 }
 
 const LookbooksPage = async () => {
-	const data = await getLookbooks()
+	const lookbooks = await getLookbooks()
 
-	const lookbooks = data
 	return (
 		<div className="max-w-7xl m-auto p-8 mb-8">
-			{lookbooks && (
+			{lookbooks && lookbooks.length > 0 && (
 				<>
 					{" "}
 					<div className="text-center">

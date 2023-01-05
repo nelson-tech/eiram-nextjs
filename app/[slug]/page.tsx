@@ -1,21 +1,9 @@
-import { WP_REST_API_Post } from "wp-types"
+import getPageBySlug from "@lib/server/getPageBySlug"
 
-import { REST_WP } from "@lib/constants"
-import useAPI from "@lib/hooks/useAPI"
 import Link from "@components/Link"
 
-const getPageData = async (slug: string) => {
-	const { fetchAPI } = useAPI()
-
-	const res = await fetchAPI({ url: REST_WP + "/pages?slug=" + slug })
-
-	const data: WP_REST_API_Post[] = await res.json()
-
-	return data[0]
-}
-
 const OtherPage = async ({ params }: { params: { slug: string } }) => {
-	const data = await getPageData(params.slug)
+	const data = await getPageBySlug(params.slug)
 
 	const pageData = data
 

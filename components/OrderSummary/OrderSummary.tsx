@@ -21,6 +21,27 @@ const OrderSummary = ({ order, detailsLink = false }: OrderSummaryInputType) => 
 		)
 	}
 
+	const OrderStatus = () => {
+		const status = order.status.toLowerCase()
+		return (
+			<div className="flex -space-x-1 justify-center items-center h-full text-sm text-gray-500 overflow-hidden mr-8">
+				<p
+					className={`inline-flex rounded-full ml-2 px-2 text-xs font-semibold text-gray-500 leading-5 ${
+						status === "processing"
+							? "bg-green-100"
+							: status === "pending"
+							? "bg-yellow-100"
+							: status === "failed"
+							? "bg-red-100"
+							: ""
+					}`}
+				>
+					{status.toUpperCase()}
+				</p>
+			</div>
+		)
+	}
+
 	return (
 		<li className="font-karla">
 			<LinkOrDiv>
@@ -60,20 +81,12 @@ const OrderSummary = ({ order, detailsLink = false }: OrderSummaryInputType) => 
 									</p>
 								</div>
 								<div className=" sm:hidden">
-									<div className="flex -space-x-1 justify-center items-center h-full text-sm text-gray-500 overflow-hidden mr-8">
-										<p className="inline-flex rounded-full bg-green-100 ml-2 px-2 text-xs font-semibold text-gray-500 leading-5">
-											{order.status.toUpperCase()}
-										</p>
-									</div>
+									<OrderStatus />
 								</div>
 							</div>
 						</div>
 						<div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5 hidden sm:block">
-							<div className="flex -space-x-1 justify-center items-center h-full text-sm text-gray-500 overflow-hidden mr-8">
-								<p className="inline-flex rounded-full bg-green-100 ml-2 px-2 text-xs font-semibold text-gray-500 leading-5">
-									{order.status.toUpperCase()}
-								</p>
-							</div>
+							<OrderStatus />
 						</div>
 					</div>
 					{detailsLink && (
