@@ -157,6 +157,13 @@
 	justify-content: space-between;
 }
 
+/* phone-screens */
+@media (max-width: 640px) {
+	.wp-container img {
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+}
 /* small-screens */
 @media (min-width: 640px) {
 	.wp-container .wp-block-columns {
