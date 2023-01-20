@@ -1,4 +1,4 @@
-type WP_LookbookType = {
+type WP_CollectionType = {
 	id: number
 	date: string
 	date_gmt: string

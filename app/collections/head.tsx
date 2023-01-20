@@ -4,7 +4,7 @@ const Head = () => {
 	return (
 		<>
 			<DefaultTags />
-			<title>Lookbooks - Eiram Knitwear</title>
+			<title>Collections - Eiram Knitwear</title>
 		</>
 	)
 }
