@@ -79,7 +79,7 @@
 }
 
 .wp-container p {
-	margin-top: 2rem;
+	margin-top: 1rem;
 	line-height: 2rem;
 	font-size: 1rem;
 	padding: 1rem;
@@ -87,7 +87,9 @@
 
 .wp-container ul {
 	margin-top: 1rem;
-	margin-left: 2rem;
+	margin-left: 1rem;
+	line-height: 2rem;
+	padding: 1rem;
 	list-style-type: disc;
 	list-style-position: outside;
 }
