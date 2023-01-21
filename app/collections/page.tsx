@@ -16,8 +16,6 @@ const getCollections = async () => {
 
 	const collectionsData: WP_CollectionType[] = await response?.json()
 
-	console.log("Collections", collectionsData)
-
 	return collectionsData && collectionsData.length > 0 ? collectionsData : null
 }
 

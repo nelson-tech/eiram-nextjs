@@ -30,18 +30,33 @@ const Lightbox = ({ open, close, slide }: LightboxPropsType) => {
 				const horizontalPadding = 30
 				const verticalPadding = 16
 
+				const wConstrained =
+					screenSize.width - horizontalPadding < image.width * (screenSize.height / image.height)
+
+				const vConstrained =
+					screenSize.height < image.height * ((screenSize.width - verticalPadding) / image.width)
+
 				const processedWidth = Math.min(
 					screenSize.width - horizontalPadding,
-					image.width * ((screenSize.height - horizontalPadding) / image.height),
+					image.width * (screenSize.height / image.height) -
+						(wConstrained
+							? horizontalPadding
+							: vConstrained && image.width > image.height
+							? verticalPadding
+							: 0),
 				)
 
 				const processedHeight = Math.min(
-					screenSize.height - horizontalPadding,
-					image.height * ((screenSize.width - verticalPadding) / image.width),
+					screenSize.height,
+					image.height * (screenSize.width / image.width) -
+						(vConstrained
+							? verticalPadding
+							: wConstrained && image.height > image.width
+							? horizontalPadding
+							: 0),
 				)
 
 				image.width = processedWidth
-
 				image.height = processedHeight
 
 				const modal = { width: `${image.width}px`, height: `${image.height}px`, padding: "1rem" }
