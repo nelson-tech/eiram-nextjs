@@ -14,7 +14,7 @@ const Collection = ({ collection }: CollectionInputType) => {
 
 			{collection.content.rendered && (
 				<div
-					className="px-8 mx-8"
+					className="px-8 mx-8 wp-container"
 					dangerouslySetInnerHTML={{ __html: collection?.content?.rendered }}
 				/>
 			)}

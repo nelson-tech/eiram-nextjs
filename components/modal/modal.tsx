@@ -1,6 +1,6 @@
 "use client"
 
-import { Children, cloneElement, Fragment, MutableRefObject, useRef } from "react"
+import { Children, cloneElement, CSSProperties, Fragment, MutableRefObject, useRef } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 
 type ModalInputType = {
@@ -8,9 +8,10 @@ type ModalInputType = {
 	open: boolean
 	children: JSX.Element
 	panelStyle?: string
+	panelCSS?: CSSProperties
 }
 
-const Modal = ({ closeModal, open, children, panelStyle }: ModalInputType) => {
+const Modal = ({ closeModal, open, children, panelStyle, panelCSS }: ModalInputType) => {
 	const firstFocusRef = useRef(null)
 	return (
 		<>
@@ -52,6 +53,7 @@ const Modal = ({ closeModal, open, children, panelStyle }: ModalInputType) => {
 									panelStyle ??
 									"inline-block w-full min-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
 								}
+								style={panelCSS}
 							>
 								{/* Dialog Content Goes Here */}
 								{Children.map(children, (child) => {
