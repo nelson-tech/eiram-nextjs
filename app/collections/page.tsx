@@ -4,8 +4,8 @@ import { REST_WP } from "@lib/constants"
 
 import Link from "@components/Link"
 
-const getLookbooks = async () => {
-	const url = REST_WP + "/lookbooks?acf_format=standard"
+const getCollections = async () => {
+	const url = REST_WP + "/collections?acf_format=standard"
 
 	const headers = { "content-type": "application/json" }
 
@@ -14,36 +14,39 @@ const getLookbooks = async () => {
 		headers,
 	})
 
-	const lookbooksData: WP_LookbookType[] = await response?.json()
+	const collectionsData: WP_CollectionType[] = await response?.json()
 
-	return lookbooksData && lookbooksData.length > 0 ? lookbooksData : null
+	return collectionsData && collectionsData.length > 0 ? collectionsData : null
 }
 
-const LookbooksPage = async () => {
-	const lookbooks = await getLookbooks()
+const CollectionsPage = async () => {
+	const collections = await getCollections()
 
 	return (
 		<div className="max-w-7xl m-auto p-8 mb-8">
-			{lookbooks && lookbooks.length > 0 && (
+			{collections && collections.length > 0 && (
 				<>
 					{" "}
 					<div className="text-center">
 						<h2 className="text-4xl font-bold uppercase text-gray-500 font-sans tracking-wide">
-							Lookbook
+							Collections
 						</h2>
 					</div>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-2 md:mx-8 lg:mx-16 mt-12">
-						{lookbooks.map((lookbook) => {
-							const imageUrl = lookbook.acf.media.coverImage
+						{collections.map((collection) => {
+							const imageUrl = collection.acf?.media?.coverImage
 
 							return (
 								<div
-									key={lookbook.id}
+									key={collection.id}
 									className="relative mx-auto cursor-pointer group w-full rounded-sm "
 									style={{ height: "600px" }}
-									title={lookbook?.title.rendered}
+									title={collection?.title.rendered}
 								>
-									<Link href={`/lookbook/${lookbook?.slug}`} className="absolute  w-full h-full">
+									<Link
+										href={`/collections/${collection?.slug}`}
+										className="absolute  w-full h-full"
+									>
 										<Image
 											src={imageUrl}
 											alt={""}
@@ -57,7 +60,7 @@ const LookbooksPage = async () => {
 												style={{ height: "550px" }}
 											>
 												<h2 className="text-white text-4xl text-center uppercase font-sans">
-													{lookbook?.title.rendered}
+													{collection?.title.rendered}
 												</h2>
 											</div>
 										</div>
@@ -72,4 +75,4 @@ const LookbooksPage = async () => {
 	)
 }
 
-export default LookbooksPage
+export default CollectionsPage

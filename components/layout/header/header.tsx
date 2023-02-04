@@ -15,7 +15,7 @@ const Header = ({ menuItems }: HeaderInputType) => {
 	return (
 		<header
 			className={`z-30 sticky ${
-				scrollDirection === "down" ? "-top-16" : "top-0"
+				scrollDirection === "down" ? "-top-24" : "top-0"
 			} transition-all duration-500`}
 		>
 			<nav aria-label="Top">
@@ -50,6 +50,9 @@ const Header = ({ menuItems }: HeaderInputType) => {
 							</div>
 						</div>
 					</div>
+				</div>
+				<div className="text-sm w-full text-center bg-gray-50 border-b py-1 text-accent">
+					Statement-driven, sustainable knitwear.
 				</div>
 			</nav>
 		</header>

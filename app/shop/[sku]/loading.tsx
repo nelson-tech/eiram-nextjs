@@ -1,6 +1,6 @@
 import LoadingSpinner from "@components/LoadingSpinner"
 
-const LookbookLoading = () => {
+const ProductLoading = () => {
 	return (
 		<>
 			<div className="h-screen w-full flex items-center justify-center">
@@ -10,4 +10,4 @@ const LookbookLoading = () => {
 	)
 }
 
-export default LookbookLoading
+export default ProductLoading
