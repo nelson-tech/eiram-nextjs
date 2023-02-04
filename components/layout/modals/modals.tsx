@@ -43,8 +43,8 @@ const Modals = ({ menuItems }: ModalsInputType) => {
 					<ShoppingCart closeModal={closeModal} />
 				</Dialog>
 			</Transition>
-			{/* <!-- Mobile Menu --> */}
 
+			{/* <!-- Mobile Menu --> */}
 			<Transition show={matches("mobileMenuOpen")}>
 				<Dialog as="div" className="fixed inset-0 flex z-40 lg:hidden" onClose={closeModal}>
 					<Transition.Child
