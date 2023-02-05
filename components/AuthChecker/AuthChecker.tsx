@@ -10,11 +10,11 @@ type AuthCheckerInputType = {
 }
 
 const AuthChecker = ({ forceGuest = false, redirect }: AuthCheckerInputType) => {
-	const { isAuth } = useAuth()
+	const { isAuth, processing } = useAuth()
 	const router = useRouter()
 
 	useEffect(() => {
-		if (isAuth == forceGuest) {
+		if (!processing && isAuth == forceGuest) {
 			router.push(redirect)
 		}
 	}, [isAuth, router, redirect])

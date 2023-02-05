@@ -1,5 +1,19 @@
 query GetCustomerData {
-  customer {
-    ...CustomerBase
-  }
+	customer {
+		...CustomerBase
+		orders {
+			nodes {
+				id
+				date
+				orderNumber
+				total
+				status
+				lineItems {
+					nodes {
+						databaseId
+					}
+				}
+			}
+		}
+	}
 }

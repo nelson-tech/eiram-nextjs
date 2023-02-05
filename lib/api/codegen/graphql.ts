@@ -1,4 +1,5 @@
 // @ts-nocheck
+
 /* eslint-disable */
 import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core"
 export type Maybe<T> = T | null
@@ -23531,6 +23532,21 @@ export type GetCustomerDataQuery = {
 		email?: string | null
 		orderCount?: number | null
 		date?: string | null
+		orders?: {
+			__typename?: "CustomerToOrderConnection"
+			nodes: Array<{
+				__typename?: "Order"
+				id: string
+				date?: string | null
+				orderNumber?: string | null
+				total?: string | null
+				status?: OrderStatusEnum | null
+				lineItems?: {
+					__typename?: "OrderToLineItemConnection"
+					nodes: Array<{ __typename?: "LineItem"; databaseId?: number | null }>
+				} | null
+			}>
+		} | null
 		billing?: {
 			__typename?: "CustomerAddress"
 			address1?: string | null
@@ -26818,6 +26834,51 @@ export const GetCustomerDataDocument = {
 							kind: "SelectionSet",
 							selections: [
 								{ kind: "FragmentSpread", name: { kind: "Name", value: "CustomerBase" } },
+								{
+									kind: "Field",
+									name: { kind: "Name", value: "orders" },
+									selectionSet: {
+										kind: "SelectionSet",
+										selections: [
+											{
+												kind: "Field",
+												name: { kind: "Name", value: "nodes" },
+												selectionSet: {
+													kind: "SelectionSet",
+													selections: [
+														{ kind: "Field", name: { kind: "Name", value: "id" } },
+														{ kind: "Field", name: { kind: "Name", value: "date" } },
+														{ kind: "Field", name: { kind: "Name", value: "orderNumber" } },
+														{ kind: "Field", name: { kind: "Name", value: "total" } },
+														{ kind: "Field", name: { kind: "Name", value: "status" } },
+														{
+															kind: "Field",
+															name: { kind: "Name", value: "lineItems" },
+															selectionSet: {
+																kind: "SelectionSet",
+																selections: [
+																	{
+																		kind: "Field",
+																		name: { kind: "Name", value: "nodes" },
+																		selectionSet: {
+																			kind: "SelectionSet",
+																			selections: [
+																				{
+																					kind: "Field",
+																					name: { kind: "Name", value: "databaseId" },
+																				},
+																			],
+																		},
+																	},
+																],
+															},
+														},
+													],
+												},
+											},
+										],
+									},
+								},
 							],
 						},
 					},
@@ -51587,6 +51648,21 @@ export type GetCustomerDataQuery = {
 		email?: string | null
 		orderCount?: number | null
 		date?: string | null
+		orders?: {
+			__typename?: "CustomerToOrderConnection"
+			nodes: Array<{
+				__typename?: "Order"
+				id: string
+				date?: string | null
+				orderNumber?: string | null
+				total?: string | null
+				status?: OrderStatusEnum | null
+				lineItems?: {
+					__typename?: "OrderToLineItemConnection"
+					nodes: Array<{ __typename?: "LineItem"; databaseId?: number | null }>
+				} | null
+			}>
+		} | null
 		billing?: {
 			__typename?: "CustomerAddress"
 			address1?: string | null

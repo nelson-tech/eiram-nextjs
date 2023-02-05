@@ -17,6 +17,8 @@ const AuthMenu = () => {
 		await logout()
 	}
 
+	console.log("Auth context", context)
+
 	return (
 		<>
 			{userMenu.map((menuItem) => {
@@ -30,11 +32,11 @@ const AuthMenu = () => {
 							>
 								{menuItem.icon({ size: 4, styling: "mr-2" })}
 								{menuItem.label}
-								{/* {menuItem.label === "Orders" && (
+								{menuItem.label === "Orders" && context.orderCount > 0 && (
 									<span className="rounded-full bg-accent text-white px-2 text-sm ml-2 group-hover:bg-white group-hover:text-accent transition-all">
-										{context.user.orderCount}
+										{context.orderCount}
 									</span>
-								)} */}
+								)}
 							</Link>
 						</div>
 					</div>

@@ -1,3 +1,5 @@
+import useClient from "@api/client"
+import { GetCustomerDataDocument, GetViewerDocument, User } from "@api/codegen/graphql"
 import { AuthMachine_Type } from "@lib/types/auth"
 import getTokensClient from "@lib/utils/getTokensClient"
 import { assign, createMachine } from "xstate"
@@ -9,7 +11,7 @@ export const authMachine = (initialState: string) =>
 	createMachine(
 		{
 			tsTypes: {} as import("./auth.typegen").Typegen0,
-			context: { tokens: null, user: null } as AuthMachine_Type,
+			context: { tokens: null, user: null, orderCount: 0 } as AuthMachine_Type,
 			id: "auth",
 			initial: initialState,
 			predictableActionArguments: true,
@@ -73,7 +75,7 @@ export const authMachine = (initialState: string) =>
 			actions: {
 				setToken: assign((ctx, { data }) => {
 					if (data.tokens?.auth) {
-						return { ...ctx, tokens: data.tokens, user: data.user }
+						return { ...ctx, tokens: data.tokens, user: data.user, orderCount: data.orderCount }
 					}
 					return { ...ctx }
 				}),
@@ -84,8 +86,16 @@ export const authMachine = (initialState: string) =>
 					const { tokens, isAuth } = await getTokensClient()
 
 					if (isAuth) {
-						// Token is stored. Return data if valid
-						return { tokens, user: null }
+						// Token is stored. Fetch user data
+						const client = useClient(tokens)
+						const user = await client.request(GetViewerDocument)
+						const customerData = await client.request(GetCustomerDataDocument)
+
+						return {
+							tokens,
+							user: user.viewer as User,
+							orderCount: customerData.customer.orderCount,
+						}
 					}
 
 					throw new Error("Unauthorized")

@@ -94,7 +94,7 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 							<div className="border-t border-gray-200 py-6 text-sm font-md text-gray-600">
 								{isAuth ? (
 									<>
-										{context.user.firstName && (
+										{context.user?.firstName && (
 											<p className="px-4 mb-4">Hello, {context.user.firstName}!</p>
 										)}
 										{userMenu.map((item) => {
@@ -107,11 +107,11 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 													>
 														<item.icon size={6} styling="mr-4" />
 														<div>{item.label}</div>
-														{/* {item.label === "Orders" && (
+														{item.label === "Orders" && (
 															<span className="rounded-full bg-accent text-white px-2 text-sm ml-2 group-hover:bg-white group-hover:text-accent transition-all">
-																{context.user.orderCount}
+																{context.orderCount}
 															</span>
-														)} */}
+														)}
 													</a>
 												</div>
 											)
