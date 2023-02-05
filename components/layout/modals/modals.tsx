@@ -9,6 +9,7 @@ import LoginForm from "@components/loginForm"
 import Modal from "@components/modal"
 import ShoppingCart from "@components/shoppingCart/shoppingCart"
 import MobileMenu from "@components/mobileMenu"
+import { MenuItem } from "@lib/api/codegen/graphql"
 
 type ModalsInputType = { menuItems: MenuItem[] }
 

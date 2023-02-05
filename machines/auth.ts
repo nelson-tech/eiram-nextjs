@@ -1,5 +1,5 @@
-import { AUTH_ENDPOINT } from "@lib/constants"
-import { isTokenValid } from "@lib/validateToken"
+import { AuthMachine_Type } from "@lib/types/auth"
+import getTokensClient from "@lib/utils/getTokensClient"
 import { assign, createMachine } from "xstate"
 
 import type { Typegen0 } from "./auth.typegen"
@@ -9,7 +9,7 @@ export const authMachine = (initialState: string) =>
 	createMachine(
 		{
 			tsTypes: {} as import("./auth.typegen").Typegen0,
-			context: { token: null, user: null } as AuthMachineContextType,
+			context: { tokens: null, user: null } as AuthMachine_Type,
 			id: "auth",
 			initial: initialState,
 			predictableActionArguments: true,
@@ -36,7 +36,6 @@ export const authMachine = (initialState: string) =>
 						AUTHENTICATE: {
 							target: "authenticating",
 						},
-						REGISTER: { target: "registering" },
 					},
 				},
 				loggingIn: {
@@ -55,28 +54,17 @@ export const authMachine = (initialState: string) =>
 						onError: [{ target: "loggedOut" }],
 					},
 				},
-				registering: {
-					invoke: {
-						src: "register",
-						id: "register",
-						onDone: [{ actions: "setToken", target: "loggedIn" }],
-						onError: [{ target: "loggedOut" }],
-					},
-				},
 			},
 			schema: {
 				services: {} as {
 					authChecker: {
-						data: API_AuthResponseType
+						data: AuthMachine_Type
 					}
 					login: {
-						data: API_AuthResponseType
+						data: AuthMachine_Type
 					}
 					logout: {
-						data: API_AuthResponseType
-					}
-					register: {
-						data: API_AuthResponseType
+						data: AuthMachine_Type
 					}
 				},
 			},
@@ -85,7 +73,7 @@ export const authMachine = (initialState: string) =>
 			actions: {
 				setToken: assign((ctx, { data }) => {
 					if (data.tokens?.auth) {
-						return { ...ctx, token: data.tokens.auth, user: data.user }
+						return { ...ctx, tokens: data.tokens, user: data.user }
 					}
 					return { ...ctx }
 				}),
@@ -93,74 +81,25 @@ export const authMachine = (initialState: string) =>
 			services: {
 				authChecker: async (ctx) => {
 					// Check for stored auth first
-					const authToken = ctx.token
+					const { tokens, isAuth } = await getTokensClient()
 
-					if (authToken && isTokenValid(authToken)) {
+					if (isAuth) {
 						// Token is stored. Return data if valid
-						return { isAuth: true, tokens: { auth: authToken } }
+						return { tokens, user: null }
 					}
-
-					const response = await fetch(AUTH_ENDPOINT, {
-						method: "POST",
-						credentials: "include",
-						body: JSON.stringify({ action: "CHECKING" }),
-					})
-
-					const data: API_AuthResponseType = await response.json()
-
-					if (data.isAuth) return data
 
 					throw new Error("Unauthorized")
 				},
 				login: async (
 					_,
 					event: {
-						input: WP_AUTH_LoginInputType
-						callback?: (data?: API_AuthResponseType) => void
+						input: AuthMachine_Type
 					},
 				) => {
-					const { input, callback } = event
-
-					const response = await fetch(AUTH_ENDPOINT, {
-						method: "POST",
-						credentials: "include",
-						body: JSON.stringify({ action: "LOGIN", input }),
-					})
-
-					const data: API_AuthResponseType = await response.json()
-
-					callback && (await callback(data))
-
-					if (data.isAuth) return data
-
-					throw new Error("Unauthorized")
+					return event.input
 				},
-				logout: async (_, event: { callback?: () => void }) => {
-					const { callback } = event
-
-					const response = await fetch(AUTH_ENDPOINT, {
-						method: "POST",
-						credentials: "include",
-						body: JSON.stringify({ action: "LOGOUT" }),
-					})
-
-					const data: API_AuthResponseType = await response.json()
-
-					callback && (await callback())
-
-					return data
-				},
-				register: async (_, event: { input: WP_RegisterUserInputType }) => {
-					const reqBody: WP_AUTH_RegisterType = { action: "REGISTER", input: event.input }
-					const response = await fetch(AUTH_ENDPOINT, {
-						method: "POST",
-						credentials: "include",
-						body: JSON.stringify(reqBody),
-					})
-
-					const data: API_AuthResponseType = await response.json()
-
-					return data
+				logout: async () => {
+					return { tokens: null, user: null }
 				},
 			},
 		},

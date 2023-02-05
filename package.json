@@ -8,6 +8,7 @@
 		"build": "NODE_OPTIONS='--trace-warnings' next build",
 		"start": "next start -p 8141",
 		"lint": "next lint",
+		"codegen": "graphql-codegen -r dotenv/config -c lib/api/codegen/config.ts -w ",
 		"pm2-dev": "pm2 start npm --name \"Eiram NextJS Dev\" -- run dev",
 		"pm2-dev-stop": "pm2 stop \"Eiram NextJS Dev\" && pm2 delete \"Eiram NextJS Dev\"",
 		"pm2-dev-restart": "pm2 restart \"Eiram NextJS Dev\"",
@@ -19,6 +20,7 @@
 		"pm2-node-restart": "pm2 restart \"Eiram Node\""
 	},
 	"dependencies": {
+		"@graphql-codegen/gql-tag-operations-preset": "^2.0.0",
 		"@headlessui/react": "^1.7.9",
 		"@heroicons/react": "^2.0.14",
 		"@hookform/error-message": "^2.0.1",
@@ -27,6 +29,7 @@
 		"@stripe/stripe-js": "^1.46.0",
 		"@xstate/react": "^3.1.2",
 		"cookies": "^0.8.0",
+		"cookies-next": "^2.1.1",
 		"graphql": "^16.6.0",
 		"graphql-request": "^5.1.0",
 		"jwt-decode": "^3.1.2",
@@ -42,8 +45,10 @@
 		"zod": "^3.20.2"
 	},
 	"devDependencies": {
-		"@graphql-codegen/cli": "^2.16.3",
+		"@graphql-codegen/cli": "^3.0.0",
 		"@graphql-codegen/client-preset": "^1.2.5",
+		"@graphql-codegen/typescript": "^2.8.8",
+		"@graphql-codegen/typescript-operations": "^2.5.13",
 		"@stripe/react-stripe-js": "^1.16.4",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/forms": "^0.5.3",

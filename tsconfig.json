@@ -21,6 +21,8 @@
 		],
 		"baseUrl": ".",
 		"paths": {
+			"@api": ["lib/api"],
+			"@api/*": ["lib/api/*"],
 			"@icons/*": ["components/icons/*"],
 			"@components/*": ["components/*"],
 			"@lib/*": ["lib/*"]

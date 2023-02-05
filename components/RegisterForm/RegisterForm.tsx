@@ -9,6 +9,7 @@ import useAuth from "@lib/hooks/useAuth"
 
 import MenuLink from "@components/Link"
 import LoadingSpinner from "@components/LoadingSpinner"
+import { RegisterUserInput } from "@api/codegen/graphql"
 
 type RegisterFormInputType = {
 	redirect?: string
@@ -25,27 +26,27 @@ const RegisterForm = ({ redirect }: RegisterFormInputType) => {
 		handleSubmit,
 	} = useForm({
 		defaultValues: {
-			first_name: "",
-			last_name: "",
+			firstName: "",
+			lastName: "",
 			email: "",
 			password: "",
 		},
 	})
 
 	const onSubmit: SubmitHandler<{
-		first_name: string
-		last_name: string
+		firstName: string
+		lastName: string
 		email: string
 		password: string
 	}> = async (data) => {
-		const { first_name, last_name, email, password } = data
+		const { firstName, lastName, email, password } = data
 
 		setLoading(true)
 
-		const input: WP_RegisterUserInputType = {
+		const input: RegisterUserInput = {
 			username: email,
-			first_name,
-			last_name,
+			firstName,
+			lastName,
 			email,
 			password,
 		}
@@ -55,7 +56,7 @@ const RegisterForm = ({ redirect }: RegisterFormInputType) => {
 		setLoading(false)
 	}
 
-	const ErrorField = ({ name }: { name: "email" | "first_name" | "last_name" | "password" }) => {
+	const ErrorField = ({ name }: { name: "email" | "firstName" | "lastName" | "password" }) => {
 		return (
 			<ErrorMessage
 				errors={errors}
@@ -87,7 +88,7 @@ const RegisterForm = ({ redirect }: RegisterFormInputType) => {
 								</label>
 								<input
 									id="first-name"
-									{...register("first_name")}
+									{...register("firstName")}
 									type="text"
 									autoComplete="given-name"
 									className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-main focus:border-blue-main focus:z-10 sm:text-sm"
@@ -101,7 +102,7 @@ const RegisterForm = ({ redirect }: RegisterFormInputType) => {
 								</label>
 								<input
 									id="family-name"
-									{...register("last_name")}
+									{...register("lastName")}
 									type="text"
 									autoComplete="family-name"
 									className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-main focus:border-blue-main focus:z-10 sm:text-sm"
@@ -138,8 +139,8 @@ const RegisterForm = ({ redirect }: RegisterFormInputType) => {
 									placeholder="Password"
 								/>
 							</div>
-							<ErrorField name="first_name" />
-							<ErrorField name="last_name" />
+							<ErrorField name="firstName" />
+							<ErrorField name="lastName" />
 							<ErrorField name="email" />
 							<ErrorField name="password" />
 						</div>

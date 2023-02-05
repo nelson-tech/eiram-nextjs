@@ -11,9 +11,10 @@ import LoadingSpinner from "@components/LoadingSpinner"
 import MinusIcon from "@icons/Minus"
 import PlusIcon from "@icons/Plus"
 import { TrashIcon } from "@heroicons/react/20/solid"
+import { CartItem } from "@api/codegen/graphql"
 
 type CartItemProps = {
-	lineItem: WC_CartType["items"][0]
+	lineItem: CartItem
 	closeModal?: () => void
 }
 
@@ -29,9 +30,7 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 	let quantity = lineItem?.quantity
 	let variations = lineItem.variation
 
-	const featuredImage = lineItem.images[0]
-
-	const total = formatCurrencyString(lineItem.totals.line_subtotal)
+	const featuredImage = lineItem.product.node.image
 
 	const handleQuantityUpdate = async (newQuantity?: number) => {
 		// setQuantity(newQuantity)
@@ -40,17 +39,20 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 
 		if (quantity && lineItem?.key) {
 			await updateItem({
-				itemKey: lineItem.key,
-				quantity,
+				items: [
+					{
+						key: lineItem.key,
+
+						quantity,
+					},
+				],
 			})
 		}
 	}
 
 	const handleRemoveItem = async (key: string) => {
 		setLoading(true)
-		await removeItem({
-			itemKey: lineItem.key,
-		})
+		await removeItem({ keys: [lineItem.key] })
 	}
 
 	return (
@@ -62,8 +64,8 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 							className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 border border-gray-200 rounded-md overflow-hidden relative`}
 						>
 							<Image
-								src={featuredImage.src || ""}
-								alt={(featuredImage.alt ?? featuredImage.name) || ""}
+								src={featuredImage.sourceUrl ?? ""}
+								alt={featuredImage.altText ?? ""}
 								fill
 								className="object-cover"
 								sizes="33vw"
@@ -74,20 +76,23 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 					<div className="ml-3 flex-1 flex flex-col mb-1 justify-between">
 						<div className="flex justify-between items-center ">
 							<h3 onClick={() => closeModal && closeModal()}>
-								<Link href={`/shop/${lineItem?.sku}`} className="font-bold text-sm text-gray-900">
-									{lineItem?.name}
+								<Link
+									href={`/shop/${lineItem?.product.node.slug}`}
+									className="font-bold text-sm text-gray-900"
+								>
+									{lineItem?.product.node.name}
 								</Link>
 							</h3>
-							<p className="ml-4 text-xs text-gray-500">{total}</p>
+							<p className="ml-4 text-xs text-gray-500">{lineItem.total}</p>
 						</div>
 						<div className="flex gap-8 mt-4 text-sm text-gray-500">
 							{
-								variations &&
-									variations.map((attribute, i) => (
+								lineItem?.variation?.attributes &&
+									lineItem.variation.attributes.map((attribute, i) => (
 										<div
-											key={attribute.attribute + i}
+											key={attribute.id}
 											className=""
-										>{`${attribute.attribute} - ${attribute.value}`}</div>
+										>{`${attribute.label} - ${attribute.value}`}</div>
 									))
 								// lineItem.meta.variation.map((attribute, i) => (
 								// 	<div

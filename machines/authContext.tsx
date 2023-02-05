@@ -5,19 +5,14 @@ import { authMachine } from "./auth"
 
 type AuthProviderInputType = {
 	children: React.ReactNode
-	isAuth: boolean
-	user: CLIENT_UserDataType
-	authToken: string
 }
 
 export const AuthContext = createContext({
 	authService: {} as InterpreterFrom<typeof authMachine>,
 })
 
-export const AuthProvider = ({ children, isAuth, user, authToken }: AuthProviderInputType) => {
-	const authService = useInterpret(authMachine(isAuth ? "loggedIn" : "loggedOut"), {
-		context: { user, token: authToken },
-	})
+export const AuthProvider = ({ children }: AuthProviderInputType) => {
+	const authService = useInterpret(authMachine("authenticating"))
 
 	return <AuthContext.Provider value={{ authService }}>{children}</AuthContext.Provider>
 }

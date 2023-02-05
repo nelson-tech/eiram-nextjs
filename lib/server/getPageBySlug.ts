@@ -1,22 +1,11 @@
-import { REST_WP } from "@lib/constants"
+import useClient from "@api/client"
+import { GetPageBySlugDocument } from "@api/codegen/graphql"
 
 const getPageBySlug = async (slug: string) => {
-	const url = REST_WP + "/pages?slug=" + slug
+	const client = useClient()
+	const pageData = await client.request(GetPageBySlugDocument, { slug })
 
-	const headers = { "content-type": "application/json" }
-
-	const fetchArgs: RequestInit = {
-		method: "GET",
-		headers,
-	}
-
-	const response = await fetch(url, {
-		...fetchArgs,
-	})
-
-	const data: WP_REST_API_Post[] = await response.json()
-
-	return data && data.length > 0 ? data[0] : null
+	return pageData.page
 }
 
 export default getPageBySlug

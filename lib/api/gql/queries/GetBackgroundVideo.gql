@@ -1,0 +1,13 @@
+query GetBackgroundVideo {
+	page(id: "home", idType: URI) {
+		bgVideo {
+			placeholderimage {
+				...ImageBase
+			}
+			video {
+				...ImageBase
+				mediaItemUrl
+			}
+		}
+	}
+}

@@ -5,52 +5,50 @@ import { useRouter } from "next/navigation"
 import { useElements, useStripe, CardElement } from "@stripe/react-stripe-js"
 import { SubmitHandler, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { LockClosedIcon } from "@heroicons/react/20/solid"
 
-import schema from "./formSchema"
-import LoadingSpinner from "@components/LoadingSpinner"
-import FormField from "./formField"
-import DocumentDuplicateIcon from "@icons/DocumentDuplicate"
-import { CART_ENDPOINT } from "@lib/constants"
+import useClient from "@api/client"
+import {
+	Cart,
+	CheckoutDocument,
+	CheckoutInput,
+	Customer,
+	CustomerAddress,
+	Menu_Sitesettings_Colors,
+} from "@api/codegen/graphql"
 import useCart from "@lib/hooks/useCart"
 import useAlerts from "@lib/hooks/useAlerts"
-import { LockClosedIcon } from "@heroicons/react/20/solid"
+
+import LoadingSpinner from "@components/LoadingSpinner"
+import DocumentDuplicateIcon from "@icons/DocumentDuplicate"
+import schema from "./formSchema"
+import FormField from "./formField"
 
 // ####
 // #### Types
 // ####
 
-type ContactInformationType = {
-	address_1: string
-	address_2: string
-	city: string
-	company: string
-	country: string
-	postcode: string
-	phone: string
-	email: string
-	state: string
-	first_name: string
-	last_name: string
-}
-
 type FormDataType = {
-	billing_address: ContactInformationType
-	shipping_address: ContactInformationType
+	billing: CustomerAddress
+	shipping: CustomerAddress
 	shipToDifferentAddress: boolean
-	customer_note: string
+	customerNote: string
 }
 
 type CheckoutFormProps = {
-	cart: WC_CartType
-	colors: WP_MENU["acf"]["colors"]
+	cart: Cart
+	customer: Customer
+	stripeData: STRIPE_PaymentIntentType
+	colors: Menu_Sitesettings_Colors
 }
 
 // ####
 // #### Component
 // ####
 
-const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
+const CheckoutForm = ({ cart, colors, customer, stripeData }: CheckoutFormProps) => {
 	const router = useRouter()
+	const client = useClient()
 	const { fetchCart } = useCart()
 
 	const { openAlert } = useAlerts()
@@ -87,31 +85,31 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 	} = useForm<FormDataType>({
 		resolver: zodResolver(schema),
 		defaultValues: {
-			billing_address: {
-				address_1: cart?.billing_address?.address_1,
-				address_2: cart?.billing_address?.address_2,
-				city: cart?.billing_address?.city,
-				company: cart?.billing_address?.company,
-				country: cart?.billing_address?.country,
-				postcode: cart?.billing_address?.postcode,
-				phone: cart?.billing_address?.phone,
-				email: cart?.billing_address?.email,
-				state: cart?.billing_address?.state,
-				first_name: cart?.billing_address?.first_name,
-				last_name: cart?.billing_address?.last_name,
+			billing: {
+				address1: customer?.billing?.address1,
+				address2: customer?.billing?.address2,
+				city: customer?.billing?.city,
+				company: customer?.billing?.company,
+				country: customer?.billing?.country,
+				postcode: customer?.billing?.postcode,
+				phone: customer?.billing?.phone,
+				email: customer?.billing?.email,
+				state: customer?.billing?.state,
+				firstName: customer?.billing?.firstName,
+				lastName: customer?.billing?.lastName,
 			},
 			shipToDifferentAddress: false,
-			shipping_address: {
-				address_1: cart?.shipping_address?.address_1,
-				address_2: cart?.shipping_address?.address_2,
-				city: cart?.shipping_address?.city,
-				company: cart?.shipping_address?.company,
-				country: cart?.shipping_address?.country,
-				postcode: cart?.shipping_address?.postcode,
-				email: cart?.billing_address?.email,
-				state: cart?.shipping_address?.state,
-				first_name: cart?.shipping_address?.first_name,
-				last_name: cart?.shipping_address?.last_name,
+			shipping: {
+				address1: customer?.shipping?.address1,
+				address2: customer?.shipping?.address2,
+				city: customer?.shipping?.city,
+				company: customer?.shipping?.company,
+				country: customer?.shipping?.country,
+				postcode: customer?.shipping?.postcode,
+				email: customer?.shipping?.email,
+				state: customer?.shipping?.state,
+				firstName: customer?.shipping?.firstName,
+				lastName: customer?.shipping?.lastName,
 			},
 		},
 	})
@@ -124,13 +122,15 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 		setLoading(true)
 
 		// Exclude shipping unless billing and shipping should be different
-		const { shipping_address, shipToDifferentAddress, billing_address, customer_note } = formData
+		const { shipping, shipToDifferentAddress, billing, customerNote } = formData
 
-		const input: WC_CheckoutInputType = {
-			billing_address,
-			customer_note,
-			payment_method: "stripe",
-			shipping_address: shipToDifferentAddress ? shipping_address : billing_address,
+		const input: CheckoutInput = {
+			billing,
+			customerNote,
+			paymentMethod: "stripe",
+			shipping: shipToDifferentAddress ? shipping : billing,
+			shipToDifferentAddress,
+			isPaid: false,
 		}
 
 		openAlert({
@@ -140,63 +140,46 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 			timeout: 40000,
 		})
 
-		const stripeResult = await stripe.createSource(
-			// @ts-ignore
-			elements.getElement(CardElement),
-			{ type: "card", owner: { email: billing_address.email } },
-		)
+		const paymentMethod = {
+			payment_method: {
+				card: elements.getElement(CardElement),
+				// billing_details: {},
+				// shipping: {},
+				// receipt_email: ''
+			},
+		}
 
-		if (stripeResult.error?.message) {
-			// TODO - Handle error
+		// use Stripe client secret to process card payment method
+		const stripeResult = await stripe.confirmCardPayment(stripeData.clientSecret, paymentMethod)
+		if (stripeResult.error) {
 			console.warn(stripeResult.error.message)
 			openAlert({
 				kind: "error",
 				primary: "Payment Error",
 				secondary: stripeResult.error.message,
 			})
+			throw new Error(stripeResult.error.message)
 		} else {
-			input["payment_data"] = [
+			input["metaData"] = [
 				{
-					key: "stripe_source",
-					value: stripeResult.source.id,
-				},
-				{
-					key: "billing_email",
-					value: billing_address.email,
-				},
-				{
-					key: "paymentMethod",
-					value: "stripe",
-				},
-				{
-					key: "paymentRequestType",
-					value: "cc",
-				},
-				{
-					key: "wc-stripe-new-payment-method",
-					value: "true",
+					key: "_stripe_intent_id",
+					value: stripeData.paymentIntentId,
 				},
 			]
-
-			const checkoutInput: WC_API_Cart_CheckoutInputType = { action: "CHECKOUT", input }
+			input["isPaid"] = true
 
 			openAlert({
 				kind: "info",
 				primary: "Processing Order",
-				secondary: "Processing payment and creating order...",
+				secondary: "Payment processed. Finalizing order...",
 				timeout: 40000,
 			})
 
-			const checkoutResponse = await fetch(CART_ENDPOINT, {
-				method: "POST",
-				body: JSON.stringify(checkoutInput),
-			})
+			const checkoutData = await client.request(CheckoutDocument, { input })
 
-			const checkoutData: API_CartResponseType = await checkoutResponse?.json()
+			console.log("Checkout Data", checkoutData.checkout.result)
 
-			console.log("Checkout Data", checkoutData.checkout.status)
-
-			switch (checkoutData.checkout.status) {
+			switch (checkoutData.checkout.result) {
 				case "processing":
 					// Payment was successful
 
@@ -233,9 +216,13 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 
 			await fetchCart()
 
-			checkoutData.checkout.order_id &&
+			checkoutData.checkout.order.orderNumber &&
 				router.push(
-					`/thanks${checkoutData.checkout.order_id ? `?id=${checkoutData.checkout.order_id}` : ""}`,
+					`/thanks${
+						checkoutData.checkout.order.orderNumber
+							? `?id=${checkoutData.checkout.order.orderNumber}`
+							: ""
+					}`,
 				)
 		}
 
@@ -252,10 +239,10 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 		setLoading(false)
 	}
 
-	const billingValues = useWatch({ control, name: "billing_address" })
+	const billingValues = useWatch({ control, name: "billing" })
 
 	const handleCopyBilling = () => {
-		setValue("shipping_address", billingValues)
+		setValue("shipping", billingValues)
 	}
 
 	return (
@@ -277,7 +264,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 							<FormField
 								register={register}
 								errors={errors}
-								name="billing_address.email"
+								name="billing.email"
 								label="Email Address"
 								type="email"
 								autoComplete="email"
@@ -286,7 +273,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 							<FormField
 								register={register}
 								errors={errors}
-								name="billing_address.phone"
+								name="billing.phone"
 								label="Phone Number"
 								type="text"
 								autoComplete="tel"
@@ -298,7 +285,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 							<FormField
 								register={register}
 								errors={errors}
-								name="billing_address.first_name"
+								name="billing.firstName"
 								label="First Name"
 								type="text"
 								autoComplete="cc-given-name"
@@ -307,7 +294,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 							<FormField
 								register={register}
 								errors={errors}
-								name="billing_address.last_name"
+								name="billing.lastName"
 								label="Last Name"
 								type="text"
 								autoComplete="cc-family-name"
@@ -318,7 +305,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 						<FormField
 							register={register}
 							errors={errors}
-							name="billing_address.company"
+							name="billing.company"
 							label="Company"
 							type="text"
 							autoComplete="organization"
@@ -327,7 +314,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 						<FormField
 							register={register}
 							errors={errors}
-							name="billing_address.address_1"
+							name="billing.address1"
 							label="Address"
 							type="text"
 							autoComplete="address-line1"
@@ -336,7 +323,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 						<FormField
 							register={register}
 							errors={errors}
-							name="billing_address.address_2"
+							name="billing.address2"
 							label={
 								<>
 									Address <span className="text-gray-400">(Continued)</span>
@@ -349,7 +336,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 						<FormField
 							register={register}
 							errors={errors}
-							name="billing_address.city"
+							name="billing.city"
 							label="City"
 							type="text"
 							autoComplete="address-level2"
@@ -359,7 +346,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 						<FormField
 							register={register}
 							errors={errors}
-							name="billing_address.state"
+							name="billing.state"
 							label="State / Province"
 							type="text"
 							autoComplete="address-level1"
@@ -369,7 +356,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 						<FormField
 							register={register}
 							errors={errors}
-							name="billing_address.postcode"
+							name="billing.postcode"
 							label="Postal Code"
 							type="text"
 							autoComplete="postal-code"
@@ -418,7 +405,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 									<FormField
 										register={register}
 										errors={errors}
-										name="shipping_address.email"
+										name="shipping.email"
 										label="Email Address"
 										type="email"
 										autoComplete="email"
@@ -427,7 +414,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 									<FormField
 										register={register}
 										errors={errors}
-										name="shipping_address.phone"
+										name="shipping.phone"
 										label="Phone Number"
 										type="text"
 										autoComplete="tel"
@@ -440,7 +427,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 										register={register}
 										registerOptions={{ required: "First name is required." }}
 										errors={errors}
-										name="shipping_address.first_name"
+										name="shipping.firstName"
 										label="First Name"
 										type="text"
 										autoComplete="given-name"
@@ -449,7 +436,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 									<FormField
 										register={register}
 										errors={errors}
-										name="shipping_address.last_name"
+										name="shipping.lastName"
 										label="Last Name"
 										type="text"
 										autoComplete="family-name"
@@ -460,7 +447,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 								<FormField
 									register={register}
 									errors={errors}
-									name="shipping_address.company"
+									name="shipping.company"
 									label="Company"
 									type="text"
 									autoComplete="organization"
@@ -469,7 +456,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 								<FormField
 									register={register}
 									errors={errors}
-									name="shipping_address.address_1"
+									name="shipping.address1"
 									label="Address"
 									type="text"
 									autoComplete="street-address"
@@ -478,7 +465,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 								<FormField
 									register={register}
 									errors={errors}
-									name="shipping_address.address_2"
+									name="shipping.address2"
 									label={
 										<>
 											Address <span className="text-gray-400">(Continued)</span>
@@ -491,7 +478,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 								<FormField
 									register={register}
 									errors={errors}
-									name="shipping_address.city"
+									name="shipping.city"
 									label="City"
 									type="text"
 									autoComplete="address-level2"
@@ -501,7 +488,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 								<FormField
 									register={register}
 									errors={errors}
-									name="shipping_address.state"
+									name="shipping.state"
 									label="State / Province"
 									type="text"
 									autoComplete="address-level1"
@@ -511,7 +498,7 @@ const CheckoutForm = ({ cart, colors }: CheckoutFormProps) => {
 								<FormField
 									register={register}
 									errors={errors}
-									name="shipping_address.postcode"
+									name="shipping.postcode"
 									label="Postal Code"
 									type="text"
 									autoComplete="postal-code"

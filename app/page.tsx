@@ -1,25 +1,23 @@
-import { REST_WP } from "@lib/constants"
 import BackgroundVideo from "@components/BackgroundVideo"
+import useClient from "@api/client"
+import { GetBackgroundVideoDocument, MediaItem } from "@api/codegen/graphql"
 
 const getBackgroundVideo = async () => {
-	const res = await fetch(REST_WP + "/pages?slug=home&acf_format=standard")
+	const client = useClient()
+	const bgVideoData = await client.request(GetBackgroundVideoDocument)
 
-	const data = await res.json()
-
-	const acf = data[0]?.acf
-
-	const videoData: WP_ImageArrayType = acf?.video
-	const placeholderData: WP_ImageArrayType = acf?.placeholderImage
-
-	return { data, acf, videoData, placeholderData }
+	return bgVideoData.page.bgVideo
 }
 
 const HomePage = async () => {
-	const { videoData, placeholderData } = await getBackgroundVideo()
+	const { video, placeholderimage } = await getBackgroundVideo()
 
 	return (
 		<>
-			<BackgroundVideo videoData={videoData} placeholderData={placeholderData} />
+			<BackgroundVideo
+				videoData={video as MediaItem}
+				placeholderData={placeholderimage as MediaItem}
+			/>
 		</>
 	)
 }

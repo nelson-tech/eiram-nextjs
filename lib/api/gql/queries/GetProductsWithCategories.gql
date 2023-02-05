@@ -1,0 +1,20 @@
+query GetProductsWithCategories {
+	products(first: 200) {
+		nodes {
+			...ProductBase
+			...SimpleProductFragment
+			...VariableProductFragment
+			productCategories {
+				nodes {
+					...ProductCategoryBase
+					ancestors {
+						nodes {
+							name
+							slug
+						}
+					}
+				}
+			}
+		}
+	}
+}

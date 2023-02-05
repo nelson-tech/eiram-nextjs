@@ -1,6 +1,5 @@
 "use client"
 
-import { AUTH_ENDPOINT } from "@lib/constants"
 import { AuthProvider } from "machines/authContext"
 import { AlertsProvider } from "machines/alertsContext"
 import { CartProvider } from "machines/cartContext"
@@ -8,29 +7,27 @@ import { ModalsProvider } from "machines/modalsContext"
 
 import RootStyleRegistry from "./RootStyleRegistry"
 import useNavigationEvent from "@lib/hooks/useNavigationEvent"
+import { Menu_Sitesettings_Colors } from "@lib/api/codegen/graphql"
+import getTokensClient from "@lib/utils/getTokensClient"
+import useClient from "@api/client"
+import isServer from "@lib/utils/isServer"
 
 type RootClientContextProps = {
 	children: React.ReactNode
-	colors?: WP_MENU["acf"]["colors"]
-	authData: API_AuthResponseType
+	colors?: Menu_Sitesettings_Colors
 }
 
-const RootClientContext = ({ children, colors, authData }: RootClientContextProps) => {
+const RootClientContext = ({ children, colors }: RootClientContextProps) => {
 	useNavigationEvent()
 
-	const { needsRefresh, isAuth, cart, user, tokens } = authData
-	if (needsRefresh) {
-		// Make refresh call on client to set cookies
-		// Remove this once next.js supports setting cookies from within the layout call
-		const body: API_SetInputType = { action: "SET", newCookies: needsRefresh }
-
-		fetch(AUTH_ENDPOINT, { method: "POST", body: JSON.stringify(body) })
-	}
+	getTokensClient().then(({ tokens, isAuth }) => {
+		const client = useClient(tokens)
+	})
 
 	return (
-		<AuthProvider isAuth={isAuth} user={user} authToken={tokens?.auth}>
+		<AuthProvider>
 			<AlertsProvider>
-				<CartProvider cart={cart}>
+				<CartProvider>
 					<ModalsProvider>
 						<RootStyleRegistry colors={colors}>{children}</RootStyleRegistry>
 					</ModalsProvider>

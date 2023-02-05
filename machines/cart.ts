@@ -1,9 +1,21 @@
 import { assign, createMachine } from "xstate"
 
-import { CART_ENDPOINT } from "@lib/constants"
-import getCart from "@lib/wp/api/getCart"
+import useClient from "@api/client"
+import {
+	AddToCartDocument,
+	Cart,
+	GetCartDocument,
+	RemoveCartItemDocument,
+	UpdateCartItemQuantityDocument,
+	UpdateItemQuantitiesInput,
+} from "@api/codegen/graphql"
 
 import type { Typegen0 } from "./cart.typegen"
+import {
+	AddToCartEventType,
+	RemoveCartItemEventType,
+	UpdateCartItemEventType,
+} from "@lib/types/cart"
 
 export const cartMachine =
 	/** @xstate-layout N4IgpgJg5mDOIC5QEMCuAXAFgOjVsAdugJYDGyJBUAxBAPYFjbEEBudA1k3pgMKZhSXAE6JQABzqxiJBmJAAPRAFYA7AA5s6gCwBGZQCYAnEd0A2M6oDMAGhABPRAFpdB7KpMHtq3etUAGKx0rMwBfULseXAwBIjIKFhowYWE6YWxxABsKADM0gFtorH5BEXlJaVkCeSUEXV0rLSN-M39lNSNVAytAu0cEA2VGqy9dI0srKw9tbWVwyJjsaShGCABJAmoAZTWAcQA5AHkAVQAVcqkZYjkkRURdf0fsI20WowMP-3rrPsQzK2U2FcJm0Blc-jBRis8xAUWWq0OGG2e32a32F0q12qt1qym0mhCJlUFjGZlB6l+CEMZi0oyhgW0ZheBhhcOIK0SG1oDCYLHYXCW7IIGwxVxuoFq6imtOMyjaBi6Y1UlLB2G0U386vGUKM7SMrMW8M5m2SqXSWVyBUFKxFtwqYuxEsQxO0aqhGkMBnU+gpDmcuuwZm66jB6jM3sZynUBqw1oIiUR6G5jGYbE4THhidFVXk-VUXXc7weJma+e0dlqrm62C99KmQY8gRjOCNVET1FNaQy2XQeWEhUzGGzWJq9w+jVrPXrCuatj9CC6ro8YP8Jf8ZfCERABDoEDg8iiPEIJHIlCgw-FdwQemeJfUYZ8crlZmUlJc-kL7xC-nUnSmPTCLc2RWSBbQkS4cxxRAjB0Z5lH+LwzF8KxfF0SldCXR5iQsHQow8VQ5iAw0hUgRNsE4C9HSvDDdCBAj8weMtrBeSkCKMbBAgeIYwSsTxtGbONSIwbAcmQYhMlQYQwEo0c6hvXR6J8ddVG8Xjy3nb1ASmB51EeJlGVcAT4SE9AZKguoFLotQlKYtTKXDGlAlXX96gaf5AIWWNWygMCQHtSCnQQf4PyDBSg2-AF1xVdpsBGPQdB8BTfG6IyhQTIc7QgkdzKhNxjCQ3iAghWdWILZdixMZT+KIrAzMCyySxgh99DaFpX3nFxw0DYMwUse9jHXTdQiAA */
@@ -13,7 +25,7 @@ export const cartMachine =
 			id: "cart",
 			initial: "cartLoaded",
 			context: {
-				cart: null as WC_CartType | null | undefined,
+				cart: null as Cart | null | undefined,
 				loading: false as boolean,
 				itemLoading: null as { itemKey: string; quantity: number } | null,
 			},
@@ -27,21 +39,6 @@ export const cartMachine =
 					},
 					entry: ["setLoading"],
 				},
-				updatingCartItem: {
-					invoke: {
-						src: "updateCartItem",
-						id: "updateCartItem",
-						onDone: [{ actions: "setCart", target: "cartLoaded" }],
-					},
-				},
-				addingItem: {
-					invoke: {
-						src: "addItem",
-						id: "addItem",
-						onDone: [{ actions: "setCart", target: "cartLoaded" }],
-					},
-					entry: ["setLoading"],
-				},
 				settingItemLoading: {
 					invoke: {
 						id: "passItemKey",
@@ -49,12 +46,28 @@ export const cartMachine =
 						onDone: { actions: ["setItemLoading"], target: "updatingCartItem" },
 					},
 				},
+				updatingCartItem: {
+					invoke: {
+						src: "updateCartItem",
+						id: "updateCartItem",
+						onDone: [{ target: "fetchingCart" }],
+					},
+				},
+				addingItem: {
+					invoke: {
+						src: "addItem",
+						id: "addItem",
+						onDone: [{ target: "fetchingCart" }],
+					},
+					entry: ["setLoading"],
+				},
 				removingItem: {
 					invoke: {
 						id: "removeItem",
 						src: "removeItem",
-						onDone: { actions: "setCart", target: "cartLoaded" },
+						onDone: { target: "fetchingCart" },
 					},
+					entry: ["setLoading"],
 				},
 				cartLoaded: {
 					entry: ["setLoaded", "clearItemLoading"],
@@ -69,19 +82,13 @@ export const cartMachine =
 			schema: {
 				services: {} as {
 					fetchCart: {
-						data: WC_CartType | null
+						data: Cart | null
 					}
-					updateCartItem: {
-						data: WC_CartType | null
-					}
-					addItem: {
-						data: WC_CartType | null
-					}
-					removeItem: {
-						data: WC_CartType | null
-					}
+					updateCartItem: { data: void }
+					addItem: { data: void }
+					removeItem: { data: void }
 					passItemKey: {
-						data: { itemKey: string; quantity: number }
+						data: { input: UpdateItemQuantitiesInput }
 					}
 				},
 			},
@@ -93,88 +100,49 @@ export const cartMachine =
 				}),
 				setLoading: assign((ctx) => ({ ...ctx, loading: true })),
 				setLoaded: assign((ctx, event) => ({ ...ctx, loading: false })),
-				setItemLoading: assign((ctx, { data: { itemKey, quantity } }) => ({
-					...ctx,
-					itemLoading: { itemKey, quantity },
-				})),
+				setItemLoading: assign((ctx, { data: { input } }) => {
+					const { key, quantity } = input.items[0]
+					return {
+						...ctx,
+						itemLoading: { itemKey: key, quantity },
+					}
+				}),
 				clearItemLoading: assign((ctx) => ({ ...ctx, itemLoading: null })),
 			},
 			services: {
 				fetchCart: async (ctx) => {
-					try {
-						const { cart } = await getCart()
+					const client = useClient()
+					const cartData = await client.request(GetCartDocument)
 
-						return cart
-					} catch (error) {
-						return null
-					}
+					return cartData.cart as Cart
 				},
 				updateCartItem: async (ctx) => {
 					const { itemKey, quantity } = ctx.itemLoading
 
-					try {
-						const data: API_CartResponseType = await (
-							await fetch(CART_ENDPOINT, {
-								method: "POST",
-								body: JSON.stringify({
-									action: "UPDATEITEM",
-									itemKey,
-									quantity,
-								} as WP_API_Cart_UpdateItemInputType),
-							})
-						).json()
+					const client = useClient()
 
-						return data.cart
-					} catch (error) {
-						return null
-					}
+					const updateCartData = await client.request(UpdateCartItemQuantityDocument, {
+						input: { items: [{ key: itemKey, quantity }] },
+					})
 				},
-				addItem: async (
-					ctx,
-					event: { input: WC_Cart_AddToCartInputType; callback: () => void },
-				) => {
+				addItem: async (ctx, event: AddToCartEventType) => {
 					const { input } = event
 
-					try {
-						const data: API_CartResponseType = await (
-							await fetch(CART_ENDPOINT, {
-								method: "POST",
-								body: JSON.stringify({
-									action: "ADDITEM",
-									input,
-								} as WP_API_Cart_AddItemInputType),
-							})
-						).json()
+					const client = useClient()
 
-						event.callback && (await event.callback())
+					const cartData = await client.request(AddToCartDocument, { input })
 
-						return data.cart
-					} catch (error) {
-						return null
-					}
+					event.callback && (await event.callback())
 				},
-				passItemKey: async (ctx, event: { itemKey: string; quantity: number }) => {
-					const { itemKey, quantity } = event
-					return { itemKey, quantity }
+				passItemKey: async (ctx, event: UpdateCartItemEventType) => {
+					return { input: event.input }
 				},
-				removeItem: async (ctx, event: { itemKey: string }) => {
-					const { itemKey } = event
+				removeItem: async (ctx, event: RemoveCartItemEventType) => {
+					const { input } = event
 
-					try {
-						const data: API_CartResponseType = await (
-							await fetch(CART_ENDPOINT, {
-								method: "POST",
-								body: JSON.stringify({
-									action: "REMOVEITEM",
-									itemKey,
-								} as WP_API_Cart_RemoveItemInputType),
-							})
-						).json()
+					const client = useClient()
 
-						return data.cart
-					} catch (error) {
-						return null
-					}
+					const removeItemData = await client.request(RemoveCartItemDocument, { input })
 				},
 			},
 		},

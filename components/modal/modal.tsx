@@ -25,15 +25,15 @@ const Modal = ({ closeModal, open, children, panelStyle, panelCSS }: ModalInputT
 				>
 					<div className="min-h-screen px-4 text-center">
 						<Transition.Child
-							enter="duration-150 ease-out"
+							enter="duration-300 ease-out"
 							enterFrom="opacity-0"
 							enterTo="opacity-100"
-							leave="duration-200 ease-in"
+							leave="duration-500 ease-in"
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 							as={Fragment}
 						>
-							<div className="fixed inset-0 bg-black bg-opacity-50" />
+							<div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity duration-300" />
 						</Transition.Child>
 						{/* This element is to trick the browser into centering the modal contents. */}
 						<span className="inline-block h-screen align-middle" aria-hidden="true">
@@ -41,17 +41,17 @@ const Modal = ({ closeModal, open, children, panelStyle, panelCSS }: ModalInputT
 						</span>
 						<Transition.Child
 							as={Fragment}
-							enter="duration-150 ease-out"
+							enter="duration-300 ease-out"
 							enterFrom="opacity-0 scale-95"
 							enterTo="opacity-100 scale-100"
-							leave="duration-200 ease-in"
+							leave="duration-300 ease-in"
 							leaveFrom="opacity-100 scale-100"
 							leaveTo="opacity-0 scale-95"
 						>
 							<Dialog.Panel
 								className={
 									panelStyle ??
-									"inline-block w-full min-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+									"inline-block min-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
 								}
 								style={panelCSS}
 							>

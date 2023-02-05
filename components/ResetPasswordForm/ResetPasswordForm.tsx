@@ -9,8 +9,6 @@ import LoadingSpinner from "@components/LoadingSpinner"
 import { EnvelopeIcon, KeyIcon, LockClosedIcon } from "@heroicons/react/20/solid"
 import { useRouter, useSearchParams } from "next/navigation"
 import useAuth from "@lib/hooks/useAuth"
-import { REST_BASE } from "@lib/constants"
-import useAlerts from "@lib/hooks/useAlerts"
 import Link from "@components/Link"
 
 type ResetPasswordFormInputType = {
@@ -25,8 +23,7 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 
-	const { login } = useAuth()
-	const { openAlert } = useAlerts()
+	const { sendResetPasswordEmail, resetUserPassword } = useAuth()
 
 	const [email, setEmail] = useState<string | null>(searchParams.get("email") ?? detectedEmail)
 	const [key, setKey] = useState<string | null>(searchParams.get("key"))
@@ -60,54 +57,13 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 	}, [router, passwordReset, error])
 
 	const onSendEmailSubmit: SubmitHandler<FieldValues> = async (data) => {
-		if (email && data.email === email) {
-			console.log("SENDING", email)
-
-			const requestResetResponse = await fetch(REST_BASE + "/bdpwr/v1/reset-password", {
-				method: "POST",
-				headers: { "content-type": "application/json" },
-				body: JSON.stringify({ email }),
-			})
-			const requestResetData: WP_Reset_ResponseBodyType = await requestResetResponse.json()
-
-			if (requestResetData.data.status === 200) {
-				setSentEmail(true)
-				openAlert({ kind: "success", primary: "Password Reset Email Sent" })
-			} else {
-				console.log("STUFF", requestResetData)
-
-				openAlert({
-					kind: "error",
-					primary: requestResetData.message,
-				})
-				setError(requestResetData.message)
-			}
-		}
+		setSentEmail(await sendResetPasswordEmail(email, data))
 	}
 
 	const onResetPasswordSubmit: SubmitHandler<FieldValues> = async (data) => {
 		if (data.passwordConfirm && data.password) {
 			if (validPassword && key && email && password) {
-				const resetResponse = await fetch(REST_BASE + "/bdpwr/v1/set-password", {
-					method: "POST",
-					headers: { "content-type": "application/json" },
-					body: JSON.stringify({ email, code: key, password }),
-				})
-				const resetData: WP_Reset_ResponseBodyType = await resetResponse.json()
-
-				if (resetData.data.status === 200) {
-					setPasswordReset(true)
-
-					const input = {
-						username: email,
-						password,
-					}
-
-					const newState = await login(input)
-					// TODO - Set success alert
-				} else {
-					// TODO - Set error alert
-				}
+				setPasswordReset(await resetUserPassword(key, email, password))
 			}
 		}
 	}
@@ -312,7 +268,7 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 										Already have a reset code?
 									</div>
 									<form
-										className="mt-4 space-y-6 border-t-2"
+										className="mt-4 space-y-6 "
 										action="#"
 										method="post"
 										onSubmit={(e) => {
@@ -337,7 +293,7 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 												/>
 											</div>
 											<ErrorField name="reset-key" />
-											{/* {key && error && <p className="text-red-main text-sm pt-2 pl-2">{error}</p>} */}
+											{key && error && <p className="text-red-main text-sm pt-2 pl-2">{error}</p>}
 										</div>
 
 										<div>

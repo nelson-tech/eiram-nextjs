@@ -1,0 +1,44 @@
+query GetMenus {
+	mainMenu: menu(id: "main", idType: SLUG) {
+		id
+		menuItems(first: 100, where: { parentDatabaseId: 0 }) {
+			nodes {
+				id
+				url
+				label
+				childItems {
+					nodes {
+						id
+						url
+						label
+					}
+				}
+			}
+		}
+		siteSettings {
+			colors {
+				accent
+				black
+				blue
+				green
+				highlight
+				indigo
+				orange
+				red
+				violet
+				white
+				yellow
+			}
+			footer {
+				socialmedia {
+					icon {
+						name
+						style
+					}
+					link
+					name
+				}
+			}
+		}
+	}
+}

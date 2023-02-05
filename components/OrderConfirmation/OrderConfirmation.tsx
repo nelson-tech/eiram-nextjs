@@ -1,9 +1,10 @@
+import { Order } from "@api/codegen/graphql"
 import OrderDetails from "@components/OrderDetails"
 import { ExclamationCircleIcon, InformationCircleIcon } from "@heroicons/react/20/solid"
 import CheckIcon from "@icons/Check"
 
 type OrderConfirmationInputType = {
-	order: WC_Order
+	order: Order
 	orderNumber: string
 }
 
@@ -11,15 +12,15 @@ const OrderConfirmation = ({ order, orderNumber }: OrderConfirmationInputType) =
 	return (
 		<>
 			<h2 className="text-4xl font-extrabold text-gray-800 text-center">
-				{order.status === "failed" ? "Uh oh..." : "Thank you!"}
+				{order.status === "FAILED" ? "Uh oh..." : "Thank you!"}
 			</h2>
 
-			{order.status === "processing" ? (
+			{order.status === "PROCESSING" ? (
 				<div className="flex items-center rounded bg-green-100 shadow w-fit p-2 mt-4 mx-auto">
 					<CheckIcon size={8} styling="text-green mr-2" />
 					<p className="text-gray-600">Order #{orderNumber} has been placed.</p>
 				</div>
-			) : order.status === "pending" ? (
+			) : order.status === "PENDING" ? (
 				<div className="flex items-center rounded bg-yellow-100 shadow w-fit p-2 mt-4 mx-auto">
 					<InformationCircleIcon className="h-8 w-8 text-green mr-2" />
 					<div>
@@ -41,7 +42,7 @@ const OrderConfirmation = ({ order, orderNumber }: OrderConfirmationInputType) =
 					</div>
 				</div>
 			) : (
-				order.status === "failed" && (
+				order.status === "FAILED" && (
 					<div className="flex items-center rounded bg-red-100 shadow w-fit p-2 mt-4 mx-auto">
 						<ExclamationCircleIcon className="h-8 w-8 text-green mr-2" />
 						<div>

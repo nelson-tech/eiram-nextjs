@@ -49,31 +49,27 @@ export interface Typegen0 {
 		services: never
 	}
 	eventsCausingActions: {
-		clearItemLoading:
-			| "done.invoke.addItem"
-			| "done.invoke.fetchCart"
-			| "done.invoke.removeItem"
-			| "done.invoke.updateCartItem"
-			| "xstate.init"
-		setCart:
-			| "done.invoke.addItem"
-			| "done.invoke.fetchCart"
-			| "done.invoke.removeItem"
-			| "done.invoke.updateCartItem"
+		clearItemLoading: "done.invoke.fetchCart" | "xstate.init"
+		setCart: "done.invoke.fetchCart"
 		setItemLoading: "done.invoke.passItemKey"
-		setLoaded:
+		setLoaded: "done.invoke.fetchCart" | "xstate.init"
+		setLoading:
+			| "ADDITEM"
+			| "FETCHCART"
+			| "REMOVEITEM"
 			| "done.invoke.addItem"
-			| "done.invoke.fetchCart"
 			| "done.invoke.removeItem"
 			| "done.invoke.updateCartItem"
-			| "xstate.init"
-		setLoading: "ADDITEM" | "FETCHCART"
 	}
 	eventsCausingDelays: {}
 	eventsCausingGuards: {}
 	eventsCausingServices: {
 		addItem: "ADDITEM"
-		fetchCart: "FETCHCART"
+		fetchCart:
+			| "FETCHCART"
+			| "done.invoke.addItem"
+			| "done.invoke.removeItem"
+			| "done.invoke.updateCartItem"
 		passItemKey: "UPDATEITEM"
 		removeItem: "REMOVEITEM"
 		updateCartItem: "done.invoke.passItemKey"

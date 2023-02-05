@@ -3,11 +3,12 @@
 import { Elements } from "@stripe/react-stripe-js"
 import { StripeElementsOptions } from "@stripe/stripe-js"
 
+import { Customer, Menu_Sitesettings_Colors } from "@api/codegen/graphql"
 import useAuth from "@lib/hooks/useAuth"
 import useCart from "@lib/hooks/useCart"
-import getStripe from "@lib/wp/getStripe"
-import Link from "@components/Link"
+import getStripe from "@lib/utils/getStripe"
 
+import Link from "@components/Link"
 import LoadingSpinner from "@components/LoadingSpinner"
 import CartSummary from "./cartSummary"
 import CheckoutForm from "./checkoutForm"
@@ -20,9 +21,16 @@ type CheckoutProps = {
 	hidePrices?: boolean
 	discounts?: boolean
 	stripeData: STRIPE_PaymentIntentType
-	colors: WP_MENU["acf"]["colors"]
+	colors: Menu_Sitesettings_Colors
+	customer: Customer
 }
-const Checkout = ({ hidePrices = false, discounts = false, stripeData, colors }: CheckoutProps) => {
+const Checkout = ({
+	hidePrices = false,
+	discounts = false,
+	stripeData,
+	colors,
+	customer,
+}: CheckoutProps) => {
 	const { isAuth } = useAuth()
 
 	const { cart, loading: cartLoading } = useCart().state
@@ -40,7 +48,7 @@ const Checkout = ({ hidePrices = false, discounts = false, stripeData, colors }:
 				<div className="w-full h-screen mx-auto flex justify-center items-center">
 					<LoadingSpinner size={12} />
 				</div>
-			) : cart?.items_count < 1 ? (
+			) : cart?.contents?.itemCount < 1 ? (
 				<div className="max-w-max mx-auto min-h-full py-24">
 					<div className="sm:ml-6">
 						<div className="text-center">
@@ -82,9 +90,9 @@ const Checkout = ({ hidePrices = false, discounts = false, stripeData, colors }:
 								<h2 id="summary-heading" className="sr-only">
 									Order summary
 								</h2>
-								{cart?.items && (
+								{cart?.contents.nodes && (
 									<ul className="flex-auto overflow-y-auto divide-y divide-gray-200 px-6">
-										<CartSummary lineItems={cart?.items} />
+										<CartSummary lineItems={cart?.contents.nodes} />
 									</ul>
 								)}
 								{!hidePrices && (
@@ -95,9 +103,14 @@ const Checkout = ({ hidePrices = false, discounts = false, stripeData, colors }:
 									</div>
 								)}
 							</section>
-							{cart && stripeData.clientSecret ? (
+							{cart && stripeData ? (
 								<Elements stripe={stripePromise} options={stripeOptions}>
-									<CheckoutForm cart={cart} colors={colors} />
+									<CheckoutForm
+										cart={cart}
+										colors={colors}
+										customer={customer}
+										stripeData={stripeData}
+									/>
 								</Elements>
 							) : (
 								<div className="h-screen mt-48 mx-auto">

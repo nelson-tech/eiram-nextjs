@@ -1,3 +1,4 @@
+import { Cart } from "@api/codegen/graphql"
 import { Disclosure } from "@headlessui/react"
 
 import formatCurrencyString from "@lib/utils/formatCurrencyString"
@@ -9,7 +10,7 @@ import PricingSummary from "./pricingSummary"
 type MobileSummaryProps = {
 	hidePrices?: boolean
 	discounts?: boolean
-	cart: WC_CartType
+	cart: Cart
 }
 
 const MobileSummary = ({ hidePrices = false, discounts = false, cart }: MobileSummaryProps) => {
@@ -28,9 +29,9 @@ const MobileSummary = ({ hidePrices = false, discounts = false, cart }: MobileSu
 							</Disclosure.Button>
 						</div>
 						<Disclosure.Panel>
-							{cart.items && (
+							{cart.contents.nodes && (
 								<ul className="divide-y divide-gray-200">
-									<CartSummary lineItems={cart.items} />
+									<CartSummary lineItems={cart.contents.nodes} />
 								</ul>
 							)}
 
@@ -45,7 +46,7 @@ const MobileSummary = ({ hidePrices = false, discounts = false, cart }: MobileSu
 						{!hidePrices && (
 							<p className="flex items-center justify-between text-sm font-medium text-gray-900 border-t border-gray-200 pt-6 mt-6">
 								<span className="text-base">Total</span>
-								<span className="text-base">{formatCurrencyString(cart?.totals.total_price)}</span>
+								<span className="text-base">{cart.total}</span>
 							</p>
 						)}{" "}
 					</>

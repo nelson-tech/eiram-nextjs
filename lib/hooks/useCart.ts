@@ -4,6 +4,19 @@ import { useActor } from "@xstate/react"
 import { CartContext } from "machines/cartContext"
 import useAuth from "./useAuth"
 import useModals from "./useModals"
+import {
+	AddToCartDocument,
+	AddToCartInput,
+	GetCartDocument,
+	RemoveItemsFromCartInput,
+	UpdateItemQuantitiesInput,
+} from "@api/codegen/graphql"
+import {
+	AddToCartEventType,
+	RemoveCartItemEventType,
+	UpdateCartItemEventType,
+} from "@lib/types/cart"
+import useClient from "@api/client"
 
 const useCart = () => {
 	const globalServices = useContext(CartContext)
@@ -32,21 +45,21 @@ const useCart = () => {
 		}
 	}, [authStatus, officialAuthStatus, send, setAuthStatus])
 
-	const addToCart = async (input: WC_Cart_AddToCartInputType) => {
+	const addToCart = async (input: AddToCartInput) => {
 		await send("ADDITEM", {
 			input,
 			callback: () => {
 				modalsSend("openShoppingCart")
 			},
-		})
+		} as AddToCartEventType)
 	}
 
-	const updateItem = async (input: { itemKey: string; quantity: number }) => {
-		await send("UPDATEITEM", input)
+	const updateItem = async (input: UpdateItemQuantitiesInput) => {
+		await send("UPDATEITEM", { input } as UpdateCartItemEventType)
 	}
 
-	const removeItem = async (input: { itemKey: string }) => {
-		await send("REMOVEITEM", input)
+	const removeItem = async (input: RemoveItemsFromCartInput) => {
+		await send("REMOVEITEM", { input } as RemoveCartItemEventType)
 	}
 
 	return {

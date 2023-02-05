@@ -1,22 +1,14 @@
 import Image from "next/image"
 
-import { REST_WP } from "@lib/constants"
-
 import Link from "@components/Link"
+import useClient from "@api/client"
+import { Collection, GetCollectionsDocument } from "@api/codegen/graphql"
 
 const getCollections = async () => {
-	const url = REST_WP + "/collections?acf_format=standard"
+	const client = useClient()
 
-	const headers = { "content-type": "application/json" }
-
-	const response: Response = await fetch(url, {
-		method: "GET",
-		headers,
-	})
-
-	const collectionsData: WP_CollectionType[] = await response?.json()
-
-	return collectionsData && collectionsData.length > 0 ? collectionsData : null
+	const collectionsData = await client.request(GetCollectionsDocument)
+	return collectionsData.collections.nodes as Collection[]
 }
 
 const CollectionsPage = async () => {
@@ -34,24 +26,28 @@ const CollectionsPage = async () => {
 					</div>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-2 md:mx-8 lg:mx-16 mt-12">
 						{collections.map((collection) => {
-							const imageUrl = collection.acf?.media?.coverImage
+							const coverImage = collection.gallery?.media?.coverimage
 
 							return (
 								<div
 									key={collection.id}
 									className="relative mx-auto cursor-pointer group w-full rounded-sm "
 									style={{ height: "600px" }}
-									title={collection?.title.rendered}
+									title={collection?.title}
 								>
 									<Link
 										href={`/collections/${collection?.slug}`}
 										className="absolute  w-full h-full"
 									>
 										<Image
-											src={imageUrl}
-											alt={""}
-											fill
-											sizes="(max-width: 800px) 100vw,33vw"
+											src={coverImage.sourceUrl}
+											alt={coverImage.altText}
+											{...(coverImage.mediaDetails.width
+												? {
+														width: coverImage.mediaDetails.width,
+														height: coverImage.mediaDetails.height,
+												  }
+												: { fill: true, sizes: "(max-width: 800px) 100vw,33vw" })}
 											className="absolute object-cover w-full h-full rounded-sm"
 										/>
 										<div className="absolute flex items-center w-full h-full bg-black bg-opacity-80 opacity-0 group-hover:opacity-80 transition-all rounded-sm overflow-hidden z-10">
@@ -60,7 +56,7 @@ const CollectionsPage = async () => {
 												style={{ height: "550px" }}
 											>
 												<h2 className="text-white text-4xl text-center uppercase font-sans">
-													{collection?.title.rendered}
+													{collection?.title}
 												</h2>
 											</div>
 										</div>

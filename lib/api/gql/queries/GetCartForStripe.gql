@@ -1,0 +1,5 @@
+query GetCartForStripe {
+	cart {
+		total(format: RAW)
+	}
+}

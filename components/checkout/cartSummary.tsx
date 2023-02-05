@@ -1,7 +1,8 @@
+import { CartItem as CartItemType, LineItem } from "@api/codegen/graphql"
 import CartItem from "@components/shoppingCart/cartItem"
 
 type CartSummaryProps = {
-	lineItems: WC_CartType["items"]
+	lineItems: CartItemType[]
 }
 const CartSummary = ({ lineItems }: CartSummaryProps) => {
 	return (

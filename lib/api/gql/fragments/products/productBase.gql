@@ -1,0 +1,28 @@
+fragment ProductBase on Product {
+	...ProductMinBase
+	dateOnSaleFrom
+	dateOnSaleTo
+	onSale
+	description
+	shortDescription
+	productCategories {
+		nodes {
+			name
+			slug
+			ancestors {
+				nodes {
+					name
+					slug
+				}
+			}
+		}
+	}
+	image {
+		...ImageBase
+	}
+	galleryImages {
+		nodes {
+			...ImageBase
+		}
+	}
+}

@@ -1,19 +1,18 @@
+import useClient from "@api/client"
+import { GetOrderDataByIdDocument, Order } from "@api/codegen/graphql"
 import OrderConfirmation from "@components/OrderConfirmation"
 import UserOrderError from "@components/UserOrderError"
 import { FRONTEND_BASE } from "@lib/constants"
-import getTokens from "@lib/utils/getTokens"
+import getTokensServer from "@lib/utils/getTokensServer"
 
 const getOrder = async (id: string) => {
-	const { tokens } = getTokens()
+	const { tokens } = await getTokensServer()
 
-	const response = await fetch(FRONTEND_BASE + "/api/orders", {
-		method: "POST",
-		body: JSON.stringify({ tokens, orderId: id }),
-	})
+	const client = useClient(tokens)
 
-	const data: WC_Order = await response.json()
+	const orderData = await client.request(GetOrderDataByIdDocument, { id })
 
-	return data
+	return orderData.order as Order
 }
 
 const ThanksPage = async ({ searchParams }: { searchParams?: { id: string } }) => {

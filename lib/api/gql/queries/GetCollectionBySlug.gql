@@ -1,0 +1,19 @@
+query GetCollectionBySlug($slug: ID!) {
+	collection(id: $slug, idType: SLUG) {
+		id
+		title
+		slug
+		content
+		gallery {
+			media {
+				video {
+					...ImageBase
+					mediaItemUrl
+				}
+				images {
+					...ImageBase
+				}
+			}
+		}
+	}
+}

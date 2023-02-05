@@ -1,20 +1,14 @@
-import { REST_CART } from "@lib/constants"
+import useClient from "@api/client"
+import { GetProductDataBySlugDocument } from "@api/codegen/graphql"
 
-const getProductByID = async (sku: string) => {
-	const url = REST_CART + "/products?sku=" + sku
+const getProductByID = async (slug: string) => {
+	const client = useClient()
 
-	const headers = { "content-type": "application/json" }
+	if (slug !== "%5Bslug%5D") {
+		const productData = await client.request(GetProductDataBySlugDocument, { id: slug })
 
-	const response = await fetch(url, {
-		method: "GET",
-		headers,
-	})
-
-	const data: WC_ProductType[] = await response?.json()
-
-	const product = data?.length > 0 ? data[0] : null
-
-	return product
+		return productData.product
+	}
 }
 
 export default getProductByID

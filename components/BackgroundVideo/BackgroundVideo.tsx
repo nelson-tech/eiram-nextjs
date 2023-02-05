@@ -1,22 +1,23 @@
 "use client"
 
+import { MediaItem } from "@api/codegen/graphql"
 import isServer from "@lib/utils/isServer"
 
 type BackgrountVideoInputType = {
-	videoData: WP_ImageArrayType
-	placeholderData: WP_ImageArrayType
+	videoData: MediaItem
+	placeholderData: MediaItem
 }
 
 const BackgroundVideo = ({ videoData, placeholderData }: BackgrountVideoInputType) => {
 	const getClientSizes = () => {
-		let viewHeight = videoData?.height
+		let viewHeight = videoData?.mediaDetails?.height
 
 		let imageSizing = "width=1920"
 
 		if (!isServer) {
-			const windowScale = window.innerWidth / ((videoData?.width as number) || 1)
+			const windowScale = window.innerWidth / ((videoData?.mediaDetails?.width as number) || 1)
 
-			viewHeight = ((videoData?.height as number) || 1) * windowScale
+			viewHeight = ((videoData?.mediaDetails.height as number) || 1) * windowScale
 
 			imageSizing =
 				window.innerWidth > window.innerHeight
@@ -29,7 +30,7 @@ const BackgroundVideo = ({ videoData, placeholderData }: BackgrountVideoInputTyp
 
 	const { imageSizing, viewHeight } = getClientSizes()
 
-	const bgImageURL = `${placeholderData?.url}?format=webp&quality=80&${imageSizing}`
+	const bgImageURL = `${placeholderData?.sourceUrl}?format=webp&quality=80&${imageSizing}`
 
 	return bgImageURL ? (
 		<div
@@ -39,7 +40,7 @@ const BackgroundVideo = ({ videoData, placeholderData }: BackgrountVideoInputTyp
 				backgroundImage: `url('${bgImageURL}')`,
 			}}
 		>
-			{videoData?.url && videoData?.mime_type && (
+			{videoData?.mediaItemUrl && videoData?.mimeType && (
 				<video
 					autoPlay
 					loop
@@ -47,7 +48,7 @@ const BackgroundVideo = ({ videoData, placeholderData }: BackgrountVideoInputTyp
 					id="video"
 					className="w-full h-screen object-cover -z-[1] opacity-100 hidden sm:block"
 				>
-					<source src={videoData.url} type={videoData.mime_type} />
+					<source src={videoData.mediaItemUrl} type={videoData.mimeType} />
 				</video>
 			)}
 		</div>

@@ -1,20 +1,22 @@
+import useClient from "@api/client"
+import { GetOrdersDataDocument, Order } from "@api/codegen/graphql"
 import AuthChecker from "@components/AuthChecker"
 import Link from "@components/Link"
 import OrderSummary from "@components/OrderSummary"
-import { FRONTEND_BASE } from "@lib/constants"
-import getTokens from "@lib/utils/getTokens"
+import getTokensServer from "@lib/utils/getTokensServer"
 
 const getOrders = async () => {
-	const { tokens } = getTokens()
+	try {
+		const { tokens } = await getTokensServer()
 
-	const response = await fetch(FRONTEND_BASE + "/api/orders", {
-		method: "POST",
-		body: JSON.stringify({ tokens }),
-	})
+		const client = useClient(tokens)
 
-	const data: WC_Order[] = await response.json()
+		const ordersData = await client.request(GetOrdersDataDocument)
 
-	return data
+		return ordersData.orders?.nodes as Order[]
+	} catch (error) {
+		console.warn("Error fetching orders.", error)
+	}
 }
 
 const OrdersPage = async () => {
@@ -44,7 +46,7 @@ const OrdersPage = async () => {
 								{orders
 									.filter((order) => order.status.toLowerCase() !== "checkout-draft")
 									.map((order) => {
-										return <OrderSummary order={order} detailsLink key={order.number} />
+										return <OrderSummary order={order} detailsLink key={order.id} />
 									})}
 							</ul>
 						</div>

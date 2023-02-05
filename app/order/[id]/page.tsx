@@ -4,6 +4,7 @@ import AuthChecker from "@components/AuthChecker"
 import Link from "@components/Link"
 import OrderDetails from "@components/OrderDetails"
 import ArrowLeftIcon from "@icons/ArrowLeft"
+import { Order } from "@api/codegen/graphql"
 
 const OrderPage = async ({ params }: { params: { id: string } }) => {
 	const order = await getOrderById(params.id)
@@ -35,7 +36,7 @@ const OrderPage = async ({ params }: { params: { id: string } }) => {
 					<h2 className="sr-only">Order details</h2>
 
 					<div className="space-y-8">
-						<OrderDetails order={order} />
+						<OrderDetails order={order as Order} />
 					</div>
 				</div>
 			</div>

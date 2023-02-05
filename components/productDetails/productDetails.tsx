@@ -4,15 +4,24 @@ import { FormEvent, useState } from "react"
 import Image from "next/image"
 import { RadioGroup, Tab } from "@headlessui/react"
 
+import {
+	AddToCartInput,
+	MediaItem,
+	Product,
+	ProductAttribute,
+	ProductVariation,
+	SimpleProduct,
+	VariableProduct,
+	VariationAttribute,
+} from "@api/codegen/graphql"
 import useCart from "@lib/hooks/useCart"
-import formatCurrencyString from "@lib/utils/formatCurrencyString"
-import Link from "@components/Link"
 
+import Link from "@components/Link"
 import LoadingSpinner from "@components/LoadingSpinner"
 import ImageMagnifier from "@components/ImageMagnifier"
 
 type ProductDetailsProps = {
-	product: WC_ProductType
+	product: Product & SimpleProduct & VariableProduct
 }
 const ProductDetails = ({ product }: ProductDetailsProps) => {
 	const {
@@ -20,10 +29,15 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 		addToCart,
 	} = useCart()
 
-	const [loading, setLoading] = useState(false)
-	const [selectedAttributes, setSelectedAttribute] = useState<{ [key: string]: string }>({})
+	const attributes = product.attributes?.nodes
 
-	const readyToAdd = Object.keys(selectedAttributes).length === product.attributes.length
+	const [loading, setLoading] = useState(false)
+	const [selectedAttributes, setSelectedAttributes] = useState<{ [key: string]: string }>({})
+
+	const readyToAdd =
+		product.type === "SIMPLE"
+			? true
+			: Object.keys(selectedAttributes).length === product.attributes?.nodes.length
 
 	function classs(...classes: string[]) {
 		return classes.filter(Boolean).join(" ")
@@ -33,20 +47,37 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 		e.preventDefault()
 		setLoading(true)
 
-		let productId = product.id
+		const variations = product.variations?.nodes
 
-		const variation = Object.entries(selectedAttributes).map(([key, value]) => ({
-			attribute: key,
-			value,
-		}))
+		const productId = product.databaseId
+
+		let variationId = null
+
+		if (variations) {
+			const matchedVariation = (variations as ProductVariation[]).find(
+				(variation: ProductVariation) => {
+					let matches = 0
+					Object.entries(selectedAttributes).map(([attribute, value]) => {
+						variation?.attributes?.nodes?.filter((varAttribute: VariationAttribute) => {
+							if (varAttribute?.label === attribute && varAttribute.value === value) {
+								matches++
+							}
+						})
+					})
+
+					return matches === attributes?.length
+				},
+			)
+			matchedVariation && (variationId = matchedVariation?.databaseId)
+		}
+
+		const input: AddToCartInput = {
+			productId,
+			quantity: 1,
+			variationId,
+		}
 
 		if (productId) {
-			const input: WC_Cart_AddToCartInputType = {
-				id: productId.toString(),
-				quantity: "1",
-				variation,
-			}
-
 			await addToCart(input)
 		}
 
@@ -57,23 +88,23 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 		<div className="mx-auto max-w-2xl lg:max-w-none">
 			<div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
 				{/* <!-- Image Gallery --> */}
-				{product.images && (
+				{product.galleryImages?.nodes && (
 					<Tab.Group as="div" className="flex flex-col-reverse">
 						{/* <!-- Image selector --> */}
 						<div className="mx-auto mt-6 px-8 sm:px-0 w-full max-w-2xl sm:block lg:max-w-none">
 							<Tab.List className="grid grid-cols-4 gap-6">
-								{product.images.map(
-									(image, i) =>
-										image.src && (
+								{product.galleryImages?.nodes.map(
+									(image: MediaItem, i) =>
+										image.sourceUrl && (
 											<Tab
-												key={image.src + i + "thumbs"}
+												key={image.id + "thumbs"}
 												className="relative flex h-24 cursor-pointer items-center justify-center rounded-md focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-accent focus:ring-offset-4"
 											>
-												<span className="sr-only"> {image.alt} </span>
+												<span className="sr-only"> {image.altText} </span>
 												<span className="absolute inset-0 overflow-hidden rounded-md">
 													<Image
-														src={image.src}
-														alt={image.alt}
+														src={image.sourceUrl}
+														alt={image.altText}
 														fill
 														sizes="33vw"
 														className="h-full w-full object-cover object-center"
@@ -93,12 +124,12 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 						</div>
 
 						<Tab.Panels className=" aspect-square object-contain w-full relative" as="div">
-							{product.images.map(
-								(image, i) =>
-									image.src && (
-										<Tab.Panel key={i + image.src + "main"}>
+							{product.galleryImages.nodes.map(
+								(image: MediaItem, i) =>
+									image.sourceUrl && (
+										<Tab.Panel key={image.id + "main"}>
 											<ImageMagnifier
-												src={image.src}
+												src={image.sourceUrl}
 												zoomLevel={2}
 												magnifieWidth={350}
 												magnifierHeight={350}
@@ -112,7 +143,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
 				{/* <!-- Product Info --> */}
 				<div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-					{product.on_sale && (
+					{product.onSale && (
 						<span className="inline-flex items-center rounded-md bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800">
 							SALE!
 						</span>
@@ -121,14 +152,12 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
 					<div className="mt-3 flex items-center">
 						<h2 className="sr-only">Product information</h2>
-						{product.on_sale && (
+						{product.onSale && (
 							<p className="text-2xl tracking-tight text-gray-400 line-through mr-2">
-								{formatCurrencyString(product.prices.regular_price)}
+								{product.regularPrice}
 							</p>
 						)}
-						<p className="text-3xl tracking-tight text-gray-500">
-							{formatCurrencyString(product.prices.price)}
-						</p>
+						<p className="text-3xl tracking-tight text-gray-500">{product.price}</p>
 					</div>
 
 					{/* <!-- Reviews --> */}
@@ -161,9 +190,8 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
 					<div className="mt-8 lg:col-span-5">
 						<form onSubmit={handleSubmit}>
-							{product.attributes &&
-								product.attributes.length > 0 &&
-								product.attributes.map((attribute) => {
+							{attributes &&
+								attributes.map((attribute: ProductAttribute) => {
 									return (
 										attribute.name && (
 											<div className="mb-8" key={attribute.name + attribute.id + "attribute"}>
@@ -181,24 +209,21 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
 												<RadioGroup
 													value={selectedAttributes[attribute.name]}
-													onChange={(e) => {
-														setSelectedAttribute({
-															...selectedAttributes,
-															[attribute.name || ""]: e,
-														})
-													}}
+													onChange={(e) =>
+														setSelectedAttributes({ ...selectedAttributes, [attribute.name]: e })
+													}
 													className="mt-2"
 												>
 													<RadioGroup.Label className="sr-only">
 														Choose a {attribute.name}
 													</RadioGroup.Label>
 													<div className="flex items-center space-x-3">
-														{attribute.terms &&
-															attribute.terms.length > 0 &&
-															attribute.terms.map((option, i) => (
+														{attribute.options &&
+															attribute.options.length > 0 &&
+															attribute.options.map((option, i) => (
 																<RadioGroup.Option
-																	key={option.id + i + option.name + "option"}
-																	value={option.slug}
+																	key={attribute.id + i + option + "option"}
+																	value={option}
 																	className={({ active, checked }) =>
 																		classs(
 																			true
@@ -212,7 +237,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 																	}
 																	disabled={false}
 																>
-																	<RadioGroup.Label as="span">{option.name}</RadioGroup.Label>
+																	<RadioGroup.Label as="span">{option}</RadioGroup.Label>
 																</RadioGroup.Option>
 															))}
 													</div>

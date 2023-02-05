@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Popover } from "@headlessui/react"
 
@@ -18,12 +17,6 @@ const AuthMenu = () => {
 		await logout()
 	}
 
-	// useEffect(() => {
-	// 	if (matches("loggedOut")) {
-	// 		router.push("/")
-	// 	}
-	// }, [matches, router])
-
 	return (
 		<>
 			{userMenu.map((menuItem) => {
@@ -37,11 +30,11 @@ const AuthMenu = () => {
 							>
 								{menuItem.icon({ size: 4, styling: "mr-2" })}
 								{menuItem.label}
-								{menuItem.label === "Orders" && (
+								{/* {menuItem.label === "Orders" && (
 									<span className="rounded-full bg-accent text-white px-2 text-sm ml-2 group-hover:bg-white group-hover:text-accent transition-all">
 										{context.user.orderCount}
 									</span>
-								)}
+								)} */}
 							</Link>
 						</div>
 					</div>

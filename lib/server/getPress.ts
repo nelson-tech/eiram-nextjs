@@ -1,17 +1,11 @@
-import { REST_WP } from "@lib/constants"
+import useClient from "@api/client"
+import { GetPressDocument, PressItem } from "@api/codegen/graphql"
 
 const getPress = async () => {
-	const url = REST_WP + "/press?_embed"
-	// const headers = { "content-type": "application/json" }
+	const client = useClient()
+	const pressData = await client.request(GetPressDocument)
 
-	const response: Response = await fetch(url, {
-		method: "GET",
-		// headers,
-	})
-
-	const pressData: WP_PressType[] = await response?.json()
-
-	return pressData
+	return pressData.press.nodes as PressItem[]
 }
 
 export default getPress

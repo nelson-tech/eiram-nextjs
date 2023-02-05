@@ -1,7 +1,8 @@
+import { MediaItem } from "@api/codegen/graphql"
 import { useEffect, useState } from "react"
 
 type UseSizesPropsType = {
-	slide: string | WP_PressType["_embedded"]["wp:featuredmedia"][0] | undefined
+	slide: string | MediaItem | undefined
 }
 
 const useSizes = ({ slide }: UseSizesPropsType) => {
@@ -13,10 +14,8 @@ const useSizes = ({ slide }: UseSizesPropsType) => {
 
 	useEffect(() => {
 		if (slide && typeof slide !== "string") {
-			console.log("Window", window.innerHeight, window.innerWidth)
-
-			const width = slide.media_details.width
-			const height = slide.media_details.height
+			const width = slide.mediaDetails.width
+			const height = slide.mediaDetails.height
 
 			const image = {
 				width,
@@ -34,25 +33,29 @@ const useSizes = ({ slide }: UseSizesPropsType) => {
 				const vConstrained =
 					screenSize.height < image.height * ((screenSize.width - verticalPadding) / image.width)
 
-				const processedWidth = Math.min(
-					screenSize.width - horizontalPadding,
-					image.width * (screenSize.height / image.height) -
-						(wConstrained
-							? horizontalPadding
-							: vConstrained && image.width > image.height
-							? verticalPadding
-							: 0),
-				)
+				const processedWidth = image.width
+					? Math.min(
+							screenSize.width - horizontalPadding,
+							image.width * (screenSize.height / image.height) -
+								(wConstrained
+									? horizontalPadding
+									: vConstrained && image.width > image.height
+									? verticalPadding
+									: 0),
+					  )
+					: screenSize.width - horizontalPadding
 
-				const processedHeight = Math.min(
-					screenSize.height,
-					image.height * (screenSize.width / image.width) -
-						(vConstrained
-							? verticalPadding
-							: wConstrained && image.height > image.width
-							? horizontalPadding
-							: 0),
-				)
+				const processedHeight = image.height
+					? Math.min(
+							screenSize.height,
+							image.height * (screenSize.width / image.width) -
+								(vConstrained
+									? verticalPadding
+									: wConstrained && image.height > image.width
+									? horizontalPadding
+									: 0),
+					  )
+					: screenSize.height
 
 				setImageSize({ width: processedWidth, height: processedHeight })
 

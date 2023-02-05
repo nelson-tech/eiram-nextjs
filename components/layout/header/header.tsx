@@ -6,6 +6,7 @@ import UserMenu from "./userMenu"
 import ShoppingCartButton from "./shoppingCartButton"
 import MobileMenuButton from "./mobileMenuButton"
 import useScrollDirection from "@lib/hooks/useScrollDirection"
+import { MenuItem } from "@lib/api/codegen/graphql"
 
 type HeaderInputType = { menuItems: MenuItem[] }
 

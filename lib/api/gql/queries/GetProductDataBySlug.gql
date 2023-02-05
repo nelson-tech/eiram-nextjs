@@ -1,0 +1,6 @@
+query GetProductDataBySlug($id: ID!) {
+  product(id: $id, idType: SLUG) {
+    ...VariableProductFragment
+    ...SimpleProductFragment
+  }
+}

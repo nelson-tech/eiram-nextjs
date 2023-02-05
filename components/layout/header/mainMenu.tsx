@@ -5,6 +5,7 @@ import ChevronDownIcon from "@icons/ChevronDown"
 import Link from "@components/Link"
 
 import { usePathname } from "next/navigation"
+import { MenuItem } from "@lib/api/codegen/graphql"
 type DesktopLinkStyleProps = {
 	open: boolean
 	target: string
@@ -27,13 +28,13 @@ const MainMenu = ({ menuItems }: { menuItems: MenuItem[] }) => {
 			<div className="h-full flex justify-center items-center space-x-2">
 				{menuItems &&
 					menuItems.map((menuItem, i) => {
-						if (menuItem && !menuItem.post_parent) {
+						if (menuItem) {
 							const target = menuItem.url
 
-							if ((menuItem.child_items?.length || 0) > 0) {
+							if ((menuItem.childItems?.nodes?.length || 0) > 0) {
 								return (
 									<Menu
-										key={menuItem.ID}
+										key={menuItem.id}
 										as="div"
 										className="relative flex h-full font-sans transition hover-underline-animation"
 									>
@@ -45,7 +46,7 @@ const MainMenu = ({ menuItems }: { menuItems: MenuItem[] }) => {
 														target,
 													})}
 												>
-													{menuItem.title}
+													{menuItem.label}
 													<ChevronDownIcon
 														size={4}
 														styling={`transition ml-1 text-gray-400 ${
@@ -64,20 +65,20 @@ const MainMenu = ({ menuItems }: { menuItems: MenuItem[] }) => {
 													className="origin-top absolute -left-1/2 pt-2 w-64"
 												>
 													<Menu.Items className="rounded-sm bg-gray-50 outline-none overflow-hidden shadow-lg ring-transparent z-40">
-														{menuItem.child_items &&
-															menuItem.child_items.map((item, i) => {
-																if (item && item.url && item.ID && item.title) {
+														{menuItem.childItems?.nodes &&
+															menuItem.childItems.nodes.map((item: MenuItem, i) => {
+																if (item && item && item.id && item.label) {
 																	return (
-																		<Menu.Item key={item?.ID + i}>
+																		<Menu.Item key={item?.id + i}>
 																			{({ close }) => (
 																				<Link
 																					href={item.url}
-																					title={item.title}
+																					title={item.label}
 																					passHref={false}
 																					onClick={close}
 																					className="transition hover:bg-accent hover:text-white text-highlight block px-4 py-2 text-sm ring-transparent outline-none"
 																				>
-																					{item.title}
+																					{item.label}
 																				</Link>
 																			)}
 																		</Menu.Item>
@@ -95,17 +96,17 @@ const MainMenu = ({ menuItems }: { menuItems: MenuItem[] }) => {
 							return (
 								<div
 									className="relative flex h-full font-sans transition hover-underline-animation"
-									key={menuItem.ID}
+									key={menuItem.id}
 								>
 									<Link
 										href={target}
-										title={menuItem?.title || ""}
+										title={menuItem?.label || ""}
 										className={getDesktopLinkStyle({
 											open: false,
 											target,
 										})}
 									>
-										{menuItem?.title}
+										{menuItem?.label}
 									</Link>
 								</div>
 							)

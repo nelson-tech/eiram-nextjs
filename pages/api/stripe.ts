@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { Stripe } from "stripe"
 
-import { CART_ENDPOINT } from "@lib/constants"
-import checkAuthAPI from "@lib/wp/utils/checkAuthAPI"
+import { CLIENT_Tokens_Type } from "@lib/types/auth"
+import useClient from "@api/client"
+import { GetCartForStripeDocument } from "@api/codegen/graphql"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2022-11-15" })
 
@@ -10,26 +11,16 @@ export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse<STRIPE_PaymentIntentType>,
 ) {
-	const inputData: { tokens?: WP_AuthTokensType } =
+	const inputData: { tokens?: CLIENT_Tokens_Type } =
 		typeof req.body === "string" ? JSON.parse(req.body) : req.body
-	const cookies = req.cookies
-	const { tokens } = await checkAuthAPI({ cookies, tokens: inputData.tokens })
 
-	const requestBody: WC_CartEndpointInputType = {
-		action: "FETCH",
-		tokens,
-	}
+	const client = useClient(inputData.tokens)
 
-	const data: API_CartResponseType = await (
-		await fetch(CART_ENDPOINT, {
-			method: "POST",
-			body: JSON.stringify(requestBody),
-		})
-	).json()
+	const cartData = await client.request(GetCartForStripeDocument)
 
-	const { cart } = data
+	const { cart } = cartData
 
-	const total = parseFloat(cart?.totals.total_price ?? "0.00")
+	const total = parseFloat("801.50" ?? "0.00") * 100
 
 	if (total > 0) {
 		const paymentIntent = await stripe.paymentIntents.create({

@@ -1,19 +1,22 @@
 "use client"
 
-import Link from "@components/Link"
 import { CalendarIcon, ChevronRightIcon } from "@heroicons/react/20/solid"
 
+import { Order } from "@api/codegen/graphql"
+
+import Link from "@components/Link"
+
 type OrderSummaryInputType = {
-	order: WC_Order
+	order: Order
 	detailsLink?: boolean
 }
 
 const OrderSummary = ({ order, detailsLink = false }: OrderSummaryInputType) => {
-	const orderDate = order?.date_created ? new Date(order.date_created).toLocaleDateString() : null
+	const orderDate = order?.date ? new Date(order.date).toLocaleDateString() : null
 
 	const LinkOrDiv = ({ children }) => {
 		return detailsLink ? (
-			<Link href={`/order/${order.number}`} className="block hover:bg-gray-50">
+			<Link href={`/order/${order.orderNumber}`} className="block hover:bg-gray-50">
 				{children}
 			</Link>
 		) : (
@@ -49,7 +52,7 @@ const OrderSummary = ({ order, detailsLink = false }: OrderSummaryInputType) => 
 					<div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
 						<div className="truncate">
 							<div className="flex text-sm">
-								<p className="truncate font-medium text-accent">Order #: {order.number}</p>
+								<p className="truncate font-medium text-accent">Order #: {order.orderNumber}</p>
 
 								<div className="ml-4 flex text-gray-500">
 									<div className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400">
@@ -67,7 +70,7 @@ const OrderSummary = ({ order, detailsLink = false }: OrderSummaryInputType) => 
 											></path>
 										</svg>
 									</div>
-									Items: {order.line_items.length}
+									Items: {order.lineItems.nodes.length}
 								</div>
 							</div>
 							<div className="mt-4 flex items-center">
@@ -77,7 +80,7 @@ const OrderSummary = ({ order, detailsLink = false }: OrderSummaryInputType) => 
 										aria-hidden="true"
 									/>
 									<p>
-										<time dateTime={order.date_created}>{orderDate}</time>
+										<time dateTime={order.date}>{orderDate}</time>
 									</p>
 								</div>
 								<div className=" sm:hidden">

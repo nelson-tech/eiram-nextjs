@@ -4,11 +4,11 @@ import Image from "next/image"
 
 import Link from "@components/Link"
 import { Transition } from "@headlessui/react"
-import formatCurrencyString from "@lib/utils/formatCurrencyString"
 import { useState } from "react"
+import { Product, SimpleProduct, VariableProduct } from "@api/codegen/graphql"
 
 type ProductCardProps = {
-	product: WC_ProductType
+	product: Product & SimpleProduct & VariableProduct
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
@@ -21,7 +21,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 				onMouseEnter={() => setIsShowing((isShowing) => !isShowing)}
 				onMouseLeave={() => setIsShowing((isShowing) => !isShowing)}
 			>
-				{product.images[0]?.src && (
+				{product.galleryImages?.nodes[0]?.sourceUrl && (
 					<div className=" transition-all h-64">
 						<div className="w-full h-64 object-center object-contain relative">
 							<Transition
@@ -36,8 +36,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
 								leaveTo="opacity-0"
 							>
 								<Image
-									src={product.images[0]?.src}
-									alt={product.images[0]?.alt || ""}
+									src={product.galleryImages?.nodes[0]?.sourceUrl}
+									alt={product.galleryImages?.nodes[0]?.altText || ""}
 									fill
 									sizes="(max-width: 400px) 100vw,(max-width: 768px) 50vw,33vw"
 									className="custom-img aspect-square"
@@ -55,8 +55,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
 								leaveTo="opacity-0"
 							>
 								<Image
-									src={product.images[1]?.src}
-									alt={product.images[1]?.alt || ""}
+									src={product.galleryImages?.nodes[1]?.sourceUrl}
+									alt={product.galleryImages?.nodes[1]?.altText || ""}
 									fill
 									sizes="(max-width: 400px) 100vw,(max-width: 768px) 50vw,33vw"
 									className="custom-img"
@@ -69,7 +69,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 				<div className="flex-1 space-y-2 flex flex-col w-full">
 					<h3 className="font-bold px-4 py-2 text-gray-900 group-hover:text-accent transition-all text-base sm:text-xl">
 						<Link
-							href={`/shop/${product.sku}`}
+							href={`/shop/${product.slug}`}
 							title={product.name || ""}
 							className="flex font-sans"
 						>
@@ -77,16 +77,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
 							{product.name}
 						</Link>
 					</h3>
-					{product.short_description && (
+					{product.shortDescription && (
 						<div
 							className="text-sm text-gray-600 p-4"
-							dangerouslySetInnerHTML={{ __html: product.short_description }}
+							dangerouslySetInnerHTML={{ __html: product.shortDescription }}
 						/>
 					)}
 
 					<div className="px-4 pb-2 flex-1 flex flex-col justify-end">
 						{/*  <p className="text-sm italic text-gray-500">{product.options}</p> */}
-						{product.on_sale && (
+						{product.onSale && (
 							<div className="flex">
 								<span className="text-center items-center sm:hidden rounded-md bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800">
 									SALE!
@@ -94,15 +94,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
 							</div>
 						)}
 						<div className="flex">
-							{product.on_sale && (
-								<p className="text-sm text-gray-400 mr-2 line-through">
-									{formatCurrencyString(product.prices.regular_price)}
-								</p>
+							{product.onSale && (
+								<p className="text-sm text-gray-400 mr-2 line-through">{product.regularPrice}</p>
 							)}
-							<p className="text-sm font-medium text-gray-500 w-full">
-								{formatCurrencyString(product.prices.price)}
-							</p>
-							{product.on_sale && (
+							<p className="text-sm font-medium text-gray-500 w-full">{product.price}</p>
+							{product.onSale && (
 								<span className="hidden sm:inline-flex items-center rounded-md bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800">
 									SALE!
 								</span>

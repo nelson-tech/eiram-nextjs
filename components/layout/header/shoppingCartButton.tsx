@@ -17,11 +17,11 @@ const ShoppingCartButton = () => {
 		>
 			<ShoppingCartIcon
 				size={6}
-				type={(cart?.items_count || 0) > 0 ? "solid" : "outline"}
+				type={(cart?.contents.itemCount || 0) > 0 ? "solid" : "outline"}
 				styling="flex-shrink-0 text-gray-400 group-hover:text-gray-500 transition-all"
 			/>
 			<span className="ml-2 text-sm font-medium text-gray-400 group-hover:text-gray-800 transition-all">
-				{loading ? <LoadingSpinner size={2} /> : cart?.items_count ?? 0}
+				{loading ? <LoadingSpinner size={2} /> : cart?.contents.itemCount ?? 0}
 			</span>
 			<span className="sr-only">items in cart, view bag</span>
 		</button>

@@ -5,14 +5,15 @@ import Image from "next/image"
 
 import Link from "@components/Link"
 import Lightbox from "@components/Lightbox"
+import { MediaItem, PressItem } from "@api/codegen/graphql"
 
 type PressGalleryPropsType = {
-	press: WP_PressType[]
+	press: PressItem[]
 }
 
 const PressGallery = ({ press }: PressGalleryPropsType) => {
 	const [open, setOpen] = useState(true)
-	const [slide, setSlide] = useState<WP_PressType["_embedded"]["wp:featuredmedia"][0]>()
+	const [slide, setSlide] = useState<MediaItem>()
 
 	const close = () => {
 		setOpen(false)
@@ -22,7 +23,7 @@ const PressGallery = ({ press }: PressGalleryPropsType) => {
 		<>
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-2 md:mx-8 lg:mx-16 mt-12">
 				{press.map((press) => {
-					const image = press._embedded["wp:featuredmedia"][0]
+					const image = press.featuredImage.node
 
 					return (
 						<div
@@ -32,14 +33,14 @@ const PressGallery = ({ press }: PressGalleryPropsType) => {
 								setOpen(true)
 							}}
 							className=" mx-auto cursor-pointer group w-full rounded-sm "
-							title={press?.title.rendered}
+							title={press?.title}
 						>
 							<div className=" relative" style={{ height: "600px" }}>
 								<Image
-									src={image.source_url}
-									alt={image.alt_text}
-									fill
-									sizes="(max-width: 800px) 100vw,33vw"
+									src={image.sourceUrl}
+									alt={image.altText}
+									width={image.mediaDetails.width}
+									height={image.mediaDetails.height}
 									className=" object-contain w-full h-full rounded-sm"
 								/>
 							</div>
@@ -54,7 +55,7 @@ const PressGallery = ({ press }: PressGalleryPropsType) => {
 								</div>
 							</div> */}
 							<div
-								dangerouslySetInnerHTML={{ __html: press.content.rendered }}
+								dangerouslySetInnerHTML={{ __html: press.content }}
 								className="text-gray-600 text-center pt-4 pb-8"
 							/>
 						</div>

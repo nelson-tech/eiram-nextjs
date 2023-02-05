@@ -1,7 +1,9 @@
 "use client"
 
+import { Menu_Sitesettings_Footer_Socialmedia } from "@lib/api/codegen/graphql"
+
 type FooterProps = {
-	socialMedia: SocialMedia[]
+	socialMedia: Menu_Sitesettings_Footer_Socialmedia[]
 }
 
 const Footer = ({ socialMedia }: FooterProps) => {

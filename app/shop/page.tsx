@@ -1,18 +1,13 @@
+import useClient from "@api/client"
+import { GetProductsWithCategoriesDocument, Product } from "@api/codegen/graphql"
+
 import ProductGrid from "@components/productGrid"
-import { REST_CART } from "@lib/constants"
 
 const getAllProducts = async () => {
-	const url = REST_CART + "/products"
-	const headers = { "content-type": "application/json" }
+	const client = useClient()
+	const productData = await client.request(GetProductsWithCategoriesDocument)
 
-	const response = await fetch(url, {
-		method: "GET",
-		headers,
-	})
-
-	const data: WC_ProductType[] = await response.json()
-
-	return data
+	return productData?.products?.nodes as Product[]
 }
 
 const ShopPage = async () => {

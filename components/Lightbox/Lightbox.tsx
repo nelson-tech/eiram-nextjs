@@ -4,11 +4,12 @@ import NextImage from "next/image"
 import Modal from "@components/modal"
 import { XMarkIcon } from "@heroicons/react/20/solid"
 import useSizes from "./useSizes"
+import { MediaItem } from "@api/codegen/graphql"
 
 type LightboxPropsType = {
 	open: boolean
 	close: () => void
-	slide: string | WP_PressType["_embedded"]["wp:featuredmedia"][0] | undefined
+	slide: string | MediaItem | undefined
 }
 
 const Lightbox = ({ open, close, slide }: LightboxPropsType) => {
@@ -16,14 +17,8 @@ const Lightbox = ({ open, close, slide }: LightboxPropsType) => {
 
 	const { modalSize, imageSize } = useSizes({ slide })
 
-	console.log("Image Size", imageSize, modalSize)
-
 	return slide ? (
-		<Modal
-			open={open}
-			closeModal={close}
-			panelStyle={"inline-block  overflow-hidden shadow-xl rounded-2xl"}
-		>
+		<Modal open={open} closeModal={close} panelStyle={"inline-block  overflow-hidden rounded-2xl"}>
 			<>
 				<div style={modalSize}>
 					<div
@@ -36,27 +31,31 @@ const Lightbox = ({ open, close, slide }: LightboxPropsType) => {
 					</div>
 					{simpleImage ? (
 						<NextImage
-							fill
 							src={slide}
 							// loading="eager"
 							// placeholder="blur"
 							alt={""}
 							className=" object-contain rounded-lg overflow-hidden"
-							sizes={"100vw"}
+							fill
+							sizes="100vw"
 						/>
 					) : (
-						imageSize && (
-							<NextImage
-								src={slide.source_url}
-								// loading="eager"
-								// placeholder="blur"
-								alt={slide.alt_text}
-								width={imageSize.width}
-								height={imageSize.height}
-								className=" object-contain rounded-lg overflow-hidden"
-								sizes={"100vw"}
-							/>
-						)
+						<NextImage
+							src={slide.sourceUrl}
+							// loading="eager"
+							// placeholder="blur"
+							alt={slide.altText}
+							{...(slide.mediaDetails.width
+								? {
+										width: slide.mediaDetails.width,
+										height: slide.mediaDetails.height,
+								  }
+								: {
+										fill: true,
+										sizes: "100vw",
+								  })}
+							className=" object-contain rounded-lg overflow-hidden"
+						/>
 					)}
 				</div>
 			</>

@@ -3,13 +3,14 @@
 import { ServerStyleSheet, StyleSheetManager } from "styled-components"
 import { useServerInsertedHTML } from "next/navigation"
 import { useEffect, useState } from "react"
+import { Menu_Sitesettings_Colors } from "@lib/api/codegen/graphql"
 
 export default function RootStyleRegistry({
 	children,
 	colors,
 }: {
 	children: React.ReactNode
-	colors: WP_MENU["acf"]["colors"]
+	colors: Menu_Sitesettings_Colors
 }) {
 	const hexHueGenerator = (hexColor: string, luminance: number) => {
 		hexColor = hexColor.replace(`#`, ``)

@@ -18,22 +18,15 @@ export interface Typegen0 {
 			data: unknown
 			__tip: "See the XState TS docs to learn how to strongly type this."
 		}
-		"done.invoke.register": {
-			type: "done.invoke.register"
-			data: unknown
-			__tip: "See the XState TS docs to learn how to strongly type this."
-		}
 		"error.platform.authChecker": { type: "error.platform.authChecker"; data: unknown }
 		"error.platform.login": { type: "error.platform.login"; data: unknown }
 		"error.platform.logout": { type: "error.platform.logout"; data: unknown }
-		"error.platform.register": { type: "error.platform.register"; data: unknown }
 		"xstate.init": { type: "xstate.init" }
 	}
 	invokeSrcNameMap: {
 		authChecker: "done.invoke.authChecker"
 		login: "done.invoke.login"
 		logout: "done.invoke.logout"
-		register: "done.invoke.register"
 	}
 	missingImplementations: {
 		actions: never
@@ -42,11 +35,7 @@ export interface Typegen0 {
 		services: never
 	}
 	eventsCausingActions: {
-		setToken:
-			| "done.invoke.authChecker"
-			| "done.invoke.login"
-			| "done.invoke.logout"
-			| "done.invoke.register"
+		setToken: "done.invoke.authChecker" | "done.invoke.login" | "done.invoke.logout"
 	}
 	eventsCausingDelays: {}
 	eventsCausingGuards: {}
@@ -54,14 +43,7 @@ export interface Typegen0 {
 		authChecker: "AUTHENTICATE"
 		login: "LOGIN"
 		logout: "LOGOUT"
-		register: "REGISTER"
 	}
-	matchesStates:
-		| "authenticating"
-		| "loggedIn"
-		| "loggedOut"
-		| "loggingIn"
-		| "loggingOut"
-		| "registering"
+	matchesStates: "authenticating" | "loggedIn" | "loggedOut" | "loggingIn" | "loggingOut"
 	tags: never
 }

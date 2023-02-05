@@ -59,11 +59,11 @@ const ShoppingCart = ({ closeModal }: ShoppingCartProps) => {
 									</button>
 								</div>
 							</div>
-							<div className="mt-8 h-full">
+							<div className="mt-8 h-full p-2">
 								<div className="flow-root h-full">
-									{cart?.items && cart.items.length > 0 ? (
+									{cart?.contents?.nodes && cart.contents.nodes.length > 0 ? (
 										<ul className="-my-6 divide-y divide-gray-200 px-2">
-											{cart.items.map(
+											{cart.contents.nodes.map(
 												(lineItem) =>
 													lineItem && (
 														<CartItem
@@ -95,12 +95,12 @@ const ShoppingCart = ({ closeModal }: ShoppingCartProps) => {
 
 						<div
 							className={`border-t border-gray-200 py-6 px-4 sm:px-6${
-								cart?.items_count < 1 && " hidden"
+								cart?.contents.itemCount < 1 && " hidden"
 							}`}
 						>
 							<div className="flex justify-between text-base pb-2 font-medium text-gray-600">
 								<p>Subtotal</p>
-								<p>{formatCurrencyString(cart?.totals?.total_items)}</p>
+								<p>{cart?.total}</p>
 							</div>
 							<div className="mt-2">
 								<Link

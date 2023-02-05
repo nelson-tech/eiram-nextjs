@@ -1,15 +1,16 @@
-import { decodeToken } from "./decodeJwt";
+import { decodeToken } from "./decodeJwt"
 
-export const isTokenValid = (token: string | null | undefined): boolean => {
-  if (typeof token === "string") {
-    const tokenData = decodeToken(token);
-    const now = Date.now();
-    const expiration = tokenData?.exp ? tokenData.exp * 1000 : now;
+export const isTokenValid = (token: string | boolean | null | undefined): boolean => {
+	if (typeof token === "string") {
+		const tokenData = decodeToken(token)
 
-    if (expiration - now > 1000) {
-      return true;
-    }
-  }
+		const now = Date.now()
+		const expiration = tokenData?.exp ? tokenData.exp * 1000 : now
 
-  return false;
-};
+		if (expiration - now > 1000) {
+			return true
+		}
+	}
+
+	return false
+}

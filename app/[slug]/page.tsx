@@ -3,20 +3,15 @@ import getPageBySlug from "@lib/server/getPageBySlug"
 import Link from "@components/Link"
 
 const OtherPage = async ({ params }: { params: { slug: string } }) => {
-	const data = await getPageBySlug(params.slug)
-
-	const pageData = data
+	const pageData = await getPageBySlug(params.slug)
 
 	return (
 		<div className="sm:px-16 py-8 max-w-7xl mx-auto text-gray-500">
 			<h2 className="text-4xl font-bold font-sans tracking-wide pb-8 text-center">
-				{pageData?.title?.rendered ?? "Oops..."}
+				{pageData?.title ?? "Oops..."}
 			</h2>
-			{pageData?.content?.rendered ? (
-				<div
-					className="wp-container"
-					dangerouslySetInnerHTML={{ __html: pageData.content.rendered }}
-				/>
+			{pageData?.content ? (
+				<div className="wp-container" dangerouslySetInnerHTML={{ __html: pageData.content }} />
 			) : (
 				<div className="text-center">
 					<p>The page requested could not be found.</p>

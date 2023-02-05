@@ -5,6 +5,7 @@ import LoginIcon from "@icons/Login"
 import LogoutIcon from "@icons/Logout"
 
 import XIcon from "@icons/X"
+import { MenuItem } from "@lib/api/codegen/graphql"
 import useAuth from "@lib/hooks/useAuth"
 import userMenu from "@lib/userMenu"
 import { Fragment } from "react"
@@ -51,21 +52,22 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 							{menuItems &&
 								menuItems.length > 0 &&
 								menuItems.map((menuItem) => {
-									if (menuItem && !menuItem.post_parent && menuItem.child_items?.length > 0) {
+									if (menuItem && menuItem.childItems?.nodes?.length > 0) {
 										return (
 											<div className="flow-root pt-2">
-												<div className={bigLinkStyle} title={menuItem.title}>
-													{menuItem.title}
+												<div className={bigLinkStyle} title={menuItem.label}>
+													{menuItem.label}
 												</div>
 												<div className="pt-2">
-													{menuItem.child_items.map((child) => {
+													{menuItem.childItems.nodes.map((child: MenuItem) => {
 														return (
 															<div
 																className="font-bold text-sm text-gray-600 transition px-8 hover:bg-accent hover:text-white"
 																onClick={() => closeModal && closeModal()}
+																key={child.id}
 															>
-																<Link href={child.url} title={child.title} className="">
-																	<div className="w-full py-3">{child.title}</div>
+																<Link href={child.url} title={child.label} className="">
+																	<div className="w-full py-3">{child.label}</div>
 																</Link>
 															</div>
 														)
@@ -80,8 +82,8 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 												className={bigLinkStyle + " hover:bg-accent hover:text-white"}
 												onClick={() => closeModal && closeModal()}
 											>
-												<Link href={menuItem.url} title={menuItem.title} className="h-full py-3">
-													<div className="w-full py-3">{menuItem.title}</div>
+												<Link href={menuItem.url} title={menuItem.label} className="h-full py-3">
+													<div className="w-full py-3">{menuItem.label}</div>
 												</Link>
 											</div>
 										</div>
@@ -105,11 +107,11 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 													>
 														<item.icon size={6} styling="mr-4" />
 														<div>{item.label}</div>
-														{item.label === "Orders" && (
+														{/* {item.label === "Orders" && (
 															<span className="rounded-full bg-accent text-white px-2 text-sm ml-2 group-hover:bg-white group-hover:text-accent transition-all">
 																{context.user.orderCount}
 															</span>
-														)}
+														)} */}
 													</a>
 												</div>
 											)

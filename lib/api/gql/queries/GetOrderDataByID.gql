@@ -1,0 +1,57 @@
+query GetOrderDataByID($id: ID) {
+	order(id: $id, idType: DATABASE_ID) {
+		id
+		date
+		orderNumber
+		total
+		status
+		lineItems {
+			nodes {
+				quantity
+				total
+				product {
+					node {
+						... on SimpleProduct {
+							...ProductMinBase
+							image {
+								...ImageBase
+							}
+							galleryImages {
+								nodes {
+									...ImageBase
+								}
+							}
+							price
+							salePrice
+						}
+						...VariableProductFragment
+
+						... on VariableProduct {
+							...ProductMinBase
+							image {
+								...ImageBase
+							}
+							galleryImages {
+								nodes {
+									...ImageBase
+								}
+							}
+							price
+							salePrice
+							variations {
+								nodes {
+									...ProductVariationBase
+								}
+							}
+							attributes {
+								nodes {
+									...ProductAttributeBase
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
