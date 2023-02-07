@@ -31,7 +31,7 @@ const Checkout = ({
 	colors,
 	customer,
 }: CheckoutProps) => {
-	const { isAuth } = useAuth()
+	const { isAuth, processing } = useAuth()
 
 	const { cart, loading: cartLoading } = useCart().state
 
@@ -77,7 +77,7 @@ const Checkout = ({
 				</div>
 			) : (
 				<div>
-					{!isAuth && <GuestWarning />}
+					{!isAuth && !processing && <GuestWarning />}
 					{cart && (
 						<main className="lg:min-h-screen lg:overflow-hidden lg:flex lg:flex-row-reverse max-w-7xl mx-auto">
 							<h1 className="sr-only">Checkout</h1>

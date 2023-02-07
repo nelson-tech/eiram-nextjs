@@ -5,9 +5,8 @@ import { CartContext } from "machines/cartContext"
 import useAuth from "./useAuth"
 import useModals from "./useModals"
 import {
-	AddToCartDocument,
 	AddToCartInput,
-	GetCartDocument,
+	ClearCartDocument,
 	RemoveItemsFromCartInput,
 	UpdateItemQuantitiesInput,
 } from "@api/codegen/graphql"
@@ -55,11 +54,21 @@ const useCart = () => {
 	}
 
 	const updateItem = async (input: UpdateItemQuantitiesInput) => {
-		await send("UPDATEITEM", { input } as UpdateCartItemEventType)
+		const event: UpdateCartItemEventType = {
+			input,
+		}
+		await send("UPDATEITEM", event)
 	}
 
 	const removeItem = async (input: RemoveItemsFromCartInput) => {
-		await send("REMOVEITEM", { input } as RemoveCartItemEventType)
+		const event: RemoveCartItemEventType = {
+			input,
+		}
+		await send("REMOVEITEM", event)
+	}
+
+	const clearCart = async () => {
+		await send("CLEARCART")
 	}
 
 	return {
@@ -69,6 +78,7 @@ const useCart = () => {
 		addToCart,
 		updateItem,
 		removeItem,
+		clearCart,
 	}
 }
 

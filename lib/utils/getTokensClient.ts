@@ -1,13 +1,13 @@
 "use client"
 
 import { GraphQLClient } from "graphql-request"
+import { getCookie, getCookies } from "cookies-next"
 
 import { RefreshAuthTokenDocument } from "@api/codegen/graphql"
 import { API_URL, AUTH_TOKEN_KEY, CART_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@lib/constants"
 import type { CLIENT_Tokens_Type } from "@lib/types/auth"
 import { isTokenValid } from "./validateToken"
 import isServer from "./isServer"
-import { getCookie } from "cookies-next"
 import setCookie from "./setCookie"
 
 // ####
@@ -16,14 +16,13 @@ import setCookie from "./setCookie"
 
 const getTokensClient = async (): Promise<{
 	tokens: CLIENT_Tokens_Type
-	newAuth: boolean
 	isAuth: boolean
 }> => {
-	let authToken = getCookie(AUTH_TOKEN_KEY)?.valueOf() as string
-	let refreshToken = getCookie(REFRESH_TOKEN_KEY)?.valueOf() as string
-	let cartToken = getCookie(CART_TOKEN_KEY)?.valueOf() as string
+	const cookies = getCookies()
+	let authToken = cookies[AUTH_TOKEN_KEY]
+	let refreshToken = cookies[REFRESH_TOKEN_KEY]
+	let cartToken = cookies[CART_TOKEN_KEY]
 
-	let newAuth = false
 	let isAuth = false
 
 	// Validate authToken
@@ -42,7 +41,6 @@ const getTokensClient = async (): Promise<{
 		if (newAuthToken) {
 			console.log("New authToken generated")
 
-			newAuth = true
 			isAuth = true
 			authToken = newAuthToken
 
@@ -56,7 +54,6 @@ const getTokensClient = async (): Promise<{
 			refresh: refreshToken,
 			cart: cartToken,
 		},
-		newAuth,
 		isAuth,
 	}
 }

@@ -16,9 +16,7 @@ type RegisterFormInputType = {
 }
 
 const RegisterForm = ({ redirect }: RegisterFormInputType) => {
-	const [loading, setLoading] = useState(false)
-
-	const { register: registerUser } = useAuth()
+	const { register: registerUser, processing } = useAuth()
 
 	const {
 		formState: { errors },
@@ -41,8 +39,6 @@ const RegisterForm = ({ redirect }: RegisterFormInputType) => {
 	}> = async (data) => {
 		const { firstName, lastName, email, password } = data
 
-		setLoading(true)
-
 		const input: RegisterUserInput = {
 			username: email,
 			firstName,
@@ -52,8 +48,6 @@ const RegisterForm = ({ redirect }: RegisterFormInputType) => {
 		}
 
 		const newState = await registerUser(input)
-
-		setLoading(false)
 	}
 
 	const ErrorField = ({ name }: { name: "email" | "firstName" | "lastName" | "password" }) => {
@@ -152,7 +146,7 @@ const RegisterForm = ({ redirect }: RegisterFormInputType) => {
 								className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-accent hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-main"
 							>
 								<span className="absolute left-0 inset-y-0 flex items-center pl-3 ">
-									{loading ? (
+									{processing ? (
 										<LoadingSpinner size={5} color="white" />
 									) : (
 										<LockClosedIcon

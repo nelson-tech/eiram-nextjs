@@ -21258,6 +21258,7 @@ export type CustomerBaseFragment = {
 	email?: string | null
 	orderCount?: number | null
 	date?: string | null
+	sessionToken?: string | null
 	billing?: {
 		__typename?: "CustomerAddress"
 		address1?: string | null
@@ -22114,6 +22115,319 @@ export type UserFragment = {
 	email?: string | null
 }
 
+export type LoginUserMutationVariables = Exact<{
+	input: LoginInput
+}>
+
+export type LoginUserMutation = {
+	__typename?: "RootMutation"
+	login?: {
+		__typename?: "LoginPayload"
+		authToken?: string | null
+		refreshToken?: string | null
+		customer?: {
+			__typename?: "Customer"
+			id: string
+			firstName?: string | null
+			lastName?: string | null
+			displayName?: string | null
+			email?: string | null
+			orderCount?: number | null
+			date?: string | null
+			sessionToken?: string | null
+			billing?: {
+				__typename?: "CustomerAddress"
+				address1?: string | null
+				address2?: string | null
+				city?: string | null
+				company?: string | null
+				country?: CountriesEnum | null
+				email?: string | null
+				firstName?: string | null
+				lastName?: string | null
+				phone?: string | null
+				postcode?: string | null
+				state?: string | null
+			} | null
+			shipping?: {
+				__typename?: "CustomerAddress"
+				address1?: string | null
+				address2?: string | null
+				city?: string | null
+				company?: string | null
+				country?: CountriesEnum | null
+				email?: string | null
+				firstName?: string | null
+				lastName?: string | null
+				phone?: string | null
+				postcode?: string | null
+				state?: string | null
+			} | null
+		} | null
+	} | null
+}
+
+export type LogoutUserMutationVariables = Exact<{
+	input: LogoutInput
+}>
+
+export type LogoutUserMutation = {
+	__typename?: "RootMutation"
+	logout?: { __typename?: "LogoutPayload"; status?: string | null } | null
+}
+
+export type RefreshAuthTokenMutationVariables = Exact<{
+	input: RefreshJwtAuthTokenInput
+}>
+
+export type RefreshAuthTokenMutation = {
+	__typename?: "RootMutation"
+	refreshJwtAuthToken?: {
+		__typename?: "RefreshJwtAuthTokenPayload"
+		authToken?: string | null
+	} | null
+}
+
+export type RegisterCustomerMutationVariables = Exact<{
+	input: RegisterCustomerInput
+}>
+
+export type RegisterCustomerMutation = {
+	__typename?: "RootMutation"
+	registerCustomer?: {
+		__typename?: "RegisterCustomerPayload"
+		authToken?: string | null
+		refreshToken?: string | null
+		customer?: {
+			__typename?: "Customer"
+			id: string
+			firstName?: string | null
+			lastName?: string | null
+			displayName?: string | null
+			email?: string | null
+			orderCount?: number | null
+			date?: string | null
+			sessionToken?: string | null
+			billing?: {
+				__typename?: "CustomerAddress"
+				address1?: string | null
+				address2?: string | null
+				city?: string | null
+				company?: string | null
+				country?: CountriesEnum | null
+				email?: string | null
+				firstName?: string | null
+				lastName?: string | null
+				phone?: string | null
+				postcode?: string | null
+				state?: string | null
+			} | null
+			shipping?: {
+				__typename?: "CustomerAddress"
+				address1?: string | null
+				address2?: string | null
+				city?: string | null
+				company?: string | null
+				country?: CountriesEnum | null
+				email?: string | null
+				firstName?: string | null
+				lastName?: string | null
+				phone?: string | null
+				postcode?: string | null
+				state?: string | null
+			} | null
+		} | null
+	} | null
+}
+
+export type ResetUserPasswordMutationVariables = Exact<{
+	key: Scalars["String"]
+	login: Scalars["String"]
+	password: Scalars["String"]
+}>
+
+export type ResetUserPasswordMutation = {
+	__typename?: "RootMutation"
+	resetUserPassword?: {
+		__typename?: "ResetUserPasswordPayload"
+		clientMutationId?: string | null
+		user?: {
+			__typename?: "User"
+			id: string
+			databaseId: number
+			jwtAuthToken?: string | null
+			jwtRefreshToken?: string | null
+			firstName?: string | null
+			lastName?: string | null
+			username?: string | null
+			email?: string | null
+			wooSessionToken?: string | null
+		} | null
+	} | null
+}
+
+export type SendPasswordResetEmailMutationVariables = Exact<{
+	username: Scalars["String"]
+}>
+
+export type SendPasswordResetEmailMutation = {
+	__typename?: "RootMutation"
+	sendPasswordResetEmail?: {
+		__typename?: "SendPasswordResetEmailPayload"
+		clientMutationId?: string | null
+		success?: boolean | null
+	} | null
+}
+
+export type AddToCartMutationVariables = Exact<{
+	input: AddToCartInput
+}>
+
+export type AddToCartMutation = {
+	__typename?: "RootMutation"
+	addToCart?: {
+		__typename?: "AddToCartPayload"
+		cart?: {
+			__typename?: "Cart"
+			contentsTotal?: string | null
+			isEmpty?: boolean | null
+			subtotal?: string | null
+			total?: string | null
+			contents?: {
+				__typename?: "CartToCartItemConnection"
+				itemCount?: number | null
+				productCount?: number | null
+				nodes: Array<{
+					__typename?: "CartItem"
+					quantity?: number | null
+					subtotal?: string | null
+					total?: string | null
+					key: string
+					variation?: {
+						__typename?: "CartItemToProductVariationConnectionEdge"
+						attributes?: Array<{
+							__typename?: "VariationAttribute"
+							id: string
+							attributeId?: number | null
+							name?: string | null
+							label?: string | null
+							value?: string | null
+						} | null> | null
+					} | null
+					product?: {
+						__typename?: "CartItemToProductConnectionEdge"
+						node:
+							| {
+									__typename?: "ExternalProduct"
+									id: string
+									databaseId: number
+									name?: string | null
+									slug?: string | null
+									type?: ProductTypesEnum | null
+									image?: {
+										__typename?: "MediaItem"
+										id: string
+										databaseId: number
+										altText?: string | null
+										sourceUrl?: string | null
+										mimeType?: string | null
+										fileSize?: number | null
+										mediaDetails?: {
+											__typename?: "MediaDetails"
+											height?: number | null
+											width?: number | null
+										} | null
+									} | null
+									productCategories?: {
+										__typename?: "ProductToProductCategoryConnection"
+										nodes: Array<{ __typename?: "ProductCategory"; slug?: string | null }>
+									} | null
+							  }
+							| {
+									__typename?: "GroupProduct"
+									id: string
+									databaseId: number
+									name?: string | null
+									slug?: string | null
+									type?: ProductTypesEnum | null
+									image?: {
+										__typename?: "MediaItem"
+										id: string
+										databaseId: number
+										altText?: string | null
+										sourceUrl?: string | null
+										mimeType?: string | null
+										fileSize?: number | null
+										mediaDetails?: {
+											__typename?: "MediaDetails"
+											height?: number | null
+											width?: number | null
+										} | null
+									} | null
+									productCategories?: {
+										__typename?: "ProductToProductCategoryConnection"
+										nodes: Array<{ __typename?: "ProductCategory"; slug?: string | null }>
+									} | null
+							  }
+							| {
+									__typename?: "SimpleProduct"
+									id: string
+									databaseId: number
+									name?: string | null
+									slug?: string | null
+									type?: ProductTypesEnum | null
+									image?: {
+										__typename?: "MediaItem"
+										id: string
+										databaseId: number
+										altText?: string | null
+										sourceUrl?: string | null
+										mimeType?: string | null
+										fileSize?: number | null
+										mediaDetails?: {
+											__typename?: "MediaDetails"
+											height?: number | null
+											width?: number | null
+										} | null
+									} | null
+									productCategories?: {
+										__typename?: "ProductToProductCategoryConnection"
+										nodes: Array<{ __typename?: "ProductCategory"; slug?: string | null }>
+									} | null
+							  }
+							| {
+									__typename?: "VariableProduct"
+									id: string
+									databaseId: number
+									name?: string | null
+									slug?: string | null
+									type?: ProductTypesEnum | null
+									image?: {
+										__typename?: "MediaItem"
+										id: string
+										databaseId: number
+										altText?: string | null
+										sourceUrl?: string | null
+										mimeType?: string | null
+										fileSize?: number | null
+										mediaDetails?: {
+											__typename?: "MediaDetails"
+											height?: number | null
+											width?: number | null
+										} | null
+									} | null
+									productCategories?: {
+										__typename?: "ProductToProductCategoryConnection"
+										nodes: Array<{ __typename?: "ProductCategory"; slug?: string | null }>
+									} | null
+							  }
+					} | null
+				}>
+			} | null
+		} | null
+	} | null
+}
+
 export type CheckoutMutationVariables = Exact<{
 	input: CheckoutInput
 }>
@@ -22132,6 +22446,7 @@ export type CheckoutMutation = {
 			email?: string | null
 			orderCount?: number | null
 			date?: string | null
+			sessionToken?: string | null
 			billing?: {
 				__typename?: "CustomerAddress"
 				address1?: string | null
@@ -22374,152 +22689,12 @@ export type CheckoutMutation = {
 	} | null
 }
 
-export type LoginUserMutationVariables = Exact<{
-	input: LoginInput
-}>
-
-export type LoginUserMutation = {
-	__typename?: "RootMutation"
-	login?: {
-		__typename?: "LoginPayload"
-		user?: {
-			__typename?: "User"
-			id: string
-			databaseId: number
-			jwtAuthToken?: string | null
-			jwtRefreshToken?: string | null
-			firstName?: string | null
-			lastName?: string | null
-			username?: string | null
-			email?: string | null
-			wooSessionToken?: string | null
-		} | null
-	} | null
-}
-
-export type LogoutUserMutationVariables = Exact<{
-	input: LogoutInput
-}>
-
-export type LogoutUserMutation = {
-	__typename?: "RootMutation"
-	logout?: { __typename?: "LogoutPayload"; status?: string | null } | null
-}
-
-export type RefreshAuthTokenMutationVariables = Exact<{
-	input: RefreshJwtAuthTokenInput
-}>
-
-export type RefreshAuthTokenMutation = {
-	__typename?: "RootMutation"
-	refreshJwtAuthToken?: {
-		__typename?: "RefreshJwtAuthTokenPayload"
-		authToken?: string | null
-	} | null
-}
-
-export type RegisterUserMutationVariables = Exact<{
-	input: RegisterUserInput
-}>
-
-export type RegisterUserMutation = {
-	__typename?: "RootMutation"
-	registerUser?: {
-		__typename?: "RegisterUserPayload"
-		user?: {
-			__typename?: "User"
-			id: string
-			databaseId: number
-			jwtAuthToken?: string | null
-			jwtRefreshToken?: string | null
-			firstName?: string | null
-			lastName?: string | null
-			username?: string | null
-			email?: string | null
-			wooSessionToken?: string | null
-		} | null
-	} | null
-}
-
-export type ResetUserPasswordMutationVariables = Exact<{
-	key: Scalars["String"]
-	login: Scalars["String"]
-	password: Scalars["String"]
-}>
-
-export type ResetUserPasswordMutation = {
-	__typename?: "RootMutation"
-	resetUserPassword?: {
-		__typename?: "ResetUserPasswordPayload"
-		clientMutationId?: string | null
-		user?: {
-			__typename?: "User"
-			id: string
-			databaseId: number
-			jwtAuthToken?: string | null
-			jwtRefreshToken?: string | null
-			firstName?: string | null
-			lastName?: string | null
-			username?: string | null
-			email?: string | null
-			wooSessionToken?: string | null
-		} | null
-	} | null
-}
-
-export type SendPasswordResetEmailMutationVariables = Exact<{
-	username: Scalars["String"]
-}>
-
-export type SendPasswordResetEmailMutation = {
-	__typename?: "RootMutation"
-	sendPasswordResetEmail?: {
-		__typename?: "SendPasswordResetEmailPayload"
-		clientMutationId?: string | null
-		success?: boolean | null
-	} | null
-}
-
-export type AddToCartMutationVariables = Exact<{
-	input: AddToCartInput
-}>
-
-export type AddToCartMutation = {
-	__typename?: "RootMutation"
-	addToCart?: {
-		__typename?: "AddToCartPayload"
-		cart?: {
-			__typename?: "Cart"
-			isEmpty?: boolean | null
-			contents?: {
-				__typename?: "CartToCartItemConnection"
-				itemCount?: number | null
-				productCount?: number | null
-				edges: Array<{
-					__typename?: "CartToCartItemConnectionEdge"
-					node: {
-						__typename?: "CartItem"
-						extraData?: Array<{
-							__typename?: "MetaData"
-							key: string
-							value?: string | null
-						} | null> | null
-					}
-				}>
-			} | null
-		} | null
-	} | null
-}
-
-export type ClearCartMutationVariables = Exact<{
-	input: EmptyCartInput
-}>
+export type ClearCartMutationVariables = Exact<{ [key: string]: never }>
 
 export type ClearCartMutation = {
 	__typename?: "RootMutation"
 	emptyCart?: {
 		__typename?: "EmptyCartPayload"
-		clientMutationId?: string | null
 		cart?: {
 			__typename?: "Cart"
 			contentsTotal?: string | null
@@ -23484,9 +23659,9 @@ export type GetCollectionBySlugQuery = {
 	} | null
 }
 
-export type GetCollectionsQueryVariables = Exact<{ [key: string]: never }>
+export type GetCollectionsDataQueryVariables = Exact<{ [key: string]: never }>
 
-export type GetCollectionsQuery = {
+export type GetCollectionsDataQuery = {
 	__typename?: "RootQuery"
 	collections?: {
 		__typename?: "RootQueryToCollectionConnection"
@@ -23532,6 +23707,52 @@ export type GetCustomerDataQuery = {
 		email?: string | null
 		orderCount?: number | null
 		date?: string | null
+		sessionToken?: string | null
+		billing?: {
+			__typename?: "CustomerAddress"
+			address1?: string | null
+			address2?: string | null
+			city?: string | null
+			company?: string | null
+			country?: CountriesEnum | null
+			email?: string | null
+			firstName?: string | null
+			lastName?: string | null
+			phone?: string | null
+			postcode?: string | null
+			state?: string | null
+		} | null
+		shipping?: {
+			__typename?: "CustomerAddress"
+			address1?: string | null
+			address2?: string | null
+			city?: string | null
+			company?: string | null
+			country?: CountriesEnum | null
+			email?: string | null
+			firstName?: string | null
+			lastName?: string | null
+			phone?: string | null
+			postcode?: string | null
+			state?: string | null
+		} | null
+	} | null
+}
+
+export type GetCustomerDataWithOrdersQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetCustomerDataWithOrdersQuery = {
+	__typename?: "RootQuery"
+	customer?: {
+		__typename?: "Customer"
+		id: string
+		firstName?: string | null
+		lastName?: string | null
+		displayName?: string | null
+		email?: string | null
+		orderCount?: number | null
+		date?: string | null
+		sessionToken?: string | null
 		orders?: {
 			__typename?: "CustomerToOrderConnection"
 			nodes: Array<{
@@ -23578,9 +23799,9 @@ export type GetCustomerDataQuery = {
 	} | null
 }
 
-export type GetMenusQueryVariables = Exact<{ [key: string]: never }>
+export type GetMenuDataQueryVariables = Exact<{ [key: string]: never }>
 
-export type GetMenusQuery = {
+export type GetMenuDataQuery = {
 	__typename?: "RootQuery"
 	mainMenu?: {
 		__typename?: "Menu"
@@ -23853,11 +24074,11 @@ export type GetOrdersDataQuery = {
 	} | null
 }
 
-export type GetPageBySlugQueryVariables = Exact<{
+export type GetPageDataBySlugQueryVariables = Exact<{
 	slug: Scalars["ID"]
 }>
 
-export type GetPageBySlugQuery = {
+export type GetPageDataBySlugQuery = {
 	__typename?: "RootQuery"
 	page?: {
 		__typename?: "Page"
@@ -23869,9 +24090,9 @@ export type GetPageBySlugQuery = {
 	} | null
 }
 
-export type GetPressQueryVariables = Exact<{ [key: string]: never }>
+export type GetPressDataQueryVariables = Exact<{ [key: string]: never }>
 
-export type GetPressQuery = {
+export type GetPressDataQuery = {
 	__typename?: "RootQuery"
 	press?: {
 		__typename?: "RootQueryToPressItemConnection"
@@ -24373,6 +24594,123 @@ export type GetProductsByCategoryQuery = {
 	} | null
 }
 
+export type GetProductsDataQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetProductsDataQuery = {
+	__typename?: "RootQuery"
+	products?: {
+		__typename?: "RootQueryToProductConnection"
+		nodes: Array<
+			| {
+					__typename?: "ExternalProduct"
+					id: string
+					databaseId: number
+					name?: string | null
+					slug?: string | null
+					type?: ProductTypesEnum | null
+					onSale?: boolean | null
+					shortDescription?: string | null
+					galleryImages?: {
+						__typename?: "ProductToMediaItemConnection"
+						nodes: Array<{
+							__typename?: "MediaItem"
+							id: string
+							databaseId: number
+							altText?: string | null
+							sourceUrl?: string | null
+							mediaDetails?: {
+								__typename?: "MediaDetails"
+								height?: number | null
+								width?: number | null
+							} | null
+						}>
+					} | null
+			  }
+			| {
+					__typename?: "GroupProduct"
+					id: string
+					databaseId: number
+					name?: string | null
+					slug?: string | null
+					type?: ProductTypesEnum | null
+					onSale?: boolean | null
+					shortDescription?: string | null
+					galleryImages?: {
+						__typename?: "ProductToMediaItemConnection"
+						nodes: Array<{
+							__typename?: "MediaItem"
+							id: string
+							databaseId: number
+							altText?: string | null
+							sourceUrl?: string | null
+							mediaDetails?: {
+								__typename?: "MediaDetails"
+								height?: number | null
+								width?: number | null
+							} | null
+						}>
+					} | null
+			  }
+			| {
+					__typename?: "SimpleProduct"
+					price?: string | null
+					regularPrice?: string | null
+					salePrice?: string | null
+					id: string
+					databaseId: number
+					name?: string | null
+					slug?: string | null
+					type?: ProductTypesEnum | null
+					onSale?: boolean | null
+					shortDescription?: string | null
+					galleryImages?: {
+						__typename?: "ProductToMediaItemConnection"
+						nodes: Array<{
+							__typename?: "MediaItem"
+							id: string
+							databaseId: number
+							altText?: string | null
+							sourceUrl?: string | null
+							mediaDetails?: {
+								__typename?: "MediaDetails"
+								height?: number | null
+								width?: number | null
+							} | null
+						}>
+					} | null
+			  }
+			| {
+					__typename?: "VariableProduct"
+					price?: string | null
+					regularPrice?: string | null
+					salePrice?: string | null
+					id: string
+					databaseId: number
+					name?: string | null
+					slug?: string | null
+					type?: ProductTypesEnum | null
+					onSale?: boolean | null
+					shortDescription?: string | null
+					galleryImages?: {
+						__typename?: "ProductToMediaItemConnection"
+						nodes: Array<{
+							__typename?: "MediaItem"
+							id: string
+							databaseId: number
+							altText?: string | null
+							sourceUrl?: string | null
+							mediaDetails?: {
+								__typename?: "MediaDetails"
+								height?: number | null
+								width?: number | null
+							} | null
+						}>
+					} | null
+			  }
+		>
+	} | null
+}
+
 export type GetProductsWithCategoriesQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetProductsWithCategoriesQuery = {
@@ -24760,24 +25098,6 @@ export type GetProductsWithCategoriesQuery = {
 	} | null
 }
 
-export type GetViewerQueryVariables = Exact<{ [key: string]: never }>
-
-export type GetViewerQuery = {
-	__typename?: "RootQuery"
-	viewer?: {
-		__typename?: "User"
-		id: string
-		databaseId: number
-		jwtAuthToken?: string | null
-		jwtRefreshToken?: string | null
-		firstName?: string | null
-		lastName?: string | null
-		username?: string | null
-		email?: string | null
-		wooSessionToken?: string | null
-	} | null
-}
-
 export type QuickSearchQueryVariables = Exact<{
 	search?: InputMaybe<Scalars["String"]>
 }>
@@ -25089,6 +25409,7 @@ export const CustomerBaseFragmentDoc = {
 							],
 						},
 					},
+					{ kind: "Field", name: { kind: "Name", value: "sessionToken" } },
 				],
 			},
 		},
@@ -25572,78 +25893,6 @@ export const UserFragmentDoc = {
 		},
 	],
 } as unknown as DocumentNode<UserFragment, unknown>
-export const CheckoutDocument = {
-	kind: "Document",
-	definitions: [
-		{
-			kind: "OperationDefinition",
-			operation: "mutation",
-			name: { kind: "Name", value: "Checkout" },
-			variableDefinitions: [
-				{
-					kind: "VariableDefinition",
-					variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
-					type: {
-						kind: "NonNullType",
-						type: { kind: "NamedType", name: { kind: "Name", value: "CheckoutInput" } },
-					},
-				},
-			],
-			selectionSet: {
-				kind: "SelectionSet",
-				selections: [
-					{
-						kind: "Field",
-						name: { kind: "Name", value: "checkout" },
-						arguments: [
-							{
-								kind: "Argument",
-								name: { kind: "Name", value: "input" },
-								value: { kind: "Variable", name: { kind: "Name", value: "input" } },
-							},
-						],
-						selectionSet: {
-							kind: "SelectionSet",
-							selections: [
-								{
-									kind: "Field",
-									name: { kind: "Name", value: "customer" },
-									selectionSet: {
-										kind: "SelectionSet",
-										selections: [
-											{ kind: "FragmentSpread", name: { kind: "Name", value: "CustomerBase" } },
-										],
-									},
-								},
-								{
-									kind: "Field",
-									name: { kind: "Name", value: "order" },
-									selectionSet: {
-										kind: "SelectionSet",
-										selections: [
-											{ kind: "FragmentSpread", name: { kind: "Name", value: "OrderProductBase" } },
-										],
-									},
-								},
-								{ kind: "Field", name: { kind: "Name", value: "result" } },
-							],
-						},
-					},
-				],
-			},
-		},
-		...CustomerBaseFragmentDoc.definitions,
-		...OrderProductBaseFragmentDoc.definitions,
-		...SimpleProductFragmentFragmentDoc.definitions,
-		...ProductBaseFragmentDoc.definitions,
-		...ProductMinBaseFragmentDoc.definitions,
-		...ImageBaseFragmentDoc.definitions,
-		...VariableProductFragmentFragmentDoc.definitions,
-		...ProductVariationBaseFragmentDoc.definitions,
-		...VariationAttributeBaseFragmentDoc.definitions,
-		...ProductAttributeBaseFragmentDoc.definitions,
-	],
-} as unknown as DocumentNode<CheckoutMutation, CheckoutMutationVariables>
 export const LoginUserDocument = {
 	kind: "Document",
 	definitions: [
@@ -25679,21 +25928,23 @@ export const LoginUserDocument = {
 							selections: [
 								{
 									kind: "Field",
-									name: { kind: "Name", value: "user" },
+									name: { kind: "Name", value: "customer" },
 									selectionSet: {
 										kind: "SelectionSet",
 										selections: [
-											{ kind: "FragmentSpread", name: { kind: "Name", value: "UserAuthBase" } },
+											{ kind: "FragmentSpread", name: { kind: "Name", value: "CustomerBase" } },
 										],
 									},
 								},
+								{ kind: "Field", name: { kind: "Name", value: "authToken" } },
+								{ kind: "Field", name: { kind: "Name", value: "refreshToken" } },
 							],
 						},
 					},
 				],
 			},
 		},
-		...UserAuthBaseFragmentDoc.definitions,
+		...CustomerBaseFragmentDoc.definitions,
 	],
 } as unknown as DocumentNode<LoginUserMutation, LoginUserMutationVariables>
 export const LogoutUserDocument = {
@@ -25776,20 +26027,20 @@ export const RefreshAuthTokenDocument = {
 		},
 	],
 } as unknown as DocumentNode<RefreshAuthTokenMutation, RefreshAuthTokenMutationVariables>
-export const RegisterUserDocument = {
+export const RegisterCustomerDocument = {
 	kind: "Document",
 	definitions: [
 		{
 			kind: "OperationDefinition",
 			operation: "mutation",
-			name: { kind: "Name", value: "RegisterUser" },
+			name: { kind: "Name", value: "RegisterCustomer" },
 			variableDefinitions: [
 				{
 					kind: "VariableDefinition",
 					variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
 					type: {
 						kind: "NonNullType",
-						type: { kind: "NamedType", name: { kind: "Name", value: "RegisterUserInput" } },
+						type: { kind: "NamedType", name: { kind: "Name", value: "RegisterCustomerInput" } },
 					},
 				},
 			],
@@ -25798,7 +26049,7 @@ export const RegisterUserDocument = {
 				selections: [
 					{
 						kind: "Field",
-						name: { kind: "Name", value: "registerUser" },
+						name: { kind: "Name", value: "registerCustomer" },
 						arguments: [
 							{
 								kind: "Argument",
@@ -25811,23 +26062,25 @@ export const RegisterUserDocument = {
 							selections: [
 								{
 									kind: "Field",
-									name: { kind: "Name", value: "user" },
+									name: { kind: "Name", value: "customer" },
 									selectionSet: {
 										kind: "SelectionSet",
 										selections: [
-											{ kind: "FragmentSpread", name: { kind: "Name", value: "UserAuthBase" } },
+											{ kind: "FragmentSpread", name: { kind: "Name", value: "CustomerBase" } },
 										],
 									},
 								},
+								{ kind: "Field", name: { kind: "Name", value: "authToken" } },
+								{ kind: "Field", name: { kind: "Name", value: "refreshToken" } },
 							],
 						},
 					},
 				],
 			},
 		},
-		...UserAuthBaseFragmentDoc.definitions,
+		...CustomerBaseFragmentDoc.definitions,
 	],
-} as unknown as DocumentNode<RegisterUserMutation, RegisterUserMutationVariables>
+} as unknown as DocumentNode<RegisterCustomerMutation, RegisterCustomerMutationVariables>
 export const ResetUserPasswordDocument = {
 	kind: "Document",
 	definitions: [
@@ -26010,53 +26263,7 @@ export const AddToCartDocument = {
 									selectionSet: {
 										kind: "SelectionSet",
 										selections: [
-											{ kind: "Field", name: { kind: "Name", value: "isEmpty" } },
-											{
-												kind: "Field",
-												name: { kind: "Name", value: "contents" },
-												selectionSet: {
-													kind: "SelectionSet",
-													selections: [
-														{ kind: "Field", name: { kind: "Name", value: "itemCount" } },
-														{ kind: "Field", name: { kind: "Name", value: "productCount" } },
-														{
-															kind: "Field",
-															name: { kind: "Name", value: "edges" },
-															selectionSet: {
-																kind: "SelectionSet",
-																selections: [
-																	{
-																		kind: "Field",
-																		name: { kind: "Name", value: "node" },
-																		selectionSet: {
-																			kind: "SelectionSet",
-																			selections: [
-																				{
-																					kind: "Field",
-																					name: { kind: "Name", value: "extraData" },
-																					selectionSet: {
-																						kind: "SelectionSet",
-																						selections: [
-																							{
-																								kind: "Field",
-																								name: { kind: "Name", value: "key" },
-																							},
-																							{
-																								kind: "Field",
-																								name: { kind: "Name", value: "value" },
-																							},
-																						],
-																					},
-																				},
-																			],
-																		},
-																	},
-																],
-															},
-														},
-													],
-												},
-											},
+											{ kind: "FragmentSpread", name: { kind: "Name", value: "CartBase" } },
 										],
 									},
 								},
@@ -26066,22 +26273,27 @@ export const AddToCartDocument = {
 				],
 			},
 		},
+		...CartBaseFragmentDoc.definitions,
+		...CartItemFragmentDoc.definitions,
+		...VariationAttributeBaseFragmentDoc.definitions,
+		...ProductMinBaseFragmentDoc.definitions,
+		...ImageBaseFragmentDoc.definitions,
 	],
 } as unknown as DocumentNode<AddToCartMutation, AddToCartMutationVariables>
-export const ClearCartDocument = {
+export const CheckoutDocument = {
 	kind: "Document",
 	definitions: [
 		{
 			kind: "OperationDefinition",
 			operation: "mutation",
-			name: { kind: "Name", value: "ClearCart" },
+			name: { kind: "Name", value: "Checkout" },
 			variableDefinitions: [
 				{
 					kind: "VariableDefinition",
 					variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
 					type: {
 						kind: "NonNullType",
-						type: { kind: "NamedType", name: { kind: "Name", value: "EmptyCartInput" } },
+						type: { kind: "NamedType", name: { kind: "Name", value: "CheckoutInput" } },
 					},
 				},
 			],
@@ -26090,7 +26302,7 @@ export const ClearCartDocument = {
 				selections: [
 					{
 						kind: "Field",
-						name: { kind: "Name", value: "emptyCart" },
+						name: { kind: "Name", value: "checkout" },
 						arguments: [
 							{
 								kind: "Argument",
@@ -26101,7 +26313,77 @@ export const ClearCartDocument = {
 						selectionSet: {
 							kind: "SelectionSet",
 							selections: [
-								{ kind: "Field", name: { kind: "Name", value: "clientMutationId" } },
+								{
+									kind: "Field",
+									name: { kind: "Name", value: "customer" },
+									selectionSet: {
+										kind: "SelectionSet",
+										selections: [
+											{ kind: "FragmentSpread", name: { kind: "Name", value: "CustomerBase" } },
+										],
+									},
+								},
+								{
+									kind: "Field",
+									name: { kind: "Name", value: "order" },
+									selectionSet: {
+										kind: "SelectionSet",
+										selections: [
+											{ kind: "FragmentSpread", name: { kind: "Name", value: "OrderProductBase" } },
+										],
+									},
+								},
+								{ kind: "Field", name: { kind: "Name", value: "result" } },
+							],
+						},
+					},
+				],
+			},
+		},
+		...CustomerBaseFragmentDoc.definitions,
+		...OrderProductBaseFragmentDoc.definitions,
+		...SimpleProductFragmentFragmentDoc.definitions,
+		...ProductBaseFragmentDoc.definitions,
+		...ProductMinBaseFragmentDoc.definitions,
+		...ImageBaseFragmentDoc.definitions,
+		...VariableProductFragmentFragmentDoc.definitions,
+		...ProductVariationBaseFragmentDoc.definitions,
+		...VariationAttributeBaseFragmentDoc.definitions,
+		...ProductAttributeBaseFragmentDoc.definitions,
+	],
+} as unknown as DocumentNode<CheckoutMutation, CheckoutMutationVariables>
+export const ClearCartDocument = {
+	kind: "Document",
+	definitions: [
+		{
+			kind: "OperationDefinition",
+			operation: "mutation",
+			name: { kind: "Name", value: "ClearCart" },
+			selectionSet: {
+				kind: "SelectionSet",
+				selections: [
+					{
+						kind: "Field",
+						name: { kind: "Name", value: "emptyCart" },
+						arguments: [
+							{
+								kind: "Argument",
+								name: { kind: "Name", value: "input" },
+								value: {
+									kind: "ObjectValue",
+									fields: [
+										{
+											kind: "ObjectField",
+											name: { kind: "Name", value: "clearPersistentCart" },
+											value: { kind: "BooleanValue", value: true },
+										},
+									],
+								},
+							},
+						],
+						selectionSet: {
+							kind: "SelectionSet",
+							selections: [
 								{
 									kind: "Field",
 									name: { kind: "Name", value: "cart" },
@@ -26742,13 +27024,13 @@ export const GetCollectionBySlugDocument = {
 		...ImageBaseFragmentDoc.definitions,
 	],
 } as unknown as DocumentNode<GetCollectionBySlugQuery, GetCollectionBySlugQueryVariables>
-export const GetCollectionsDocument = {
+export const GetCollectionsDataDocument = {
 	kind: "Document",
 	definitions: [
 		{
 			kind: "OperationDefinition",
 			operation: "query",
-			name: { kind: "Name", value: "GetCollections" },
+			name: { kind: "Name", value: "GetCollectionsData" },
 			selectionSet: {
 				kind: "SelectionSet",
 				selections: [
@@ -26816,7 +27098,7 @@ export const GetCollectionsDocument = {
 		},
 		...ImageBaseFragmentDoc.definitions,
 	],
-} as unknown as DocumentNode<GetCollectionsQuery, GetCollectionsQueryVariables>
+} as unknown as DocumentNode<GetCollectionsDataQuery, GetCollectionsDataQueryVariables>
 export const GetCustomerDataDocument = {
 	kind: "Document",
 	definitions: [
@@ -26824,6 +27106,32 @@ export const GetCustomerDataDocument = {
 			kind: "OperationDefinition",
 			operation: "query",
 			name: { kind: "Name", value: "GetCustomerData" },
+			selectionSet: {
+				kind: "SelectionSet",
+				selections: [
+					{
+						kind: "Field",
+						name: { kind: "Name", value: "customer" },
+						selectionSet: {
+							kind: "SelectionSet",
+							selections: [
+								{ kind: "FragmentSpread", name: { kind: "Name", value: "CustomerBase" } },
+							],
+						},
+					},
+				],
+			},
+		},
+		...CustomerBaseFragmentDoc.definitions,
+	],
+} as unknown as DocumentNode<GetCustomerDataQuery, GetCustomerDataQueryVariables>
+export const GetCustomerDataWithOrdersDocument = {
+	kind: "Document",
+	definitions: [
+		{
+			kind: "OperationDefinition",
+			operation: "query",
+			name: { kind: "Name", value: "GetCustomerDataWithOrders" },
 			selectionSet: {
 				kind: "SelectionSet",
 				selections: [
@@ -26887,14 +27195,17 @@ export const GetCustomerDataDocument = {
 		},
 		...CustomerBaseFragmentDoc.definitions,
 	],
-} as unknown as DocumentNode<GetCustomerDataQuery, GetCustomerDataQueryVariables>
-export const GetMenusDocument = {
+} as unknown as DocumentNode<
+	GetCustomerDataWithOrdersQuery,
+	GetCustomerDataWithOrdersQueryVariables
+>
+export const GetMenuDataDocument = {
 	kind: "Document",
 	definitions: [
 		{
 			kind: "OperationDefinition",
 			operation: "query",
-			name: { kind: "Name", value: "GetMenus" },
+			name: { kind: "Name", value: "GetMenuData" },
 			selectionSet: {
 				kind: "SelectionSet",
 				selections: [
@@ -27048,7 +27359,7 @@ export const GetMenusDocument = {
 			},
 		},
 	],
-} as unknown as DocumentNode<GetMenusQuery, GetMenusQueryVariables>
+} as unknown as DocumentNode<GetMenuDataQuery, GetMenuDataQueryVariables>
 export const GetOrderDataByIdDocument = {
 	kind: "Document",
 	definitions: [
@@ -27377,13 +27688,13 @@ export const GetOrdersDataDocument = {
 		},
 	],
 } as unknown as DocumentNode<GetOrdersDataQuery, GetOrdersDataQueryVariables>
-export const GetPageBySlugDocument = {
+export const GetPageDataBySlugDocument = {
 	kind: "Document",
 	definitions: [
 		{
 			kind: "OperationDefinition",
 			operation: "query",
-			name: { kind: "Name", value: "GetPageBySlug" },
+			name: { kind: "Name", value: "GetPageDataBySlug" },
 			variableDefinitions: [
 				{
 					kind: "VariableDefinition",
@@ -27425,14 +27736,14 @@ export const GetPageBySlugDocument = {
 		},
 		...PageCommonBaseFragmentDoc.definitions,
 	],
-} as unknown as DocumentNode<GetPageBySlugQuery, GetPageBySlugQueryVariables>
-export const GetPressDocument = {
+} as unknown as DocumentNode<GetPageDataBySlugQuery, GetPageDataBySlugQueryVariables>
+export const GetPressDataDocument = {
 	kind: "Document",
 	definitions: [
 		{
 			kind: "OperationDefinition",
 			operation: "query",
-			name: { kind: "Name", value: "GetPress" },
+			name: { kind: "Name", value: "GetPressData" },
 			selectionSet: {
 				kind: "SelectionSet",
 				selections: [
@@ -27492,7 +27803,7 @@ export const GetPressDocument = {
 		},
 		...ImageBaseFragmentDoc.definitions,
 	],
-} as unknown as DocumentNode<GetPressQuery, GetPressQueryVariables>
+} as unknown as DocumentNode<GetPressDataQuery, GetPressDataQueryVariables>
 export const GetProductCategoriesDocument = {
 	kind: "Document",
 	definitions: [
@@ -27910,6 +28221,116 @@ export const GetProductsByCategoryDocument = {
 		...ProductPriceBaseFragmentDoc.definitions,
 	],
 } as unknown as DocumentNode<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>
+export const GetProductsDataDocument = {
+	kind: "Document",
+	definitions: [
+		{
+			kind: "OperationDefinition",
+			operation: "query",
+			name: { kind: "Name", value: "GetProductsData" },
+			selectionSet: {
+				kind: "SelectionSet",
+				selections: [
+					{
+						kind: "Field",
+						name: { kind: "Name", value: "products" },
+						arguments: [
+							{
+								kind: "Argument",
+								name: { kind: "Name", value: "first" },
+								value: { kind: "IntValue", value: "200" },
+							},
+						],
+						selectionSet: {
+							kind: "SelectionSet",
+							selections: [
+								{
+									kind: "Field",
+									name: { kind: "Name", value: "nodes" },
+									selectionSet: {
+										kind: "SelectionSet",
+										selections: [
+											{ kind: "Field", name: { kind: "Name", value: "id" } },
+											{ kind: "Field", name: { kind: "Name", value: "databaseId" } },
+											{ kind: "Field", name: { kind: "Name", value: "name" } },
+											{ kind: "Field", name: { kind: "Name", value: "slug" } },
+											{ kind: "Field", name: { kind: "Name", value: "type" } },
+											{ kind: "Field", name: { kind: "Name", value: "onSale" } },
+											{ kind: "Field", name: { kind: "Name", value: "shortDescription" } },
+											{
+												kind: "Field",
+												name: { kind: "Name", value: "galleryImages" },
+												selectionSet: {
+													kind: "SelectionSet",
+													selections: [
+														{
+															kind: "Field",
+															name: { kind: "Name", value: "nodes" },
+															selectionSet: {
+																kind: "SelectionSet",
+																selections: [
+																	{ kind: "Field", name: { kind: "Name", value: "id" } },
+																	{ kind: "Field", name: { kind: "Name", value: "databaseId" } },
+																	{ kind: "Field", name: { kind: "Name", value: "altText" } },
+																	{ kind: "Field", name: { kind: "Name", value: "sourceUrl" } },
+																	{
+																		kind: "Field",
+																		name: { kind: "Name", value: "mediaDetails" },
+																		selectionSet: {
+																			kind: "SelectionSet",
+																			selections: [
+																				{ kind: "Field", name: { kind: "Name", value: "height" } },
+																				{ kind: "Field", name: { kind: "Name", value: "width" } },
+																			],
+																		},
+																	},
+																],
+															},
+														},
+													],
+												},
+											},
+											{
+												kind: "InlineFragment",
+												typeCondition: {
+													kind: "NamedType",
+													name: { kind: "Name", value: "SimpleProduct" },
+												},
+												selectionSet: {
+													kind: "SelectionSet",
+													selections: [
+														{ kind: "Field", name: { kind: "Name", value: "price" } },
+														{ kind: "Field", name: { kind: "Name", value: "regularPrice" } },
+														{ kind: "Field", name: { kind: "Name", value: "salePrice" } },
+													],
+												},
+											},
+											{
+												kind: "InlineFragment",
+												typeCondition: {
+													kind: "NamedType",
+													name: { kind: "Name", value: "VariableProduct" },
+												},
+												selectionSet: {
+													kind: "SelectionSet",
+													selections: [
+														{ kind: "Field", name: { kind: "Name", value: "price" } },
+														{ kind: "Field", name: { kind: "Name", value: "regularPrice" } },
+														{ kind: "Field", name: { kind: "Name", value: "salePrice" } },
+													],
+												},
+											},
+										],
+									},
+								},
+							],
+						},
+					},
+				],
+			},
+		},
+	],
+} as unknown as DocumentNode<GetProductsDataQuery, GetProductsDataQueryVariables>
 export const GetProductsWithCategoriesDocument = {
 	kind: "Document",
 	definitions: [
@@ -28019,32 +28440,6 @@ export const GetProductsWithCategoriesDocument = {
 	GetProductsWithCategoriesQuery,
 	GetProductsWithCategoriesQueryVariables
 >
-export const GetViewerDocument = {
-	kind: "Document",
-	definitions: [
-		{
-			kind: "OperationDefinition",
-			operation: "query",
-			name: { kind: "Name", value: "GetViewer" },
-			selectionSet: {
-				kind: "SelectionSet",
-				selections: [
-					{
-						kind: "Field",
-						name: { kind: "Name", value: "viewer" },
-						selectionSet: {
-							kind: "SelectionSet",
-							selections: [
-								{ kind: "FragmentSpread", name: { kind: "Name", value: "UserAuthBase" } },
-							],
-						},
-					},
-				],
-			},
-		},
-		...UserAuthBaseFragmentDoc.definitions,
-	],
-} as unknown as DocumentNode<GetViewerQuery, GetViewerQueryVariables>
 export const QuickSearchDocument = {
 	kind: "Document",
 	definitions: [
@@ -49374,6 +49769,7 @@ export type CustomerBaseFragment = {
 	email?: string | null
 	orderCount?: number | null
 	date?: string | null
+	sessionToken?: string | null
 	billing?: {
 		__typename?: "CustomerAddress"
 		address1?: string | null
@@ -50230,6 +50626,319 @@ export type UserFragment = {
 	email?: string | null
 }
 
+export type LoginUserMutationVariables = Exact<{
+	input: LoginInput
+}>
+
+export type LoginUserMutation = {
+	__typename?: "RootMutation"
+	login?: {
+		__typename?: "LoginPayload"
+		authToken?: string | null
+		refreshToken?: string | null
+		customer?: {
+			__typename?: "Customer"
+			id: string
+			firstName?: string | null
+			lastName?: string | null
+			displayName?: string | null
+			email?: string | null
+			orderCount?: number | null
+			date?: string | null
+			sessionToken?: string | null
+			billing?: {
+				__typename?: "CustomerAddress"
+				address1?: string | null
+				address2?: string | null
+				city?: string | null
+				company?: string | null
+				country?: CountriesEnum | null
+				email?: string | null
+				firstName?: string | null
+				lastName?: string | null
+				phone?: string | null
+				postcode?: string | null
+				state?: string | null
+			} | null
+			shipping?: {
+				__typename?: "CustomerAddress"
+				address1?: string | null
+				address2?: string | null
+				city?: string | null
+				company?: string | null
+				country?: CountriesEnum | null
+				email?: string | null
+				firstName?: string | null
+				lastName?: string | null
+				phone?: string | null
+				postcode?: string | null
+				state?: string | null
+			} | null
+		} | null
+	} | null
+}
+
+export type LogoutUserMutationVariables = Exact<{
+	input: LogoutInput
+}>
+
+export type LogoutUserMutation = {
+	__typename?: "RootMutation"
+	logout?: { __typename?: "LogoutPayload"; status?: string | null } | null
+}
+
+export type RefreshAuthTokenMutationVariables = Exact<{
+	input: RefreshJwtAuthTokenInput
+}>
+
+export type RefreshAuthTokenMutation = {
+	__typename?: "RootMutation"
+	refreshJwtAuthToken?: {
+		__typename?: "RefreshJwtAuthTokenPayload"
+		authToken?: string | null
+	} | null
+}
+
+export type RegisterCustomerMutationVariables = Exact<{
+	input: RegisterCustomerInput
+}>
+
+export type RegisterCustomerMutation = {
+	__typename?: "RootMutation"
+	registerCustomer?: {
+		__typename?: "RegisterCustomerPayload"
+		authToken?: string | null
+		refreshToken?: string | null
+		customer?: {
+			__typename?: "Customer"
+			id: string
+			firstName?: string | null
+			lastName?: string | null
+			displayName?: string | null
+			email?: string | null
+			orderCount?: number | null
+			date?: string | null
+			sessionToken?: string | null
+			billing?: {
+				__typename?: "CustomerAddress"
+				address1?: string | null
+				address2?: string | null
+				city?: string | null
+				company?: string | null
+				country?: CountriesEnum | null
+				email?: string | null
+				firstName?: string | null
+				lastName?: string | null
+				phone?: string | null
+				postcode?: string | null
+				state?: string | null
+			} | null
+			shipping?: {
+				__typename?: "CustomerAddress"
+				address1?: string | null
+				address2?: string | null
+				city?: string | null
+				company?: string | null
+				country?: CountriesEnum | null
+				email?: string | null
+				firstName?: string | null
+				lastName?: string | null
+				phone?: string | null
+				postcode?: string | null
+				state?: string | null
+			} | null
+		} | null
+	} | null
+}
+
+export type ResetUserPasswordMutationVariables = Exact<{
+	key: Scalars["String"]
+	login: Scalars["String"]
+	password: Scalars["String"]
+}>
+
+export type ResetUserPasswordMutation = {
+	__typename?: "RootMutation"
+	resetUserPassword?: {
+		__typename?: "ResetUserPasswordPayload"
+		clientMutationId?: string | null
+		user?: {
+			__typename?: "User"
+			id: string
+			databaseId: number
+			jwtAuthToken?: string | null
+			jwtRefreshToken?: string | null
+			firstName?: string | null
+			lastName?: string | null
+			username?: string | null
+			email?: string | null
+			wooSessionToken?: string | null
+		} | null
+	} | null
+}
+
+export type SendPasswordResetEmailMutationVariables = Exact<{
+	username: Scalars["String"]
+}>
+
+export type SendPasswordResetEmailMutation = {
+	__typename?: "RootMutation"
+	sendPasswordResetEmail?: {
+		__typename?: "SendPasswordResetEmailPayload"
+		clientMutationId?: string | null
+		success?: boolean | null
+	} | null
+}
+
+export type AddToCartMutationVariables = Exact<{
+	input: AddToCartInput
+}>
+
+export type AddToCartMutation = {
+	__typename?: "RootMutation"
+	addToCart?: {
+		__typename?: "AddToCartPayload"
+		cart?: {
+			__typename?: "Cart"
+			contentsTotal?: string | null
+			isEmpty?: boolean | null
+			subtotal?: string | null
+			total?: string | null
+			contents?: {
+				__typename?: "CartToCartItemConnection"
+				itemCount?: number | null
+				productCount?: number | null
+				nodes: Array<{
+					__typename?: "CartItem"
+					quantity?: number | null
+					subtotal?: string | null
+					total?: string | null
+					key: string
+					variation?: {
+						__typename?: "CartItemToProductVariationConnectionEdge"
+						attributes?: Array<{
+							__typename?: "VariationAttribute"
+							id: string
+							attributeId?: number | null
+							name?: string | null
+							label?: string | null
+							value?: string | null
+						} | null> | null
+					} | null
+					product?: {
+						__typename?: "CartItemToProductConnectionEdge"
+						node:
+							| {
+									__typename?: "ExternalProduct"
+									id: string
+									databaseId: number
+									name?: string | null
+									slug?: string | null
+									type?: ProductTypesEnum | null
+									image?: {
+										__typename?: "MediaItem"
+										id: string
+										databaseId: number
+										altText?: string | null
+										sourceUrl?: string | null
+										mimeType?: string | null
+										fileSize?: number | null
+										mediaDetails?: {
+											__typename?: "MediaDetails"
+											height?: number | null
+											width?: number | null
+										} | null
+									} | null
+									productCategories?: {
+										__typename?: "ProductToProductCategoryConnection"
+										nodes: Array<{ __typename?: "ProductCategory"; slug?: string | null }>
+									} | null
+							  }
+							| {
+									__typename?: "GroupProduct"
+									id: string
+									databaseId: number
+									name?: string | null
+									slug?: string | null
+									type?: ProductTypesEnum | null
+									image?: {
+										__typename?: "MediaItem"
+										id: string
+										databaseId: number
+										altText?: string | null
+										sourceUrl?: string | null
+										mimeType?: string | null
+										fileSize?: number | null
+										mediaDetails?: {
+											__typename?: "MediaDetails"
+											height?: number | null
+											width?: number | null
+										} | null
+									} | null
+									productCategories?: {
+										__typename?: "ProductToProductCategoryConnection"
+										nodes: Array<{ __typename?: "ProductCategory"; slug?: string | null }>
+									} | null
+							  }
+							| {
+									__typename?: "SimpleProduct"
+									id: string
+									databaseId: number
+									name?: string | null
+									slug?: string | null
+									type?: ProductTypesEnum | null
+									image?: {
+										__typename?: "MediaItem"
+										id: string
+										databaseId: number
+										altText?: string | null
+										sourceUrl?: string | null
+										mimeType?: string | null
+										fileSize?: number | null
+										mediaDetails?: {
+											__typename?: "MediaDetails"
+											height?: number | null
+											width?: number | null
+										} | null
+									} | null
+									productCategories?: {
+										__typename?: "ProductToProductCategoryConnection"
+										nodes: Array<{ __typename?: "ProductCategory"; slug?: string | null }>
+									} | null
+							  }
+							| {
+									__typename?: "VariableProduct"
+									id: string
+									databaseId: number
+									name?: string | null
+									slug?: string | null
+									type?: ProductTypesEnum | null
+									image?: {
+										__typename?: "MediaItem"
+										id: string
+										databaseId: number
+										altText?: string | null
+										sourceUrl?: string | null
+										mimeType?: string | null
+										fileSize?: number | null
+										mediaDetails?: {
+											__typename?: "MediaDetails"
+											height?: number | null
+											width?: number | null
+										} | null
+									} | null
+									productCategories?: {
+										__typename?: "ProductToProductCategoryConnection"
+										nodes: Array<{ __typename?: "ProductCategory"; slug?: string | null }>
+									} | null
+							  }
+					} | null
+				}>
+			} | null
+		} | null
+	} | null
+}
+
 export type CheckoutMutationVariables = Exact<{
 	input: CheckoutInput
 }>
@@ -50248,6 +50957,7 @@ export type CheckoutMutation = {
 			email?: string | null
 			orderCount?: number | null
 			date?: string | null
+			sessionToken?: string | null
 			billing?: {
 				__typename?: "CustomerAddress"
 				address1?: string | null
@@ -50490,152 +51200,12 @@ export type CheckoutMutation = {
 	} | null
 }
 
-export type LoginUserMutationVariables = Exact<{
-	input: LoginInput
-}>
-
-export type LoginUserMutation = {
-	__typename?: "RootMutation"
-	login?: {
-		__typename?: "LoginPayload"
-		user?: {
-			__typename?: "User"
-			id: string
-			databaseId: number
-			jwtAuthToken?: string | null
-			jwtRefreshToken?: string | null
-			firstName?: string | null
-			lastName?: string | null
-			username?: string | null
-			email?: string | null
-			wooSessionToken?: string | null
-		} | null
-	} | null
-}
-
-export type LogoutUserMutationVariables = Exact<{
-	input: LogoutInput
-}>
-
-export type LogoutUserMutation = {
-	__typename?: "RootMutation"
-	logout?: { __typename?: "LogoutPayload"; status?: string | null } | null
-}
-
-export type RefreshAuthTokenMutationVariables = Exact<{
-	input: RefreshJwtAuthTokenInput
-}>
-
-export type RefreshAuthTokenMutation = {
-	__typename?: "RootMutation"
-	refreshJwtAuthToken?: {
-		__typename?: "RefreshJwtAuthTokenPayload"
-		authToken?: string | null
-	} | null
-}
-
-export type RegisterUserMutationVariables = Exact<{
-	input: RegisterUserInput
-}>
-
-export type RegisterUserMutation = {
-	__typename?: "RootMutation"
-	registerUser?: {
-		__typename?: "RegisterUserPayload"
-		user?: {
-			__typename?: "User"
-			id: string
-			databaseId: number
-			jwtAuthToken?: string | null
-			jwtRefreshToken?: string | null
-			firstName?: string | null
-			lastName?: string | null
-			username?: string | null
-			email?: string | null
-			wooSessionToken?: string | null
-		} | null
-	} | null
-}
-
-export type ResetUserPasswordMutationVariables = Exact<{
-	key: Scalars["String"]
-	login: Scalars["String"]
-	password: Scalars["String"]
-}>
-
-export type ResetUserPasswordMutation = {
-	__typename?: "RootMutation"
-	resetUserPassword?: {
-		__typename?: "ResetUserPasswordPayload"
-		clientMutationId?: string | null
-		user?: {
-			__typename?: "User"
-			id: string
-			databaseId: number
-			jwtAuthToken?: string | null
-			jwtRefreshToken?: string | null
-			firstName?: string | null
-			lastName?: string | null
-			username?: string | null
-			email?: string | null
-			wooSessionToken?: string | null
-		} | null
-	} | null
-}
-
-export type SendPasswordResetEmailMutationVariables = Exact<{
-	username: Scalars["String"]
-}>
-
-export type SendPasswordResetEmailMutation = {
-	__typename?: "RootMutation"
-	sendPasswordResetEmail?: {
-		__typename?: "SendPasswordResetEmailPayload"
-		clientMutationId?: string | null
-		success?: boolean | null
-	} | null
-}
-
-export type AddToCartMutationVariables = Exact<{
-	input: AddToCartInput
-}>
-
-export type AddToCartMutation = {
-	__typename?: "RootMutation"
-	addToCart?: {
-		__typename?: "AddToCartPayload"
-		cart?: {
-			__typename?: "Cart"
-			isEmpty?: boolean | null
-			contents?: {
-				__typename?: "CartToCartItemConnection"
-				itemCount?: number | null
-				productCount?: number | null
-				edges: Array<{
-					__typename?: "CartToCartItemConnectionEdge"
-					node: {
-						__typename?: "CartItem"
-						extraData?: Array<{
-							__typename?: "MetaData"
-							key: string
-							value?: string | null
-						} | null> | null
-					}
-				}>
-			} | null
-		} | null
-	} | null
-}
-
-export type ClearCartMutationVariables = Exact<{
-	input: EmptyCartInput
-}>
+export type ClearCartMutationVariables = Exact<{ [key: string]: never }>
 
 export type ClearCartMutation = {
 	__typename?: "RootMutation"
 	emptyCart?: {
 		__typename?: "EmptyCartPayload"
-		clientMutationId?: string | null
 		cart?: {
 			__typename?: "Cart"
 			contentsTotal?: string | null
@@ -51600,9 +52170,9 @@ export type GetCollectionBySlugQuery = {
 	} | null
 }
 
-export type GetCollectionsQueryVariables = Exact<{ [key: string]: never }>
+export type GetCollectionsDataQueryVariables = Exact<{ [key: string]: never }>
 
-export type GetCollectionsQuery = {
+export type GetCollectionsDataQuery = {
 	__typename?: "RootQuery"
 	collections?: {
 		__typename?: "RootQueryToCollectionConnection"
@@ -51648,6 +52218,52 @@ export type GetCustomerDataQuery = {
 		email?: string | null
 		orderCount?: number | null
 		date?: string | null
+		sessionToken?: string | null
+		billing?: {
+			__typename?: "CustomerAddress"
+			address1?: string | null
+			address2?: string | null
+			city?: string | null
+			company?: string | null
+			country?: CountriesEnum | null
+			email?: string | null
+			firstName?: string | null
+			lastName?: string | null
+			phone?: string | null
+			postcode?: string | null
+			state?: string | null
+		} | null
+		shipping?: {
+			__typename?: "CustomerAddress"
+			address1?: string | null
+			address2?: string | null
+			city?: string | null
+			company?: string | null
+			country?: CountriesEnum | null
+			email?: string | null
+			firstName?: string | null
+			lastName?: string | null
+			phone?: string | null
+			postcode?: string | null
+			state?: string | null
+		} | null
+	} | null
+}
+
+export type GetCustomerDataWithOrdersQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetCustomerDataWithOrdersQuery = {
+	__typename?: "RootQuery"
+	customer?: {
+		__typename?: "Customer"
+		id: string
+		firstName?: string | null
+		lastName?: string | null
+		displayName?: string | null
+		email?: string | null
+		orderCount?: number | null
+		date?: string | null
+		sessionToken?: string | null
 		orders?: {
 			__typename?: "CustomerToOrderConnection"
 			nodes: Array<{
@@ -51694,9 +52310,9 @@ export type GetCustomerDataQuery = {
 	} | null
 }
 
-export type GetMenusQueryVariables = Exact<{ [key: string]: never }>
+export type GetMenuDataQueryVariables = Exact<{ [key: string]: never }>
 
-export type GetMenusQuery = {
+export type GetMenuDataQuery = {
 	__typename?: "RootQuery"
 	mainMenu?: {
 		__typename?: "Menu"
@@ -51969,11 +52585,11 @@ export type GetOrdersDataQuery = {
 	} | null
 }
 
-export type GetPageBySlugQueryVariables = Exact<{
+export type GetPageDataBySlugQueryVariables = Exact<{
 	slug: Scalars["ID"]
 }>
 
-export type GetPageBySlugQuery = {
+export type GetPageDataBySlugQuery = {
 	__typename?: "RootQuery"
 	page?: {
 		__typename?: "Page"
@@ -51985,9 +52601,9 @@ export type GetPageBySlugQuery = {
 	} | null
 }
 
-export type GetPressQueryVariables = Exact<{ [key: string]: never }>
+export type GetPressDataQueryVariables = Exact<{ [key: string]: never }>
 
-export type GetPressQuery = {
+export type GetPressDataQuery = {
 	__typename?: "RootQuery"
 	press?: {
 		__typename?: "RootQueryToPressItemConnection"
@@ -52489,6 +53105,123 @@ export type GetProductsByCategoryQuery = {
 	} | null
 }
 
+export type GetProductsDataQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetProductsDataQuery = {
+	__typename?: "RootQuery"
+	products?: {
+		__typename?: "RootQueryToProductConnection"
+		nodes: Array<
+			| {
+					__typename?: "ExternalProduct"
+					id: string
+					databaseId: number
+					name?: string | null
+					slug?: string | null
+					type?: ProductTypesEnum | null
+					onSale?: boolean | null
+					shortDescription?: string | null
+					galleryImages?: {
+						__typename?: "ProductToMediaItemConnection"
+						nodes: Array<{
+							__typename?: "MediaItem"
+							id: string
+							databaseId: number
+							altText?: string | null
+							sourceUrl?: string | null
+							mediaDetails?: {
+								__typename?: "MediaDetails"
+								height?: number | null
+								width?: number | null
+							} | null
+						}>
+					} | null
+			  }
+			| {
+					__typename?: "GroupProduct"
+					id: string
+					databaseId: number
+					name?: string | null
+					slug?: string | null
+					type?: ProductTypesEnum | null
+					onSale?: boolean | null
+					shortDescription?: string | null
+					galleryImages?: {
+						__typename?: "ProductToMediaItemConnection"
+						nodes: Array<{
+							__typename?: "MediaItem"
+							id: string
+							databaseId: number
+							altText?: string | null
+							sourceUrl?: string | null
+							mediaDetails?: {
+								__typename?: "MediaDetails"
+								height?: number | null
+								width?: number | null
+							} | null
+						}>
+					} | null
+			  }
+			| {
+					__typename?: "SimpleProduct"
+					price?: string | null
+					regularPrice?: string | null
+					salePrice?: string | null
+					id: string
+					databaseId: number
+					name?: string | null
+					slug?: string | null
+					type?: ProductTypesEnum | null
+					onSale?: boolean | null
+					shortDescription?: string | null
+					galleryImages?: {
+						__typename?: "ProductToMediaItemConnection"
+						nodes: Array<{
+							__typename?: "MediaItem"
+							id: string
+							databaseId: number
+							altText?: string | null
+							sourceUrl?: string | null
+							mediaDetails?: {
+								__typename?: "MediaDetails"
+								height?: number | null
+								width?: number | null
+							} | null
+						}>
+					} | null
+			  }
+			| {
+					__typename?: "VariableProduct"
+					price?: string | null
+					regularPrice?: string | null
+					salePrice?: string | null
+					id: string
+					databaseId: number
+					name?: string | null
+					slug?: string | null
+					type?: ProductTypesEnum | null
+					onSale?: boolean | null
+					shortDescription?: string | null
+					galleryImages?: {
+						__typename?: "ProductToMediaItemConnection"
+						nodes: Array<{
+							__typename?: "MediaItem"
+							id: string
+							databaseId: number
+							altText?: string | null
+							sourceUrl?: string | null
+							mediaDetails?: {
+								__typename?: "MediaDetails"
+								height?: number | null
+								width?: number | null
+							} | null
+						}>
+					} | null
+			  }
+		>
+	} | null
+}
+
 export type GetProductsWithCategoriesQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetProductsWithCategoriesQuery = {
@@ -52873,24 +53606,6 @@ export type GetProductsWithCategoriesQuery = {
 					} | null
 			  }
 		>
-	} | null
-}
-
-export type GetViewerQueryVariables = Exact<{ [key: string]: never }>
-
-export type GetViewerQuery = {
-	__typename?: "RootQuery"
-	viewer?: {
-		__typename?: "User"
-		id: string
-		databaseId: number
-		jwtAuthToken?: string | null
-		jwtRefreshToken?: string | null
-		firstName?: string | null
-		lastName?: string | null
-		username?: string | null
-		email?: string | null
-		wooSessionToken?: string | null
 	} | null
 }
 

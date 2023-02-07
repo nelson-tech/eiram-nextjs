@@ -1,5 +1,5 @@
 import useClient from "@api/client"
-import { GetViewerDocument } from "@api/codegen/graphql"
+import { GetCustomerDataDocument } from "@api/codegen/graphql"
 import getTokensServer from "@lib/utils/getTokensServer"
 
 import ResetPasswordForm from "@components/ResetPasswordForm"
@@ -9,9 +9,9 @@ const getUserEmail = async () => {
 
 	const client = useClient(tokens)
 
-	const userData = await client.request(GetViewerDocument)
+	const userData = await client.request(GetCustomerDataDocument)
 
-	return userData.viewer?.email
+	return userData.customer?.email
 }
 
 const ResetPasswordPage = async () => {

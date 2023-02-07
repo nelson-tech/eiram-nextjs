@@ -7,18 +7,17 @@ const PressPage = async () => {
 	return (
 		<>
 			<div className="max-w-7xl m-auto p-8 mb-8">
-				{press && press.length > 0 && (
+				{press && press?.length > 0 && (
 					<>
-						{" "}
 						<div className="text-center">
 							<h2 className="text-4xl font-bold uppercase text-gray-500 font-sans tracking-wide">
 								Press
 							</h2>
 						</div>
+
+						<PressGallery press={press} />
 					</>
 				)}
-
-				<PressGallery press={press} />
 			</div>
 		</>
 	)

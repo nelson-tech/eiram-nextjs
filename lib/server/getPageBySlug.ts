@@ -1,11 +1,10 @@
-import useClient from "@api/client"
-import { GetPageBySlugDocument } from "@api/codegen/graphql"
+import { GetPageDataBySlugQuery } from "@api/codegen/graphql"
+import getCachedQuery from "./getCachedQuery"
 
 const getPageBySlug = async (slug: string) => {
-	const client = useClient()
-	const pageData = await client.request(GetPageBySlugDocument, { slug })
-
-	return pageData.page
+	return await getCachedQuery<GetPageDataBySlugQuery>(
+		`getPageDataBySlug&variables={"slug":"${slug}"}`,
+	)
 }
 
 export default getPageBySlug

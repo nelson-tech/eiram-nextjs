@@ -4,10 +4,13 @@ import { GetProductDataBySlugDocument } from "@api/codegen/graphql"
 const getProductByID = async (slug: string) => {
 	const client = useClient()
 
-	if (slug !== "%5Bslug%5D") {
+	try {
 		const productData = await client.request(GetProductDataBySlugDocument, { id: slug })
 
 		return productData.product
+	} catch (error) {
+		console.warn(error)
+		return null
 	}
 }
 

@@ -109,7 +109,7 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 														<div>{item.label}</div>
 														{item.label === "Orders" && (
 															<span className="rounded-full bg-accent text-white px-2 text-sm ml-2 group-hover:bg-white group-hover:text-accent transition-all">
-																{context.orderCount}
+																{context.user.orderCount}
 															</span>
 														)}
 													</a>

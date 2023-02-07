@@ -23,7 +23,7 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 
-	const { sendResetPasswordEmail, resetUserPassword } = useAuth()
+	const { processing, sendResetPasswordEmail, resetUserPassword } = useAuth()
 
 	const [email, setEmail] = useState<string | null>(searchParams.get("email") ?? detectedEmail)
 	const [key, setKey] = useState<string | null>(searchParams.get("key"))
@@ -51,19 +51,23 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 
 	// Forward user after successful password reset
 	useEffect(() => {
-		if (passwordReset && !error) {
+		if (passwordReset && !error && !processing) {
 			router.push("/shop")
 		}
 	}, [router, passwordReset, error])
 
 	const onSendEmailSubmit: SubmitHandler<FieldValues> = async (data) => {
-		setSentEmail(await sendResetPasswordEmail(email, data))
+		if (email && data.email === email) {
+			await sendResetPasswordEmail({ username: email })
+			setSentEmail(true)
+		}
 	}
 
 	const onResetPasswordSubmit: SubmitHandler<FieldValues> = async (data) => {
 		if (data.passwordConfirm && data.password) {
 			if (validPassword && key && email && password) {
-				setPasswordReset(await resetUserPassword(key, email, password))
+				await resetUserPassword({ key, login: email, password })
+				setPasswordReset(true)
 			}
 		}
 	}
@@ -319,7 +323,7 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 							</div>
 						</>
 					)}
-					{sentEmail && !error && (
+					{sentEmail && !error && !processing && (
 						<p className="text-highlight text-sm pt-2 pl-2">
 							Reset request successful. Please check your email for a link to reset your password.
 						</p>

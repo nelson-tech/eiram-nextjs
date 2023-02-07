@@ -1,13 +1,8 @@
-import { GetMenusQuery } from "@api/codegen/graphql"
-import { API_URL } from "@lib/constants"
+import { GetMenuDataQuery } from "@api/codegen/graphql"
+import getCachedQuery from "./getCachedQuery"
 
 const getMenu = async () => {
-	const menuResponse = await fetch(API_URL + "?queryId=getMenuData", {
-		headers: { "content-type": "application/json" },
-	})
-	const { data } = await menuResponse.json()
-
-	return data as GetMenusQuery
+	return getCachedQuery<GetMenuDataQuery>("getMenuData")
 }
 
 export default getMenu

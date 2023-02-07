@@ -251,9 +251,11 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 								<button
 									type="submit"
 									className={`relative flex uppercase transition items-center justify-center rounded-sm border border-transparent ${
-										readyToAdd ? "bg-accent hover:bg-highlight" : " bg-gray-300 cursor-not-allowed"
+										readyToAdd && !processing
+											? "bg-accent hover:bg-highlight"
+											: " bg-gray-300 cursor-not-allowed"
 									} text-white py-3 px-8 text-base font-medium focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-gray-50 w-full`}
-									disabled={!readyToAdd}
+									disabled={!readyToAdd || processing}
 									title={readyToAdd ? "Add to bag" : "Select your options before adding to bag"}
 								>
 									{(loading || processing) && (

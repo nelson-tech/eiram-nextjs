@@ -1,4 +1,4 @@
-query GetCollections {
+query GetCollectionsData {
 	collections(first: 100) {
 		nodes {
 			id

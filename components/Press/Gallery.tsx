@@ -3,9 +3,9 @@
 import { useState } from "react"
 import Image from "next/image"
 
-import Link from "@components/Link"
-import Lightbox from "@components/Lightbox"
 import { MediaItem, PressItem } from "@api/codegen/graphql"
+
+import Lightbox from "@components/Lightbox"
 
 type PressGalleryPropsType = {
 	press: PressItem[]

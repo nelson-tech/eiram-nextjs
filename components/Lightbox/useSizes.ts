@@ -1,5 +1,7 @@
-import { MediaItem } from "@api/codegen/graphql"
 import { useEffect, useState } from "react"
+
+import { MediaItem } from "@api/codegen/graphql"
+import isServer from "@lib/utils/isServer"
 
 type UseSizesPropsType = {
 	slide: string | MediaItem | undefined
@@ -22,7 +24,7 @@ const useSizes = ({ slide }: UseSizesPropsType) => {
 				height,
 			}
 
-			if (typeof window != "undefined") {
+			if (!isServer) {
 				const screenSize = { width: window.innerWidth, height: window.innerHeight }
 				const horizontalPadding = 30
 				const verticalPadding = 16
@@ -66,7 +68,7 @@ const useSizes = ({ slide }: UseSizesPropsType) => {
 				})
 			}
 		}
-	}, [slide, window.innerWidth, window.innerHeight])
+	}, [slide])
 
 	return { modalSize, imageSize }
 }

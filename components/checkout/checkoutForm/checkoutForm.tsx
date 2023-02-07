@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useElements, useStripe, CardElement } from "@stripe/react-stripe-js"
+import { CreatePaymentMethodCardData } from "@stripe/stripe-js"
 import { SubmitHandler, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LockClosedIcon } from "@heroicons/react/20/solid"
@@ -49,7 +50,7 @@ type CheckoutFormProps = {
 const CheckoutForm = ({ cart, colors, customer, stripeData }: CheckoutFormProps) => {
 	const router = useRouter()
 	const client = useClient()
-	const { fetchCart } = useCart()
+	const { fetchCart, clearCart } = useCart()
 
 	const { openAlert } = useAlerts()
 
@@ -118,7 +119,10 @@ const CheckoutForm = ({ cart, colors, customer, stripeData }: CheckoutFormProps)
 		control,
 		name: "shipToDifferentAddress",
 	})
+
 	const onSubmit: SubmitHandler<FormDataType> = async (formData) => {
+		console.log("Attempting to submit.")
+
 		setLoading(true)
 
 		// Exclude shipping unless billing and shipping should be different
@@ -135,22 +139,30 @@ const CheckoutForm = ({ cart, colors, customer, stripeData }: CheckoutFormProps)
 
 		openAlert({
 			kind: "info",
-			primary: "Processing Order",
+			primary: "Processing payment.",
 			secondary: "Sending payment request to Stripe...",
 			timeout: 40000,
 		})
 
-		const paymentMethod = {
-			payment_method: {
-				card: elements.getElement(CardElement),
-				// billing_details: {},
-				// shipping: {},
-				// receipt_email: ''
-			},
+		const paymentMethod: Omit<CreatePaymentMethodCardData, "type"> = {
+			card: elements.getElement(CardElement),
+			billing_details: { email: customer.email },
+			// billing_details: {},
+			// shipping: {},
+			// receipt_email: ''
+		}
+
+		if (!paymentMethod.card) {
+			setLoading(false)
+			return null
 		}
 
 		// use Stripe client secret to process card payment method
-		const stripeResult = await stripe.confirmCardPayment(stripeData.clientSecret, paymentMethod)
+		const stripeResult = await stripe.confirmCardPayment(stripeData.clientSecret, {
+			payment_method: paymentMethod,
+		})
+		console.log("Stripe Result", stripeResult)
+
 		if (stripeResult.error) {
 			console.warn(stripeResult.error.message)
 			openAlert({
@@ -158,7 +170,6 @@ const CheckoutForm = ({ cart, colors, customer, stripeData }: CheckoutFormProps)
 				primary: "Payment Error",
 				secondary: stripeResult.error.message,
 			})
-			throw new Error(stripeResult.error.message)
 		} else {
 			input["metaData"] = [
 				{
@@ -175,55 +186,59 @@ const CheckoutForm = ({ cart, colors, customer, stripeData }: CheckoutFormProps)
 				timeout: 40000,
 			})
 
-			const checkoutData = await client.request(CheckoutDocument, { input })
+			try {
+				const checkoutData = await client.request(CheckoutDocument, { input })
 
-			console.log("Checkout Data", checkoutData.checkout.result)
+				console.log("Checkout Data", checkoutData.checkout)
 
-			switch (checkoutData.checkout.result) {
-				case "processing":
-					// Payment was successful
+				switch (checkoutData.checkout.result) {
+					case "success":
+						// Payment was successful
 
-					openAlert({
-						kind: "success",
-						primary: "Order Placed Successfully!",
-					})
+						openAlert({
+							kind: "success",
+							primary: "Order Placed Successfully!",
+						})
 
-					break
-				case "pending":
-					// Payment requires authorization
+						break
+					case "PENDING":
+						// Payment requires authorization
 
-					openAlert({
-						kind: "warning",
-						primary: "Payment Incomplete.",
-						timeout: 3000,
-					})
+						openAlert({
+							kind: "warning",
+							primary: "Payment Incomplete.",
+							timeout: 3000,
+						})
 
-					break
-				case "failed":
-					// Payment failed
+						break
+					case "FAILED":
+						// Payment failed
 
-					openAlert({
-						kind: "error",
-						primary: "Payment Failed.",
-						timeout: 3000,
-					})
+						openAlert({
+							kind: "error",
+							primary: "Payment Failed.",
+							timeout: 3000,
+						})
 
-					break
+						break
 
-				default:
-					break
+					default:
+						break
+				}
+
+				checkoutData.checkout.order.orderNumber &&
+					router.push(
+						`/thanks${
+							checkoutData.checkout.order.orderNumber
+								? `?id=${checkoutData.checkout.order.orderNumber}`
+								: ""
+						}`,
+					)
+
+				await clearCart()
+			} catch (error) {
+				console.warn("Error checking out", error)
 			}
-
-			await fetchCart()
-
-			checkoutData.checkout.order.orderNumber &&
-				router.push(
-					`/thanks${
-						checkoutData.checkout.order.orderNumber
-							? `?id=${checkoutData.checkout.order.orderNumber}`
-							: ""
-					}`,
-				)
 		}
 
 		// error &&
@@ -542,14 +557,6 @@ const CheckoutForm = ({ cart, colors, customer, stripeData }: CheckoutFormProps)
 					>
 						{loading ? <LoadingSpinner size={7} color="white" style="mx-auto" /> : "Place Order"}
 					</button>
-
-					{/* <p className="flex justify-center text-sm font-medium text-gray-500 mt-6">
-        <LockClosedIcon
-          className="w-5 h-5 text-gray-400 mr-1.5"
-          aria-hidden="true"
-        />
-        Payment details stored in plain text
-      </p> */}
 				</form>
 			</div>
 		</section>

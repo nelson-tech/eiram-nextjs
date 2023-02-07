@@ -1,18 +1,13 @@
 import Image from "next/image"
 
 import Link from "@components/Link"
-import useClient from "@api/client"
-import { Collection, GetCollectionsDocument } from "@api/codegen/graphql"
-
-const getCollections = async () => {
-	const client = useClient()
-
-	const collectionsData = await client.request(GetCollectionsDocument)
-	return collectionsData.collections.nodes as Collection[]
-}
+import { GetCollectionsDataQuery } from "@api/codegen/graphql"
+import getCachedQuery from "@lib/server/getCachedQuery"
 
 const CollectionsPage = async () => {
-	const collections = await getCollections()
+	const { data } = await getCachedQuery<GetCollectionsDataQuery>("getCollectionsData")
+
+	const collections = data.collections.nodes
 
 	return (
 		<div className="max-w-7xl m-auto p-8 mb-8">

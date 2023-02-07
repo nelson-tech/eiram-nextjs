@@ -5,7 +5,6 @@ import Image from "next/image"
 
 import useCart from "@lib/hooks/useCart"
 import Link from "@components/Link"
-import formatCurrencyString from "@lib/utils/formatCurrencyString"
 
 import LoadingSpinner from "@components/LoadingSpinner"
 import MinusIcon from "@icons/Minus"
@@ -19,16 +18,13 @@ type CartItemProps = {
 }
 
 const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
-	const [loading, setLoading] = useState(false)
-
 	const {
-		state: { itemLoading },
+		state: { updateLoading, removeLoading },
 		updateItem,
 		removeItem,
 	} = useCart()
 
 	let quantity = lineItem?.quantity
-	let variations = lineItem.variation
 
 	const featuredImage = lineItem.product.node.image
 
@@ -51,7 +47,6 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 	}
 
 	const handleRemoveItem = async (key: string) => {
-		setLoading(true)
 		await removeItem({ keys: [lineItem.key] })
 	}
 
@@ -86,52 +81,59 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 							<p className="ml-4 text-xs text-gray-500">{lineItem.total}</p>
 						</div>
 						<div className="flex gap-8 mt-4 text-sm text-gray-500">
-							{
-								lineItem?.variation?.attributes &&
-									lineItem.variation.attributes.map((attribute, i) => (
-										<div
-											key={attribute.id}
-											className=""
-										>{`${attribute.label} - ${attribute.value}`}</div>
-									))
-								// lineItem.meta.variation.map((attribute, i) => (
-								// 	<div
-								// 		key={attribute.id}
-								// 		className=""
-								// 	>{`${attribute?.label} - ${attribute?.value}`}</div>
-								// ))
-							}
+							{lineItem?.variation?.attributes &&
+								lineItem.variation.attributes.map((attribute, i) => (
+									<div
+										key={attribute.id}
+										className=""
+									>{`${attribute.label} - ${attribute.value}`}</div>
+								))}
 						</div>
 
 						<div className="flex-1 flex items-center justify-between text-sm mt-4">
 							{quantity && (
-								<div className="flex items-center space-x-2 text-xs text-gray-600">
+								<div
+									className={
+										"flex items-center space-x-2 text-xs text-gray-600 transition-opacity " +
+										`${removeLoading?.itemKey === lineItem.key ? "opacity-0" : "opacity-100"}`
+									}
+								>
 									<label htmlFor="quantity" className="pr-2">
 										Quantity:{" "}
 									</label>
 									<div
 										className="cursor-pointer py-2"
 										onClick={() => {
-											quantity && handleQuantityUpdate(quantity - 1)
+											quantity &&
+												updateLoading?.itemKey !== lineItem.key &&
+												handleQuantityUpdate(quantity - 1)
 										}}
 									>
 										<MinusIcon size={3} type="solid" />
 									</div>
 
-									<input
-										className="w-16 text-center border py-1 text-xs rounded outline-none focus:bg-white ring-transparent"
-										value={quantity}
-										id="quantity"
-										name="quantity"
-										type="number"
-										min={1}
-										onChange={async (e) => await handleQuantityUpdate(Number(e.target.value))}
-									/>
+									{updateLoading?.itemKey === lineItem.key ? (
+										<div className="w-16 flex justify-center items-center">
+											<LoadingSpinner style="" size={4} />
+										</div>
+									) : (
+										<input
+											className="w-16 text-center border py-1 text-xs rounded outline-none focus:bg-white ring-transparent"
+											value={quantity}
+											id="quantity"
+											name="quantity"
+											type="number"
+											min={1}
+											onChange={async (e) => await handleQuantityUpdate(Number(e.target.value))}
+										/>
+									)}
 
 									<div
 										className="cursor-pointer py-2"
 										onClick={() => {
-											quantity && handleQuantityUpdate(quantity + 1)
+											quantity &&
+												updateLoading?.itemKey !== lineItem.key &&
+												handleQuantityUpdate(quantity + 1)
 										}}
 									>
 										<PlusIcon size={3} type="solid" />
@@ -141,7 +143,7 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 							)}
 
 							<div className="">
-								{loading || itemLoading?.itemKey === lineItem.key ? (
+								{removeLoading?.itemKey === lineItem.key ? (
 									<LoadingSpinner style="mr-4" size={4} />
 								) : (
 									<button

@@ -32,4 +32,5 @@ fragment CustomerBase on Customer {
 		postcode
 		state
 	}
+	sessionToken
 }

@@ -1,8 +1,7 @@
-mutation ClearCart($input: EmptyCartInput!) {
-  emptyCart(input: $input) {
-    clientMutationId
-    cart {
-      ...CartBase
-    }
-  }
+mutation ClearCart {
+	emptyCart(input: { clearPersistentCart: true }) {
+		cart {
+			...CartBase
+		}
+	}
 }

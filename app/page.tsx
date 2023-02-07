@@ -1,23 +1,21 @@
+import { GetBackgroundVideoQuery, MediaItem } from "@api/codegen/graphql"
+
 import BackgroundVideo from "@components/BackgroundVideo"
-import useClient from "@api/client"
-import { GetBackgroundVideoDocument, MediaItem } from "@api/codegen/graphql"
-
-const getBackgroundVideo = async () => {
-	const client = useClient()
-	const bgVideoData = await client.request(GetBackgroundVideoDocument)
-
-	return bgVideoData.page.bgVideo
-}
+import getCachedQuery from "@lib/server/getCachedQuery"
 
 const HomePage = async () => {
-	const { video, placeholderimage } = await getBackgroundVideo()
+	const { data } = await getCachedQuery<GetBackgroundVideoQuery>("getBackgroundVideo")
+
+	const { video, placeholderimage } = data?.page?.bgVideo
 
 	return (
 		<>
-			<BackgroundVideo
-				videoData={video as MediaItem}
-				placeholderData={placeholderimage as MediaItem}
-			/>
+			<div>
+				<BackgroundVideo
+					videoData={video as MediaItem}
+					placeholderData={placeholderimage as MediaItem}
+				/>
+			</div>
 		</>
 	)
 }

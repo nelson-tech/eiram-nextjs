@@ -1,9 +1,11 @@
+import Link from "@components/Link"
+import { GetPageDataBySlugQuery } from "@api/codegen/graphql"
+import getCachedQuery from "@lib/server/getCachedQuery"
 import getPageBySlug from "@lib/server/getPageBySlug"
 
-import Link from "@components/Link"
-
 const OtherPage = async ({ params }: { params: { slug: string } }) => {
-	const pageData = await getPageBySlug(params.slug)
+	const { data } = await getPageBySlug(params.slug)
+	const pageData = data?.page
 
 	return (
 		<div className="sm:px-16 py-8 max-w-7xl mx-auto text-gray-500">

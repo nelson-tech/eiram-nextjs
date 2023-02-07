@@ -17,10 +17,13 @@ type ShoppingCartProps = {
 }
 
 const ShoppingCart = ({ closeModal }: ShoppingCartProps) => {
-	const { cart, loading } = useCart().state
+	const {
+		state: { cart, loading },
+		clearCart,
+	} = useCart()
 
 	const handleClearCart = async () => {
-		// await clearCart()
+		await clearCart()
 		// TODO - Handle error case
 	}
 

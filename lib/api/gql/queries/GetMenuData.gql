@@ -1,4 +1,4 @@
-query GetMenus {
+query GetMenuData {
 	mainMenu: menu(id: "main", idType: SLUG) {
 		id
 		menuItems(first: 100, where: { parentDatabaseId: 0 }) {

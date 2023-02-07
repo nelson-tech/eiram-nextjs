@@ -20,7 +20,7 @@ export default async function handler(
 
 	const { cart } = cartData
 
-	const total = parseFloat("801.50" ?? "0.00") * 100
+	const total = parseFloat(cart?.total ?? "0.00") * 100
 
 	if (total > 0) {
 		const paymentIntent = await stripe.paymentIntents.create({

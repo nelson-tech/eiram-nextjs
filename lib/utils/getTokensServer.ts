@@ -5,8 +5,6 @@ import { RefreshAuthTokenDocument } from "@api/codegen/graphql"
 import { API_URL, AUTH_TOKEN_KEY, CART_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@lib/constants"
 import type { CLIENT_Tokens_Type } from "@lib/types/auth"
 import { isTokenValid } from "./validateToken"
-import isServer from "./isServer"
-import setCookie from "./setCookie"
 
 // ####
 // #### Function (Can only be called on server)
@@ -17,11 +15,11 @@ const getTokensServer = async (): Promise<{
 	newAuth: boolean
 	isAuth: boolean
 }> => {
-	const cookies = nextCookies()
+	const cookies = nextCookies().getAll()
 
-	let authToken = cookies.get(AUTH_TOKEN_KEY)?.value
-	let refreshToken = cookies.get(REFRESH_TOKEN_KEY)?.value
-	let cartToken = cookies.get(CART_TOKEN_KEY)?.value
+	let authToken = cookies.find((cookie) => cookie.name === AUTH_TOKEN_KEY)?.value
+	let refreshToken = cookies.find((cookie) => cookie.name === REFRESH_TOKEN_KEY)?.value
+	let cartToken = cookies.find((cookie) => cookie.name === CART_TOKEN_KEY)?.value
 
 	let newAuth = false
 	let isAuth = false

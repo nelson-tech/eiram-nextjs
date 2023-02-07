@@ -1,5 +1,5 @@
 mutation RefreshAuthToken($input: RefreshJwtAuthTokenInput!) {
-  refreshJwtAuthToken(input: $input) {
-    authToken
-  }
+	refreshJwtAuthToken(input: $input) {
+		authToken
+	}
 }

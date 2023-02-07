@@ -1,4 +1,4 @@
-query GetPress {
+query GetPressData {
 	press(first: 100) {
 		nodes {
 			id

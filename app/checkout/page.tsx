@@ -1,8 +1,8 @@
 import useClient from "@api/client"
-import { Customer, GetCustomerDataDocument } from "@api/codegen/graphql"
+import { Customer, GetCustomerDataDocument, GetMenuDataQuery } from "@api/codegen/graphql"
 import { STRIPE_ENDPOINT } from "@lib/constants"
-import getMenu from "@lib/server/getMenu"
 import getTokensServer from "@lib/utils/getTokensServer"
+import getMenu from "@lib/server/getMenu"
 
 import Checkout from "@components/checkout"
 
@@ -30,16 +30,16 @@ const getCustomerData = async () => {
 
 const CheckoutPage = async () => {
 	const stripePromise = getStripeData()
-	const menuPromise = getMenu()
 	const customerPromise = getCustomerData()
+	const menuPromise = getMenu()
 
-	const [stripeData, menuData, customerData] = await Promise.all([
+	const [stripeData, customerData, menuData] = await Promise.all([
 		stripePromise,
-		menuPromise,
 		customerPromise,
+		menuPromise,
 	])
 
-	const { colors } = menuData.mainMenu.siteSettings
+	const { colors } = menuData?.data?.mainMenu?.siteSettings
 
 	return (
 		<>

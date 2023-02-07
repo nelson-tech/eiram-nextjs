@@ -2,6 +2,7 @@ import "./globals.css"
 
 import localFont from "@next/font/local"
 
+import { MenuItem } from "@lib/api/codegen/graphql"
 import getMenu from "@lib/server/getMenu"
 
 import RootClientContext from "./RootClientContext"
@@ -11,16 +12,15 @@ import Footer from "@components/layout/footer"
 import Alerts from "@components/Alerts"
 import ScrollToTop from "@components/ScrollToTop"
 import Analytics from "@components/Analytics"
-import { MenuItem } from "@lib/api/codegen/graphql"
 
 const font = localFont({
 	src: "./Karla-Regular.ttf",
 })
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-	const menuData = await getMenu()
+	const { data } = await getMenu()
 
-	const { mainMenu } = menuData
+	const { mainMenu } = data
 
 	return (
 		<html lang="en-us" className={font.className}>

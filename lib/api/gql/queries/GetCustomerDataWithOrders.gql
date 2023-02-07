@@ -1,0 +1,19 @@
+query GetCustomerDataWithOrders {
+	customer {
+		...CustomerBase
+		orders {
+			nodes {
+				id
+				date
+				orderNumber
+				total
+				status
+				lineItems {
+					nodes {
+						databaseId
+					}
+				}
+			}
+		}
+	}
+}

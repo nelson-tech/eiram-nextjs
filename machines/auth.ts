@@ -1,7 +1,26 @@
 import useClient from "@api/client"
-import { GetCustomerDataDocument, GetViewerDocument, User } from "@api/codegen/graphql"
-import { AuthMachine_Type } from "@lib/types/auth"
+import {
+	Customer,
+	GetCustomerDataDocument,
+	LoginUserDocument,
+	LogoutUserDocument,
+	RegisterCustomerDocument,
+	ResetUserPasswordDocument,
+	SendPasswordResetEmailDocument,
+	User,
+} from "@api/codegen/graphql"
+import { AUTH_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@lib/constants"
+import {
+	AuthLoginEvent_Type,
+	AuthLogoutEvent_Type,
+	AuthMachine_Type,
+	AuthRegisterEvent_Type,
+	AuthResetPasswordEvent_Type,
+	AuthSendResetEmailEvent_Type,
+} from "@lib/types/auth"
 import getTokensClient from "@lib/utils/getTokensClient"
+import setCookie from "@lib/utils/setCookie"
+import { deleteCookie } from "cookies-next"
 import { assign, createMachine } from "xstate"
 
 import type { Typegen0 } from "./auth.typegen"
@@ -11,7 +30,7 @@ export const authMachine = (initialState: string) =>
 	createMachine(
 		{
 			tsTypes: {} as import("./auth.typegen").Typegen0,
-			context: { tokens: null, user: null, orderCount: 0 } as AuthMachine_Type,
+			context: { tokens: null, user: null } as AuthMachine_Type,
 			id: "auth",
 			initial: initialState,
 			predictableActionArguments: true,
@@ -28,6 +47,12 @@ export const authMachine = (initialState: string) =>
 					on: {
 						LOGOUT: { target: "loggingOut" },
 						AUTHENTICATE: { target: "authenticating" },
+						SENDRESETEMAIL: {
+							target: "sendingResetEmail",
+						},
+						RESETPASSWORD: {
+							target: "resettingPassword",
+						},
 					},
 				},
 				loggedOut: {
@@ -37,6 +62,15 @@ export const authMachine = (initialState: string) =>
 						},
 						AUTHENTICATE: {
 							target: "authenticating",
+						},
+						REGISTER: {
+							target: "registering",
+						},
+						SENDRESETEMAIL: {
+							target: "sendingResetEmail",
+						},
+						RESETPASSWORD: {
+							target: "resettingPassword",
 						},
 					},
 				},
@@ -56,6 +90,30 @@ export const authMachine = (initialState: string) =>
 						onError: [{ target: "loggedOut" }],
 					},
 				},
+				registering: {
+					invoke: {
+						src: "register",
+						id: "register",
+						onDone: [{ actions: "setToken", target: "loggedIn" }],
+						onError: [{ target: "loggedOut" }],
+					},
+				},
+				sendingResetEmail: {
+					invoke: {
+						src: "sendResetEmail",
+						id: "sendResetEmail",
+						onDone: [{ target: "loggedOut" }],
+						onError: [{ target: "loggedOut" }],
+					},
+				},
+				resettingPassword: {
+					invoke: {
+						src: "resetPassword",
+						id: "resetPassword",
+						onDone: [{ actions: "setToken", target: "loggedIn" }],
+						onError: [{ target: "loggedOut" }],
+					},
+				},
 			},
 			schema: {
 				services: {} as {
@@ -68,48 +126,153 @@ export const authMachine = (initialState: string) =>
 					logout: {
 						data: AuthMachine_Type
 					}
+					register: {
+						data: AuthMachine_Type
+					}
+					resetPassword: {
+						data: AuthMachine_Type
+					}
 				},
 			},
 		},
 		{
 			actions: {
-				setToken: assign((ctx, { data }) => {
-					if (data.tokens?.auth) {
-						return { ...ctx, tokens: data.tokens, user: data.user, orderCount: data.orderCount }
-					}
-					return { ...ctx }
-				}),
+				setToken: assign((ctx, { data }) => ({ ...ctx, ...data })),
 			},
 			services: {
-				authChecker: async (ctx) => {
+				authChecker: async () => {
 					// Check for stored auth first
 					const { tokens, isAuth } = await getTokensClient()
 
 					if (isAuth) {
 						// Token is stored. Fetch user data
 						const client = useClient(tokens)
-						const user = await client.request(GetViewerDocument)
+
 						const customerData = await client.request(GetCustomerDataDocument)
 
 						return {
 							tokens,
-							user: user.viewer as User,
-							orderCount: customerData.customer.orderCount,
+							user: customerData.customer as Customer,
 						}
 					}
 
 					throw new Error("Unauthorized")
 				},
-				login: async (
-					_,
-					event: {
-						input: AuthMachine_Type
-					},
-				) => {
-					return event.input
+				login: async (_, event: AuthLoginEvent_Type) => {
+					const client = useClient()
+					const loginData = await client
+						.request(LoginUserDocument, { input: event.input })
+						.catch((error) => {})
+
+					if (loginData) {
+						// Login mutation responded
+						const login = loginData.login
+
+						if (login?.authToken && login.refreshToken) {
+							const { authToken, refreshToken, customer } = login
+
+							// Set authToken in client
+							client.setHeader("Authorization", `Bearer ${authToken}`)
+
+							// Set cookies
+							setCookie(AUTH_TOKEN_KEY, authToken)
+							setCookie(REFRESH_TOKEN_KEY, refreshToken)
+
+							event.callback && (await event.callback(true, customer.firstName))
+
+							const authData: AuthMachine_Type = {
+								tokens: {
+									auth: authToken,
+									refresh: refreshToken,
+									cart: customer.sessionToken,
+								},
+								user: customer as Customer,
+							}
+
+							return authData
+						}
+					}
+
+					// Login mutation failed
+					event.callback && event.callback(false, null)
 				},
-				logout: async () => {
+				logout: async (_, event: AuthLogoutEvent_Type) => {
+					const client = useClient()
+
+					const logoutData = await client.request(LogoutUserDocument, { input: {} })
+
+					// Delete cookies
+					deleteCookie(AUTH_TOKEN_KEY)
+					deleteCookie(REFRESH_TOKEN_KEY)
+
+					event.callback && event.callback(logoutData.logout.status === "SUCCESS")
+
 					return { tokens: null, user: null }
+				},
+				register: async (_, event: AuthRegisterEvent_Type) => {
+					const client = useClient()
+
+					const registerData = await client.request(RegisterCustomerDocument, {
+						input: event.input,
+					})
+					const newUser = registerData?.registerCustomer
+
+					if (newUser) {
+						// Registration was successfull
+						const { authToken, refreshToken, customer } = newUser
+
+						// Set cookies
+						setCookie(AUTH_TOKEN_KEY, authToken)
+						setCookie(REFRESH_TOKEN_KEY, refreshToken)
+
+						event.callback && event.callback(true, customer.firstName)
+
+						const authData: AuthMachine_Type = {
+							tokens: { auth: authToken, refresh: refreshToken, cart: customer.sessionToken },
+							user: customer as Customer,
+						}
+
+						return authData
+					}
+				},
+				sendResetEmail: async (_, event: AuthSendResetEmailEvent_Type) => {
+					const client = useClient()
+
+					const resetData = await client.request(SendPasswordResetEmailDocument, event.input)
+
+					event.callback && event.callback(resetData.sendPasswordResetEmail.success)
+				},
+				resetPassword: async (_, event: AuthResetPasswordEvent_Type) => {
+					const client = useClient()
+
+					const { key, login, password } = event.input
+
+					const resetData = await client
+						.request(ResetUserPasswordDocument, { key, login, password })
+						.catch((errors) => {
+							const message = `Error: ${errors.message}`
+						})
+
+					const user = (resetData && (resetData.resetUserPassword.user as User)) || null
+
+					if (user) {
+						const { jwtAuthToken, jwtRefreshToken, ...plainUser } = user
+						// Set cookies
+						setCookie(AUTH_TOKEN_KEY, jwtAuthToken)
+						setCookie(REFRESH_TOKEN_KEY, jwtRefreshToken)
+
+						// Get customer data
+						const customerData = await client.request(GetCustomerDataDocument)
+
+						event.callback && event.callback(true, customerData?.customer?.firstName)
+
+						const authData: AuthMachine_Type = {
+							tokens: { auth: jwtAuthToken, refresh: jwtRefreshToken, cart: user.wooSessionToken },
+							user: customerData.customer as Customer,
+						}
+
+						return authData
+					}
 				},
 			},
 		},

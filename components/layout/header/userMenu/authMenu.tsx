@@ -10,14 +10,12 @@ import Link from "@components/Link"
 import LogoutIcon from "@icons/Logout"
 
 const AuthMenu = () => {
-	const { logout, matches, context } = useAuth()
+	const { logout, context } = useAuth()
 	const router = useRouter()
 
 	const handleLogout = async () => {
 		await logout()
 	}
-
-	console.log("Auth context", context)
 
 	return (
 		<>
@@ -32,9 +30,9 @@ const AuthMenu = () => {
 							>
 								{menuItem.icon({ size: 4, styling: "mr-2" })}
 								{menuItem.label}
-								{menuItem.label === "Orders" && context.orderCount > 0 && (
+								{menuItem.label === "Orders" && context.user.orderCount > 0 && (
 									<span className="rounded-full bg-accent text-white px-2 text-sm ml-2 group-hover:bg-white group-hover:text-accent transition-all">
-										{context.orderCount}
+										{context.user.orderCount}
 									</span>
 								)}
 							</Link>
