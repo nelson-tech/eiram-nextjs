@@ -84,16 +84,18 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 		setLoading(false)
 	}
 
+	const images = [product?.image, ...product?.galleryImages?.nodes] as MediaItem[]
+
 	return (
 		<div className="mx-auto max-w-2xl lg:max-w-none">
 			<div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
 				{/* <!-- Image Gallery --> */}
-				{product.galleryImages?.nodes && (
+				{images && (
 					<Tab.Group as="div" className="flex flex-col-reverse">
 						{/* <!-- Image selector --> */}
 						<div className="mx-auto mt-6 px-8 sm:px-0 w-full max-w-2xl sm:block lg:max-w-none">
 							<Tab.List className="grid grid-cols-4 gap-6">
-								{product.galleryImages?.nodes.map(
+								{images.map(
 									(image: MediaItem, i) =>
 										image.sourceUrl && (
 											<Tab
@@ -124,7 +126,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 						</div>
 
 						<Tab.Panels className=" aspect-square object-contain w-full relative" as="div">
-							{product.galleryImages.nodes.map(
+							{images.map(
 								(image: MediaItem, i) =>
 									image.sourceUrl && (
 										<Tab.Panel key={image.id + "main"}>
@@ -159,25 +161,6 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 						)}
 						<p className="text-3xl tracking-tight text-gray-500">{product.price}</p>
 					</div>
-
-					{/* <!-- Reviews --> */}
-					{/* <div className="mt-3">
-      <h3 className="sr-only">Reviews</h3>
-      <div className="flex items-center">
-        <div className="flex items-center">
-          {#each [0, 1, 2, 3, 4] as rating}<StarIcon
-              key={rating}
-              className={classNames(
-                product.rating > rating ? "text-indigo-500" : "text-gray-300",
-                "h-5 w-5 flex-shrink-0",
-              )}
-              aria-hidden="true"
-            />
-          {/each}
-        </div>
-        <p className="sr-only">{product.rating} out of 5 stars</p>
-      </div>
-    </div>  */}
 
 					<div className="mt-6">
 						<h3 className="sr-only">Description</h3>

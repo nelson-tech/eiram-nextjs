@@ -8,6 +8,18 @@ query GetProductsData {
 			type
 			onSale
 			shortDescription
+			featuredImage {
+				node {
+					id
+					databaseId
+					altText
+					sourceUrl
+					mediaDetails {
+						height
+						width
+					}
+				}
+			}
 			galleryImages {
 				nodes {
 					id

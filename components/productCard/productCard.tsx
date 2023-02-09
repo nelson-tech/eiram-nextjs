@@ -21,7 +21,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 				onMouseEnter={() => setIsShowing((isShowing) => !isShowing)}
 				onMouseLeave={() => setIsShowing((isShowing) => !isShowing)}
 			>
-				{product.galleryImages?.nodes[0]?.sourceUrl && (
+				{product?.featuredImage?.node?.sourceUrl && (
 					<div className=" transition-all h-64">
 						<div className="w-full h-64 object-center object-contain relative">
 							<Transition
@@ -36,8 +36,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
 								leaveTo="opacity-0"
 							>
 								<Image
-									src={product.galleryImages?.nodes[0]?.sourceUrl}
-									alt={product.galleryImages?.nodes[0]?.altText || ""}
+									src={product?.featuredImage?.node?.sourceUrl}
+									alt={product?.featuredImage?.node?.altText || ""}
 									fill
 									sizes="(max-width: 400px) 100vw,(max-width: 768px) 50vw,33vw"
 									className="custom-img aspect-square"
@@ -55,8 +55,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
 								leaveTo="opacity-0"
 							>
 								<Image
-									src={product.galleryImages?.nodes[1]?.sourceUrl}
-									alt={product.galleryImages?.nodes[1]?.altText || ""}
+									src={product.galleryImages?.nodes[0]?.sourceUrl}
+									alt={product.galleryImages?.nodes[0]?.altText || ""}
 									fill
 									sizes="(max-width: 400px) 100vw,(max-width: 768px) 50vw,33vw"
 									className="custom-img"
