@@ -9,7 +9,7 @@ import RootStyleRegistry from "./RootStyleRegistry"
 // import useNavigationEvent from "@lib/hooks/useNavigationEvent"
 import { Menu_Sitesettings_Colors } from "@lib/api/codegen/graphql"
 import getTokensClient from "@lib/utils/getTokensClient"
-import useClient from "@api/client"
+import getClient from "@api/client"
 // import isServer from "@lib/utils/isServer"
 
 type RootClientContextProps = {
@@ -21,7 +21,7 @@ const RootClientContext = ({ children, colors }: RootClientContextProps) => {
 	// useNavigationEvent()
 
 	getTokensClient().then(({ tokens, isAuth }) => {
-		const client = useClient(tokens)
+		const client = getClient(tokens)
 	})
 
 	return (

@@ -54,7 +54,7 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 		if (passwordReset && !error && !processing) {
 			router.push("/shop")
 		}
-	}, [router, passwordReset, error])
+	}, [router, passwordReset, error, processing])
 
 	const onSendEmailSubmit: SubmitHandler<FieldValues> = async (data) => {
 		if (email && data.email === email) {

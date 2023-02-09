@@ -54,7 +54,7 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 								menuItems.map((menuItem) => {
 									if (menuItem && menuItem.childItems?.nodes?.length > 0) {
 										return (
-											<div className="flow-root pt-2">
+											<div className="flow-root pt-2" key={menuItem.id}>
 												<div className={bigLinkStyle} title={menuItem.label}>
 													{menuItem.label}
 												</div>
@@ -77,7 +77,7 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 										)
 									}
 									return (
-										<div className="flow-root">
+										<div className="flow-root" key={menuItem.id}>
 											<div
 												className={bigLinkStyle + " hover:bg-accent hover:text-white"}
 												onClick={() => closeModal && closeModal()}
@@ -99,7 +99,11 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 										)}
 										{customerMenu.map((item) => {
 											return (
-												<div className="outline-none" onClick={() => closeModal && closeModal()}>
+												<div
+													className="outline-none"
+													onClick={() => closeModal && closeModal()}
+													key={item.path}
+												>
 													<a
 														href={item.path}
 														title={item.label}

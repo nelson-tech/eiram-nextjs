@@ -1,11 +1,10 @@
 "use client"
 
-import { Elements } from "@stripe/react-stripe-js"
-import { StripeElementsOptions } from "@stripe/stripe-js"
+import type { StripeElementsOptions } from "@stripe/stripe-js/types/stripe-js/elements-group"
 
-import { Customer, Menu_Sitesettings_Colors } from "@api/codegen/graphql"
 import useAuth from "@lib/hooks/useAuth"
 import useCart from "@lib/hooks/useCart"
+import useCheckoutData from "@lib/hooks/useCheckoutData"
 import getStripe from "@lib/utils/getStripe"
 
 import Link from "@components/Link"
@@ -16,31 +15,20 @@ import DiscountForm from "./discountForm"
 import GuestWarning from "./guestWarning"
 import MobileSummary from "./mobileSummary"
 import PricingSummary from "./pricingSummary"
+import { Elements } from "@stripe/react-stripe-js"
 
 type CheckoutProps = {
 	hidePrices?: boolean
 	discounts?: boolean
-	stripeData: STRIPE_PaymentIntentType
-	colors: Menu_Sitesettings_Colors
-	customer: Customer
 }
-const Checkout = ({
-	hidePrices = false,
-	discounts = false,
-	stripeData,
-	colors,
-	customer,
-}: CheckoutProps) => {
+const Checkout = ({ hidePrices = false, discounts = false }: CheckoutProps) => {
 	const { isAuth, processing } = useAuth()
 
 	const { cart, loading: cartLoading } = useCart().state
 
-	const stripePromise = getStripe()
+	const { stripeData, customer } = useCheckoutData()
 
-	const stripeOptions: StripeElementsOptions = {
-		clientSecret: stripeData.clientSecret,
-		appearance: { theme: "stripe", labels: "floating" },
-	}
+	const stripePromise = getStripe()
 
 	return (
 		<>
@@ -66,12 +54,6 @@ const Checkout = ({
 							>
 								Visit our shop.
 							</Link>
-							{/*  <a
-                    href="#"
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    Contact support
-                  </a> --> */}
 						</div>
 					</div>
 				</div>
@@ -103,14 +85,15 @@ const Checkout = ({
 									</div>
 								)}
 							</section>
-							{cart && stripeData ? (
-								<Elements stripe={stripePromise} options={stripeOptions}>
-									<CheckoutForm
-										cart={cart}
-										colors={colors}
-										customer={customer}
-										stripeData={stripeData}
-									/>
+							{cart && stripeData?.clientSecret && customer ? (
+								<Elements
+									stripe={stripePromise}
+									options={{
+										clientSecret: stripeData.clientSecret,
+										appearance: { theme: "stripe", labels: "floating" },
+									}}
+								>
+									<CheckoutForm customer={customer} stripeData={stripeData} />
 								</Elements>
 							) : (
 								<div className="h-screen mt-48 mx-auto">

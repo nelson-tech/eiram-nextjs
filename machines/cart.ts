@@ -1,6 +1,6 @@
 import { assign, createMachine } from "xstate"
 
-import useClient from "@api/client"
+import getClient from "@api/client"
 import {
 	AddToCartDocument,
 	Cart,
@@ -142,7 +142,7 @@ export const cartMachine =
 			},
 			services: {
 				fetchCart: async (ctx) => {
-					const client = useClient()
+					const client = getClient()
 					const cartData = await client.request(GetCartDocument)
 
 					return cartData.cart as Cart
@@ -150,7 +150,7 @@ export const cartMachine =
 				addItem: async (ctx, event: AddToCartEventType) => {
 					const { input } = event
 
-					const client = useClient()
+					const client = getClient()
 
 					const cartData = await client.request(AddToCartDocument, { input })
 
@@ -164,7 +164,7 @@ export const cartMachine =
 				updateCartItem: async (ctx) => {
 					const { itemKey, quantity } = ctx.updateLoading
 
-					const client = useClient()
+					const client = getClient()
 
 					const updateCartData = await client.request(UpdateCartItemQuantityDocument, {
 						input: { items: [{ key: itemKey, quantity }] },
@@ -176,7 +176,7 @@ export const cartMachine =
 					return { input: event.input }
 				},
 				removeItem: async (ctx) => {
-					const client = useClient()
+					const client = getClient()
 
 					const removeItemData = await client.request(RemoveCartItemDocument, {
 						input: { keys: [ctx.removeLoading.itemKey] },
@@ -185,7 +185,7 @@ export const cartMachine =
 					return removeItemData.removeItemsFromCart.cart as Cart
 				},
 				clearCart: async () => {
-					const client = useClient()
+					const client = getClient()
 
 					const clearCartData = await client.request(ClearCartDocument)
 					return clearCartData.emptyCart.cart as Cart

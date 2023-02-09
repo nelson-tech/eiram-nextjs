@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import { Stripe } from "stripe"
 
 import { CLIENT_Tokens_Type } from "@lib/types/auth"
-import useClient from "@api/client"
+import getClient from "@api/client"
 import { GetCartForStripeDocument } from "@api/codegen/graphql"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2022-11-15" })
@@ -14,7 +14,7 @@ export default async function handler(
 	const inputData: { tokens?: CLIENT_Tokens_Type } =
 		typeof req.body === "string" ? JSON.parse(req.body) : req.body
 
-	const client = useClient(inputData.tokens)
+	const client = getClient(inputData.tokens)
 
 	const cartData = await client.request(GetCartForStripeDocument)
 

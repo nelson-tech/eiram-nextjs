@@ -17,7 +17,7 @@ const AuthChecker = ({ forceGuest = false, redirect }: AuthCheckerInputType) => 
 		if (!processing && isAuth == forceGuest) {
 			router.push(redirect)
 		}
-	}, [isAuth, router, processing, redirect])
+	}, [isAuth, router, processing, redirect, forceGuest])
 
 	return <></>
 }

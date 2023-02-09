@@ -1,8 +1,8 @@
-import useClient from "@api/client"
+import getClient from "@api/client"
 import { Collection, GetCollectionBySlugDocument } from "@api/codegen/graphql"
 
 const getCollection = async (slug: string) => {
-	const client = useClient()
+	const client = getClient()
 
 	try {
 		const collectionData = await client.request(GetCollectionBySlugDocument, { slug })

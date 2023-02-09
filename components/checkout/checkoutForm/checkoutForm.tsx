@@ -8,15 +8,8 @@ import { SubmitHandler, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LockClosedIcon } from "@heroicons/react/20/solid"
 
-import useClient from "@api/client"
-import {
-	Cart,
-	CheckoutDocument,
-	CheckoutInput,
-	Customer,
-	CustomerAddress,
-	Menu_Sitesettings_Colors,
-} from "@api/codegen/graphql"
+import getClient from "@api/client"
+import { CheckoutDocument, CheckoutInput, Customer, CustomerAddress } from "@api/codegen/graphql"
 import useCart from "@lib/hooks/useCart"
 import useAlerts from "@lib/hooks/useAlerts"
 
@@ -36,21 +29,22 @@ type FormDataType = {
 	customerNote: string
 }
 
-type CheckoutFormProps = {
-	cart: Cart
+type CheckoutFormPropsType = {
 	customer: Customer
 	stripeData: STRIPE_PaymentIntentType
-	colors: Menu_Sitesettings_Colors
 }
 
 // ####
 // #### Component
 // ####
 
-const CheckoutForm = ({ cart, colors, customer, stripeData }: CheckoutFormProps) => {
+const CheckoutForm = ({ stripeData, customer }: CheckoutFormPropsType) => {
 	const router = useRouter()
-	const client = useClient()
-	const { fetchCart, clearCart } = useCart()
+	const client = getClient()
+
+	console.log("Checkout data", stripeData, customer)
+
+	const { clearCart } = useCart()
 
 	const { openAlert } = useAlerts()
 
@@ -58,24 +52,6 @@ const CheckoutForm = ({ cart, colors, customer, stripeData }: CheckoutFormProps)
 
 	const stripe = useStripe()
 	const elements = useElements()
-	const CARD_ELEMENT_OPTIONS = {
-		style: {
-			base: {
-				iconColor: "black",
-				color: "black",
-				fontSize: "18px",
-				fontFamily: "Raleway, sans-serif",
-				fontSmoothing: "antialiased",
-				"::placeholder": {
-					color: "black",
-				},
-			},
-			invalid: {
-				iconColor: "#fa004f",
-				color: "#fa004f",
-			},
-		},
-	}
 
 	const {
 		formState: { errors },
@@ -147,9 +123,6 @@ const CheckoutForm = ({ cart, colors, customer, stripeData }: CheckoutFormProps)
 		const paymentMethod: Omit<CreatePaymentMethodCardData, "type"> = {
 			card: elements.getElement(CardElement),
 			billing_details: { email: customer.email },
-			// billing_details: {},
-			// shipping: {},
-			// receipt_email: ''
 		}
 
 		if (!paymentMethod.card) {
@@ -240,16 +213,6 @@ const CheckoutForm = ({ cart, colors, customer, stripeData }: CheckoutFormProps)
 				console.warn("Error checking out", error)
 			}
 		}
-
-		// error &&
-		//   setAlert({
-		//     open: true,
-		//     type: "error",
-		//     primary: "Error Checking Out",
-		//     secondary: error.message.split("] ")[1],
-		//   })
-
-		// error && console.warn(error)
 
 		setLoading(false)
 	}
@@ -531,6 +494,7 @@ const CheckoutForm = ({ cart, colors, customer, stripeData }: CheckoutFormProps)
 							<a
 								href="https://stripe.com"
 								target="_blank"
+								rel="noreferrer"
 								title="Visit Stripe to learn more."
 								style={{ color: "rgba(85, 108, 214,0.6)" }}
 								className="hover:underline transition-all"
@@ -543,7 +507,7 @@ const CheckoutForm = ({ cart, colors, customer, stripeData }: CheckoutFormProps)
 							<CardElement
 								options={{
 									style: {
-										base: { iconColor: colors.accent },
+										base: { iconColor: "#8aa29e" },
 									},
 								}}
 								className=" border border-gray-300 focus:ring-accent focus:border-accent p-2 rounded-md font-sans"

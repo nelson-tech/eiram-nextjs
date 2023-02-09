@@ -1,4 +1,6 @@
+import { GetPageSlugsQuery } from "@api/codegen/graphql"
 import Link from "@components/Link"
+import getCachedQuery from "@lib/server/getCachedQuery"
 import getPageBySlug from "@lib/server/getPageBySlug"
 
 const OtherPage = async ({ params }: { params: { slug: string } }) => {
@@ -30,6 +32,16 @@ const OtherPage = async ({ params }: { params: { slug: string } }) => {
 			)}
 		</div>
 	)
+}
+
+export const revalidate = 60 // revalidate this page every 60 seconds
+
+export async function generateStaticParams() {
+	const { data } = await getCachedQuery<GetPageSlugsQuery>("getPageSlugs")
+
+	return data?.pages?.nodes?.map((page) => ({
+		slug: page.slug,
+	}))
 }
 
 export default OtherPage

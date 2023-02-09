@@ -1,6 +1,7 @@
 "use client"
 
 import { Menu_Sitesettings_Footer_Socialmedia } from "@lib/api/codegen/graphql"
+import Image from "next/image"
 
 type FooterProps = {
 	socialMedia: Menu_Sitesettings_Footer_Socialmedia[]
@@ -28,7 +29,7 @@ const Footer = ({ socialMedia }: FooterProps) => {
 									className="w-8 h-8 fill-white stroke-white"
 									target="_blank"
 								>
-									<img
+									<Image
 										src={
 											CDN_URL +
 											"/icons/" +
@@ -37,6 +38,8 @@ const Footer = ({ socialMedia }: FooterProps) => {
 											social.icon.name.toLowerCase() +
 											".svg"
 										}
+										width={32}
+										height={32}
 										alt={social.name}
 										className="social-icon"
 									/>

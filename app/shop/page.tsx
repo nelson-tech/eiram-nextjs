@@ -12,4 +12,6 @@ const ShopPage = async () => {
 	return products ? <ProductGrid products={products} /> : <>No products found</>
 }
 
+export const revalidate = 60 // revalidate this page every 60 seconds
+
 export default ShopPage

@@ -69,7 +69,7 @@ const LoginForm = ({ firstFocusRef, closeModal }: LoginFormProps) => {
 		if (matches("loggedIn") && router) {
 			router.push(`/${redirect ?? ""}`)
 		}
-	}, [matches, router])
+	}, [matches, router, redirect])
 
 	const { ref, ...restEmail } = register("email", {
 		required: "Valid email is required.",

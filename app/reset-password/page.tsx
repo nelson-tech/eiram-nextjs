@@ -1,4 +1,4 @@
-import useClient from "@api/client"
+import getClient from "@api/client"
 import { GetCustomerDataDocument } from "@api/codegen/graphql"
 import getTokensServer from "@lib/utils/getTokensServer"
 
@@ -7,7 +7,7 @@ import ResetPasswordForm from "@components/ResetPasswordForm"
 const getUserEmail = async () => {
 	const { tokens } = await getTokensServer()
 
-	const client = useClient(tokens)
+	const client = getClient(tokens)
 
 	const customerData = await client.request(GetCustomerDataDocument)
 

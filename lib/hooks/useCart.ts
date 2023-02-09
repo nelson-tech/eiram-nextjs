@@ -1,12 +1,8 @@
-import { useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import { useActor } from "@xstate/react"
 
-import { CartContext } from "machines/cartContext"
-import useAuth from "./useAuth"
-import useModals from "./useModals"
 import {
 	AddToCartInput,
-	ClearCartDocument,
 	RemoveItemsFromCartInput,
 	UpdateItemQuantitiesInput,
 } from "@api/codegen/graphql"
@@ -15,7 +11,9 @@ import {
 	RemoveCartItemEventType,
 	UpdateCartItemEventType,
 } from "@lib/types/cart"
-import useClient from "@api/client"
+import { CartContext } from "machines/cartContext"
+import useAuth from "./useAuth"
+import useModals from "./useModals"
 
 const useCart = () => {
 	const globalServices = useContext(CartContext)
@@ -28,9 +26,9 @@ const useCart = () => {
 
 	const [authStatus, setAuthStatus] = useState(officialAuthStatus)
 
-	const fetchCart = async () => {
+	const fetchCart = useCallback(async () => {
 		await send("FETCHCART")
-	}
+	}, [send])
 
 	// Update cart when authentication status changes, except for loading states
 	useEffect(() => {
@@ -42,7 +40,7 @@ const useCart = () => {
 			setAuthStatus(officialAuthStatus)
 			fetchCart()
 		}
-	}, [authStatus, officialAuthStatus, send, setAuthStatus])
+	}, [authStatus, officialAuthStatus, send, setAuthStatus, fetchCart])
 
 	const addToCart = async (input: AddToCartInput) => {
 		await send("ADDITEM", {

@@ -44,4 +44,6 @@ const OrderPage = async ({ params }: { params: { id: string } }) => {
 	)
 }
 
+export const revalidate = 0 // dynamically serve this page
+
 export default OrderPage

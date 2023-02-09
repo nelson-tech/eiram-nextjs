@@ -1,4 +1,4 @@
-import useClient from "@api/client"
+import getClient from "@api/client"
 import { GetOrdersDataDocument, Order } from "@api/codegen/graphql"
 import AuthChecker from "@components/AuthChecker"
 import Link from "@components/Link"
@@ -9,7 +9,7 @@ const getOrders = async () => {
 	try {
 		const { tokens } = await getTokensServer()
 
-		const client = useClient(tokens)
+		const client = getClient(tokens)
 
 		const ordersData = await client.request(GetOrdersDataDocument)
 
@@ -70,5 +70,7 @@ const OrdersPage = async () => {
 		</>
 	)
 }
+
+export const revalidate = 0 // dynamically serve this page
 
 export default OrdersPage

@@ -50,11 +50,13 @@ const documents = {
     "query GetCollectionBySlug($slug: ID!) {\n  collection(id: $slug, idType: SLUG) {\n    id\n    title\n    slug\n    content\n    gallery {\n      media {\n        video {\n          ...ImageBase\n          mediaItemUrl\n        }\n        images {\n          ...ImageBase\n        }\n      }\n    }\n  }\n}": types.GetCollectionBySlugDocument,
     "query GetCollectionsData {\n  collections(first: 100) {\n    nodes {\n      id\n      title\n      slug\n      gallery {\n        media {\n          coverimage {\n            ...ImageBase\n          }\n        }\n      }\n    }\n  }\n}": types.GetCollectionsDataDocument,
     "query GetCustomerData {\n  customer {\n    ...CustomerBase\n  }\n}": types.GetCustomerDataDocument,
+    "query GetCustomerDataWithAddresses {\n  customer {\n    ...CustomerBase\n    ...CustomerAddresses\n  }\n}": types.GetCustomerDataWithAddressesDocument,
     "query GetCustomerDataWithOrders {\n  customer {\n    ...CustomerBase\n    orders {\n      nodes {\n        id\n        date\n        orderNumber\n        total\n        status\n        lineItems {\n          nodes {\n            databaseId\n          }\n        }\n      }\n    }\n  }\n}": types.GetCustomerDataWithOrdersDocument,
     "query GetMenuData {\n  mainMenu: menu(id: \"main\", idType: SLUG) {\n    id\n    menuItems(first: 100, where: {parentDatabaseId: 0}) {\n      nodes {\n        id\n        url\n        label\n        childItems {\n          nodes {\n            id\n            url\n            label\n          }\n        }\n      }\n    }\n    siteSettings {\n      colors {\n        accent\n        black\n        blue\n        green\n        highlight\n        indigo\n        orange\n        red\n        violet\n        white\n        yellow\n      }\n      footer {\n        socialmedia {\n          icon {\n            name\n            style\n          }\n          link\n          name\n        }\n      }\n    }\n  }\n}": types.GetMenuDataDocument,
     "query GetOrderDataByID($id: ID) {\n  order(id: $id, idType: DATABASE_ID) {\n    id\n    date\n    orderNumber\n    total\n    status\n    lineItems {\n      nodes {\n        quantity\n        total\n        product {\n          node {\n            ... on SimpleProduct {\n              ...ProductMinBase\n              image {\n                ...ImageBase\n              }\n              galleryImages {\n                nodes {\n                  ...ImageBase\n                }\n              }\n              price\n              salePrice\n            }\n            ...VariableProductFragment\n            ... on VariableProduct {\n              ...ProductMinBase\n              image {\n                ...ImageBase\n              }\n              galleryImages {\n                nodes {\n                  ...ImageBase\n                }\n              }\n              price\n              salePrice\n              variations {\n                nodes {\n                  ...ProductVariationBase\n                }\n              }\n              attributes {\n                nodes {\n                  ...ProductAttributeBase\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}": types.GetOrderDataByIdDocument,
     "query GetOrdersData {\n  orders {\n    nodes {\n      id\n      date\n      orderNumber\n      total\n      status\n      lineItems {\n        nodes {\n          databaseId\n        }\n      }\n    }\n  }\n}": types.GetOrdersDataDocument,
     "query GetPageDataBySlug($slug: ID!) {\n  page(id: $slug, idType: URI) {\n    ...PageCommonBase\n    content\n  }\n}": types.GetPageDataBySlugDocument,
+    "query GetPageSlugs {\n  pages {\n    nodes {\n      slug\n    }\n  }\n}": types.GetPageSlugsDocument,
     "query GetPressData {\n  press(first: 100) {\n    nodes {\n      id\n      title\n      content\n      featuredImage {\n        node {\n          ...ImageBase\n        }\n      }\n      slug\n    }\n  }\n}": types.GetPressDataDocument,
     "query GetProductCategories {\n  productCategories(where: {hideEmpty: true}, first: 99) {\n    nodes {\n      ...ProductCategoryBase\n      ancestors {\n        nodes {\n          ...ProductCategoryBase\n        }\n      }\n      children(where: {hideEmpty: true}, first: 99) {\n        nodes {\n          ...ProductCategoryBase\n          children(where: {hideEmpty: true}, first: 99) {\n            nodes {\n              ...ProductCategoryBase\n            }\n          }\n        }\n      }\n    }\n  }\n}": types.GetProductCategoriesDocument,
     "query GetProductDataBySlug($id: ID!) {\n  product(id: $id, idType: SLUG) {\n    ...VariableProductFragment\n    ...SimpleProductFragment\n  }\n}": types.GetProductDataBySlugDocument,
@@ -229,6 +231,10 @@ export function gql(source: "query GetCustomerData {\n  customer {\n    ...Custo
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "query GetCustomerDataWithAddresses {\n  customer {\n    ...CustomerBase\n    ...CustomerAddresses\n  }\n}"): (typeof documents)["query GetCustomerDataWithAddresses {\n  customer {\n    ...CustomerBase\n    ...CustomerAddresses\n  }\n}"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "query GetCustomerDataWithOrders {\n  customer {\n    ...CustomerBase\n    orders {\n      nodes {\n        id\n        date\n        orderNumber\n        total\n        status\n        lineItems {\n          nodes {\n            databaseId\n          }\n        }\n      }\n    }\n  }\n}"): (typeof documents)["query GetCustomerDataWithOrders {\n  customer {\n    ...CustomerBase\n    orders {\n      nodes {\n        id\n        date\n        orderNumber\n        total\n        status\n        lineItems {\n          nodes {\n            databaseId\n          }\n        }\n      }\n    }\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -246,6 +252,10 @@ export function gql(source: "query GetOrdersData {\n  orders {\n    nodes {\n   
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "query GetPageDataBySlug($slug: ID!) {\n  page(id: $slug, idType: URI) {\n    ...PageCommonBase\n    content\n  }\n}"): (typeof documents)["query GetPageDataBySlug($slug: ID!) {\n  page(id: $slug, idType: URI) {\n    ...PageCommonBase\n    content\n  }\n}"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "query GetPageSlugs {\n  pages {\n    nodes {\n      slug\n    }\n  }\n}"): (typeof documents)["query GetPageSlugs {\n  pages {\n    nodes {\n      slug\n    }\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

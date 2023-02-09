@@ -1,4 +1,4 @@
-import useClient from "@api/client"
+import getClient from "@api/client"
 import {
 	Customer,
 	GetCustomerDataDocument,
@@ -158,7 +158,7 @@ export const authMachine = (initialState: string) =>
 					throw new Error("Unauthorized")
 				},
 				login: async (_, event: AuthLoginEvent_Type) => {
-					const client = useClient()
+					const client = getClient()
 					const loginData = await client
 						.request(LoginUserDocument, { input: event.input })
 						.catch((error) => {})
@@ -202,7 +202,7 @@ export const authMachine = (initialState: string) =>
 					event.callback && event.callback(false, null)
 				},
 				logout: async (_, event: AuthLogoutEvent_Type) => {
-					const client = useClient()
+					const client = getClient()
 
 					const logoutData = await client.request(LogoutUserDocument, { input: {} })
 
@@ -216,7 +216,7 @@ export const authMachine = (initialState: string) =>
 					return { tokens: null, customer: null }
 				},
 				register: async (_, event: AuthRegisterEvent_Type) => {
-					const client = useClient()
+					const client = getClient()
 
 					const registerData = await client.request(RegisterCustomerDocument, {
 						input: event.input,
@@ -252,14 +252,14 @@ export const authMachine = (initialState: string) =>
 					}
 				},
 				sendResetEmail: async (_, event: AuthSendResetEmailEvent_Type) => {
-					const client = useClient()
+					const client = getClient()
 
 					const resetData = await client.request(SendPasswordResetEmailDocument, event.input)
 
 					event.callback && event.callback(resetData.sendPasswordResetEmail.success)
 				},
 				resetPassword: async (_, event: AuthResetPasswordEvent_Type) => {
-					const client = useClient()
+					const client = getClient()
 
 					const { key, login, password } = event.input
 

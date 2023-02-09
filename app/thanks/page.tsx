@@ -1,14 +1,13 @@
-import useClient from "@api/client"
+import getClient from "@api/client"
 import { GetOrderDataByIdDocument, Order } from "@api/codegen/graphql"
 import OrderConfirmation from "@components/OrderConfirmation"
 import UserOrderError from "@components/UserOrderError"
-import { FRONTEND_BASE } from "@lib/constants"
 import getTokensServer from "@lib/utils/getTokensServer"
 
 const getOrder = async (id: string) => {
 	const { tokens } = await getTokensServer()
 
-	const client = useClient(tokens)
+	const client = getClient(tokens)
 
 	const orderData = await client.request(GetOrderDataByIdDocument, { id })
 
@@ -38,5 +37,7 @@ const ThanksPage = async ({ searchParams }: { searchParams?: { id: string } }) =
 		</div>
 	)
 }
+
+export const revalidate = 0 // dynamically serve this page
 
 export default ThanksPage

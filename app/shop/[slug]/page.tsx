@@ -1,5 +1,6 @@
 import {
 	GetProductDataBySlugQuery,
+	GetProductsDataQuery,
 	Product,
 	SimpleProduct,
 	VariableProduct,
@@ -20,6 +21,16 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
 			{product?.id && <ProductDetails product={product} />}
 		</main>
 	)
+}
+
+export const revalidate = 60 // revalidate this page every 60 seconds
+
+export async function generateStaticParams() {
+	const { data } = await getCachedQuery<GetProductsDataQuery>("getProductsData")
+
+	return data?.products?.nodes?.map((product) => ({
+		slug: product.slug,
+	}))
 }
 
 export default ProductPage

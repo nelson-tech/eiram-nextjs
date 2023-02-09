@@ -8,7 +8,7 @@ const config: CodegenConfig = {
 		"lib/api/codegen/": {
 			config: { dedupeFragments: true, fragmentMasking: false },
 			preset: "gql-tag-operations-preset",
-			plugins: ["typescript", "typescript-operations"],
+			plugins: [],
 		},
 		// "lib/api/codegen/schema.ts": {
 		//   plugins: ["typescript", "typescript-operations"],

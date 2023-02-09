@@ -23,7 +23,8 @@ const AuthMenu = () => {
 				return (
 					<div key={menuItem.label + menuItem.path} className=" z-10">
 						<div>
-							<Link
+							<Popover.Button
+								as={Link}
 								href={menuItem.path}
 								title={menuItem.label}
 								className="transition-all group flex items-center hover:bg-accent outline-none ring-transparent hover:text-white text-highlight px-4 py-2 text-sm"
@@ -35,7 +36,7 @@ const AuthMenu = () => {
 										{context.customer.orderCount}
 									</span>
 								)}
-							</Link>
+							</Popover.Button>
 						</div>
 					</div>
 				)

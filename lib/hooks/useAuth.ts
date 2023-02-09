@@ -17,8 +17,9 @@ import {
 	AuthSendResetEmailEvent_Type,
 } from "@lib/types/auth"
 
+const processingStates = ["loggedIn", "loggedOut"]
+
 const useAuth = () => {
-	const processingStates = ["loggedIn", "loggedOut"]
 	const globalServices = useContext(AuthContext)
 	const [state] = useActor(globalServices.authService)
 	const [isAuth, setIsAuth] = useState(state.value === "loggedIn")
