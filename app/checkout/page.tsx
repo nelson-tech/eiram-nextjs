@@ -1,9 +1,12 @@
 import Checkout from "@components/checkout"
+import getCheckoutData from "@lib/server/getCheckoutData"
 
 const CheckoutPage = async () => {
+	const { stripeData, customer } = await getCheckoutData()
+
 	return (
 		<>
-			<Checkout />
+			<Checkout stripeData={stripeData} customer={customer} />
 		</>
 	)
 }

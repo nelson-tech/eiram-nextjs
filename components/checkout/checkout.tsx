@@ -1,10 +1,11 @@
 "use client"
 
+import { Elements } from "@stripe/react-stripe-js"
 import type { StripeElementsOptions } from "@stripe/stripe-js/types/stripe-js/elements-group"
 
+import { Customer } from "@api/codegen/graphql"
 import useAuth from "@lib/hooks/useAuth"
 import useCart from "@lib/hooks/useCart"
-import useCheckoutData from "@lib/hooks/useCheckoutData"
 import getStripe from "@lib/utils/getStripe"
 
 import Link from "@components/Link"
@@ -15,20 +16,45 @@ import DiscountForm from "./discountForm"
 import GuestWarning from "./guestWarning"
 import MobileSummary from "./mobileSummary"
 import PricingSummary from "./pricingSummary"
-import { Elements } from "@stripe/react-stripe-js"
+import { useEffect, useState } from "react"
+import getTokensClient from "@lib/utils/getTokensClient"
+import { STRIPE_ENDPOINT } from "@lib/constants"
 
 type CheckoutProps = {
 	hidePrices?: boolean
 	discounts?: boolean
+	stripeData: STRIPE_PaymentIntentType
+	customer: Customer
 }
-const Checkout = ({ hidePrices = false, discounts = false }: CheckoutProps) => {
+const Checkout = ({
+	hidePrices = false,
+	discounts = false,
+	stripeData: stripeServerData,
+	customer,
+}: CheckoutProps) => {
+	const [stripeData, setStripeData] = useState<STRIPE_PaymentIntentType>(stripeServerData)
+
 	const { isAuth, processing } = useAuth()
 
 	const { cart, loading: cartLoading } = useCart().state
 
-	const { stripeData, customer } = useCheckoutData()
-
 	const stripePromise = getStripe()
+
+	const stripeOptions: StripeElementsOptions = {
+		clientSecret: stripeData.clientSecret,
+		appearance: { theme: "stripe", labels: "floating" },
+	}
+
+	useEffect(() => {
+		getTokensClient().then(({ tokens }) => {
+			fetch(STRIPE_ENDPOINT, {
+				method: "POST",
+				body: JSON.stringify({ tokens }),
+			}).then((response) =>
+				response.json().then((data: STRIPE_PaymentIntentType) => setStripeData(data)),
+			)
+		})
+	}, [cart])
 
 	return (
 		<>
@@ -86,13 +112,7 @@ const Checkout = ({ hidePrices = false, discounts = false }: CheckoutProps) => {
 								)}
 							</section>
 							{cart && stripeData?.clientSecret && customer ? (
-								<Elements
-									stripe={stripePromise}
-									options={{
-										clientSecret: stripeData.clientSecret,
-										appearance: { theme: "stripe", labels: "floating" },
-									}}
-								>
+								<Elements stripe={stripePromise} options={stripeOptions}>
 									<CheckoutForm customer={customer} stripeData={stripeData} />
 								</Elements>
 							) : (
