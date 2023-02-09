@@ -2,7 +2,7 @@
 
 import Logo from "./logo"
 import MainMenu from "./mainMenu"
-import UserMenu from "./userMenu"
+import UserMenu from "./customerMenu"
 import ShoppingCartButton from "./shoppingCartButton"
 import MobileMenuButton from "./mobileMenuButton"
 import useScrollDirection from "@lib/hooks/useScrollDirection"

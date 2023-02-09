@@ -70,9 +70,9 @@ const OrderConfirmation = ({ order, orderNumber }: OrderConfirmationInputType) =
 				) : (
 					<div className="px-6 text-gray-500">
 						<div className="pb-4">
-							Order details are only visible on our website for orders placed with a user account.
-							Please <span className="font-bold">save your order number</span> ( #{orderNumber} )
-							for future reference.
+							Order details are only visible on our website for orders placed with a customer
+							account. Please <span className="font-bold">save your order number</span> ( #
+							{orderNumber} ) for future reference.
 						</div>
 						<div>
 							A sales representative will contact you to finish processing your order. If you have

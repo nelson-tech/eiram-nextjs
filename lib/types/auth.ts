@@ -10,11 +10,12 @@ export type CLIENT_Tokens_Type = {
 	auth: string | null | undefined
 	refresh: string | null | undefined
 	cart: string | null | undefined
+	customer: string | null | undefined
 }
 
 export type AuthMachine_Type = {
 	tokens: CLIENT_Tokens_Type
-	user: Customer | null
+	customer: Customer | null
 }
 
 type AuthCallbackWithName = (success: boolean, firstName?: string | null | undefined) => void

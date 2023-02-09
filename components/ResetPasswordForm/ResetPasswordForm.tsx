@@ -49,7 +49,7 @@ const ResetPasswordForm = ({ detectedEmail }: ResetPasswordFormInputType) => {
 		}
 	}, [setError, setValidPassword, password, passwordConfirm])
 
-	// Forward user after successful password reset
+	// Forward customer after successful password reset
 	useEffect(() => {
 		if (passwordReset && !error && !processing) {
 			router.push("/shop")

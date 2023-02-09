@@ -1,6 +1,4 @@
 import Link from "@components/Link"
-import { GetPageDataBySlugQuery } from "@api/codegen/graphql"
-import getCachedQuery from "@lib/server/getCachedQuery"
 import getPageBySlug from "@lib/server/getPageBySlug"
 
 const OtherPage = async ({ params }: { params: { slug: string } }) => {

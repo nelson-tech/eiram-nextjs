@@ -1,26 +1,21 @@
 import { useContext, useEffect, useState } from "react"
 import { useActor } from "@xstate/react"
 
-import useClient from "@api/client"
 import {
 	LoginInput,
 	RegisterCustomerInput,
 	ResetUserPasswordInput,
 	SendPasswordResetEmailInput,
-	User,
 } from "@api/codegen/graphql"
 import { AuthContext } from "machines/authContext"
 import useAlerts from "./useAlerts"
-import { AUTH_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@lib/constants"
 import {
 	AuthLoginEvent_Type,
 	AuthLogoutEvent_Type,
-	AuthMachine_Type,
 	AuthRegisterEvent_Type,
 	AuthResetPasswordEvent_Type,
 	AuthSendResetEmailEvent_Type,
 } from "@lib/types/auth"
-import setCookie from "@lib/utils/setCookie"
 
 const useAuth = () => {
 	const processingStates = ["loggedIn", "loggedOut"]
@@ -30,8 +25,6 @@ const useAuth = () => {
 	const [processing, setProcessing] = useState(!processingStates.includes(state.value as string))
 
 	const { openAlert } = useAlerts()
-
-	const client = useClient()
 
 	// Keep isAuth and processing current as state.value changes
 	useEffect(() => {

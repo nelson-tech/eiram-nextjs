@@ -9,9 +9,9 @@ const getUserEmail = async () => {
 
 	const client = useClient(tokens)
 
-	const userData = await client.request(GetCustomerDataDocument)
+	const customerData = await client.request(GetCustomerDataDocument)
 
-	return userData.customer?.email
+	return customerData.customer?.email
 }
 
 const ResetPasswordPage = async () => {

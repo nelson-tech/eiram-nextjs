@@ -9,7 +9,7 @@ import {
 	SendPasswordResetEmailDocument,
 	User,
 } from "@api/codegen/graphql"
-import { AUTH_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@lib/constants"
+import { AUTH_TOKEN_KEY, CUSTOMER_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@lib/constants"
 import {
 	AuthLoginEvent_Type,
 	AuthLogoutEvent_Type,
@@ -18,6 +18,8 @@ import {
 	AuthResetPasswordEvent_Type,
 	AuthSendResetEmailEvent_Type,
 } from "@lib/types/auth"
+import { decodeCustomerToken } from "@lib/utils/decodeJwt"
+import encodeToken from "@lib/utils/encodeJwt"
 import getTokensClient from "@lib/utils/getTokensClient"
 import setCookie from "@lib/utils/setCookie"
 import { deleteCookie } from "cookies-next"
@@ -30,7 +32,7 @@ export const authMachine = (initialState: string) =>
 	createMachine(
 		{
 			tsTypes: {} as import("./auth.typegen").Typegen0,
-			context: { tokens: null, user: null } as AuthMachine_Type,
+			context: { tokens: null, customer: null } as AuthMachine_Type,
 			id: "auth",
 			initial: initialState,
 			predictableActionArguments: true,
@@ -145,14 +147,11 @@ export const authMachine = (initialState: string) =>
 					const { tokens, isAuth } = await getTokensClient()
 
 					if (isAuth) {
-						// Token is stored. Fetch user data
-						const client = useClient(tokens)
-
-						const customerData = await client.request(GetCustomerDataDocument)
+						// Tokens are stored.
 
 						return {
 							tokens,
-							user: customerData.customer as Customer,
+							customer: decodeCustomerToken(tokens.customer),
 						}
 					}
 
@@ -174,9 +173,14 @@ export const authMachine = (initialState: string) =>
 							// Set authToken in client
 							client.setHeader("Authorization", `Bearer ${authToken}`)
 
+							// Encode customer into token
+							const customerToken = encodeToken(customer)
+
 							// Set cookies
 							setCookie(AUTH_TOKEN_KEY, authToken)
 							setCookie(REFRESH_TOKEN_KEY, refreshToken)
+							// Set customer token's expiration to same as refreshToken
+							setCookie(CUSTOMER_TOKEN_KEY, customerToken, {}, refreshToken)
 
 							event.callback && (await event.callback(true, customer.firstName))
 
@@ -185,8 +189,9 @@ export const authMachine = (initialState: string) =>
 									auth: authToken,
 									refresh: refreshToken,
 									cart: customer.sessionToken,
+									customer: customerToken,
 								},
-								user: customer as Customer,
+								customer: customer as Customer,
 							}
 
 							return authData
@@ -204,10 +209,11 @@ export const authMachine = (initialState: string) =>
 					// Delete cookies
 					deleteCookie(AUTH_TOKEN_KEY)
 					deleteCookie(REFRESH_TOKEN_KEY)
+					deleteCookie(CUSTOMER_TOKEN_KEY)
 
 					event.callback && event.callback(logoutData.logout.status === "SUCCESS")
 
-					return { tokens: null, user: null }
+					return { tokens: null, customer: null }
 				},
 				register: async (_, event: AuthRegisterEvent_Type) => {
 					const client = useClient()
@@ -215,21 +221,31 @@ export const authMachine = (initialState: string) =>
 					const registerData = await client.request(RegisterCustomerDocument, {
 						input: event.input,
 					})
-					const newUser = registerData?.registerCustomer
+					const newCustomer = registerData?.registerCustomer
 
-					if (newUser) {
+					if (newCustomer) {
 						// Registration was successfull
-						const { authToken, refreshToken, customer } = newUser
+						const { authToken, refreshToken, customer } = newCustomer
+
+						// Encode customer into token
+						const customerToken = encodeToken(customer)
 
 						// Set cookies
 						setCookie(AUTH_TOKEN_KEY, authToken)
 						setCookie(REFRESH_TOKEN_KEY, refreshToken)
+						// Set customer token's expiration to same as refreshToken
+						setCookie(CUSTOMER_TOKEN_KEY, customerToken, {}, refreshToken)
 
 						event.callback && event.callback(true, customer.firstName)
 
 						const authData: AuthMachine_Type = {
-							tokens: { auth: authToken, refresh: refreshToken, cart: customer.sessionToken },
-							user: customer as Customer,
+							tokens: {
+								auth: authToken,
+								refresh: refreshToken,
+								customer: customerToken,
+								cart: customer.sessionToken,
+							},
+							customer: customer as Customer,
 						}
 
 						return authData
@@ -256,19 +272,30 @@ export const authMachine = (initialState: string) =>
 					const user = (resetData && (resetData.resetUserPassword.user as User)) || null
 
 					if (user) {
-						const { jwtAuthToken, jwtRefreshToken, ...plainUser } = user
-						// Set cookies
-						setCookie(AUTH_TOKEN_KEY, jwtAuthToken)
-						setCookie(REFRESH_TOKEN_KEY, jwtRefreshToken)
+						const { jwtAuthToken, jwtRefreshToken } = user
 
 						// Get customer data
 						const customerData = await client.request(GetCustomerDataDocument)
 
+						// Encode customer into token
+						const customerToken = encodeToken(customerData.customer)
+
+						// Set cookies
+						setCookie(AUTH_TOKEN_KEY, jwtAuthToken)
+						setCookie(REFRESH_TOKEN_KEY, jwtRefreshToken)
+						// Set customer token's expiration to same as refreshToken
+						setCookie(CUSTOMER_TOKEN_KEY, customerToken, {}, jwtRefreshToken)
+
 						event.callback && event.callback(true, customerData?.customer?.firstName)
 
 						const authData: AuthMachine_Type = {
-							tokens: { auth: jwtAuthToken, refresh: jwtRefreshToken, cart: user.wooSessionToken },
-							user: customerData.customer as Customer,
+							tokens: {
+								auth: jwtAuthToken,
+								refresh: jwtRefreshToken,
+								customer: customerToken,
+								cart: customerData.customer.sessionToken,
+							},
+							customer: customerData.customer as Customer,
 						}
 
 						return authData

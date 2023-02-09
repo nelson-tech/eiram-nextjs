@@ -20,7 +20,7 @@ const UserMenu = () => {
 					}
 				>
 					<div title="User Menu" className="mt-0.5">
-						<span className="sr-only">Open user menu</span>
+						<span className="sr-only">Open customer menu</span>
 						{processing ? (
 							<LoadingSpinner size={6} />
 						) : (

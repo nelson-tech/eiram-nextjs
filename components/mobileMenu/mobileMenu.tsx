@@ -7,7 +7,7 @@ import LogoutIcon from "@icons/Logout"
 import XIcon from "@icons/X"
 import { MenuItem } from "@lib/api/codegen/graphql"
 import useAuth from "@lib/hooks/useAuth"
-import userMenu from "@lib/userMenu"
+import customerMenu from "@lib/customerMenu"
 import { Fragment } from "react"
 
 type MobileMenuInputType = {
@@ -90,14 +90,14 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 									)
 								})}
 
-							{/* User Menu */}
+							{/* Customer Menu */}
 							<div className="border-t border-gray-200 py-6 text-sm font-md text-gray-600">
 								{isAuth ? (
 									<>
-										{context.user?.firstName && (
-											<p className="px-4 mb-4">Hello, {context.user.firstName}!</p>
+										{context.customer?.firstName && (
+											<p className="px-4 mb-4">Hello, {context.customer.firstName}!</p>
 										)}
-										{userMenu.map((item) => {
+										{customerMenu.map((item) => {
 											return (
 												<div className="outline-none" onClick={() => closeModal && closeModal()}>
 													<a
@@ -107,9 +107,9 @@ const MobileMenu = ({ menuItems, closeModal }: MobileMenuInputType) => {
 													>
 														<item.icon size={6} styling="mr-4" />
 														<div>{item.label}</div>
-														{item.label === "Orders" && (
+														{item.label === "Orders" && context.customer.orderCount > 0 && (
 															<span className="rounded-full bg-accent text-white px-2 text-sm ml-2 group-hover:bg-white group-hover:text-accent transition-all">
-																{context.user.orderCount}
+																{context.customer.orderCount}
 															</span>
 														)}
 													</a>

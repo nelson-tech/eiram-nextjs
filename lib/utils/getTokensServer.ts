@@ -2,7 +2,13 @@ import { cookies as nextCookies } from "next/headers"
 import { GraphQLClient } from "graphql-request"
 
 import { RefreshAuthTokenDocument } from "@api/codegen/graphql"
-import { API_URL, AUTH_TOKEN_KEY, CART_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@lib/constants"
+import {
+	API_URL,
+	AUTH_TOKEN_KEY,
+	CART_TOKEN_KEY,
+	CUSTOMER_TOKEN_KEY,
+	REFRESH_TOKEN_KEY,
+} from "@lib/constants"
 import type { CLIENT_Tokens_Type } from "@lib/types/auth"
 import { isTokenValid } from "./validateToken"
 
@@ -19,6 +25,7 @@ const getTokensServer = async (): Promise<{
 
 	let authToken = cookies.find((cookie) => cookie.name === AUTH_TOKEN_KEY)?.value
 	let refreshToken = cookies.find((cookie) => cookie.name === REFRESH_TOKEN_KEY)?.value
+	let customerToken = cookies.find((cookie) => cookie.name === CUSTOMER_TOKEN_KEY)?.value
 	let cartToken = cookies.find((cookie) => cookie.name === CART_TOKEN_KEY)?.value
 
 	let newAuth = false
@@ -50,6 +57,7 @@ const getTokensServer = async (): Promise<{
 		tokens: {
 			auth: authToken,
 			refresh: refreshToken,
+			customer: customerToken,
 			cart: cartToken,
 		},
 		newAuth,

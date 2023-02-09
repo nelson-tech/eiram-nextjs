@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { Popover } from "@headlessui/react"
 
 import useAuth from "@lib/hooks/useAuth"
-import userMenu from "@lib/userMenu"
+import customerMenu from "@lib/customerMenu"
 import Link from "@components/Link"
 
 import LogoutIcon from "@icons/Logout"
@@ -19,7 +19,7 @@ const AuthMenu = () => {
 
 	return (
 		<>
-			{userMenu.map((menuItem) => {
+			{customerMenu.map((menuItem) => {
 				return (
 					<div key={menuItem.label + menuItem.path} className=" z-10">
 						<div>
@@ -30,9 +30,9 @@ const AuthMenu = () => {
 							>
 								{menuItem.icon({ size: 4, styling: "mr-2" })}
 								{menuItem.label}
-								{menuItem.label === "Orders" && context.user.orderCount > 0 && (
+								{menuItem.label === "Orders" && context.customer.orderCount > 0 && (
 									<span className="rounded-full bg-accent text-white px-2 text-sm ml-2 group-hover:bg-white group-hover:text-accent transition-all">
-										{context.user.orderCount}
+										{context.customer.orderCount}
 									</span>
 								)}
 							</Link>
