@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useActor } from "@xstate/react"
 
 import {
@@ -26,6 +27,7 @@ const useAuth = () => {
 	const [processing, setProcessing] = useState(!processingStates.includes(state.value as string))
 
 	const { openAlert } = useAlerts()
+	const router = useRouter()
 
 	// Keep isAuth and processing current as state.value changes
 	useEffect(() => {
@@ -51,6 +53,9 @@ const useAuth = () => {
 					  })
 
 				callback && callback()
+
+				// Force page reload to refresh any server-loaded auth data
+				router.refresh()
 			},
 		}
 
@@ -73,6 +78,9 @@ const useAuth = () => {
 					  })
 
 				callback && callback()
+
+				// Force page reload to refresh any server-loaded auth data
+				router.refresh()
 			},
 		}
 
@@ -97,6 +105,9 @@ const useAuth = () => {
 					  })
 
 				callback && callback()
+
+				// Force page reload to refresh any server-loaded auth data
+				router.refresh()
 			},
 		}
 		await globalServices.authService.send("REGISTER", event)
@@ -135,6 +146,9 @@ const useAuth = () => {
 							secondary: "Please check that you've entered the correct email address and key.",
 							timeout: 5000,
 					  })
+
+				// Force page reload to refresh any server-loaded auth data
+				router.refresh()
 			},
 		}
 
