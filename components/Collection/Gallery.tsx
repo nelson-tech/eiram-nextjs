@@ -36,15 +36,10 @@ const LookbookGallery = ({ images }: LookbookGalleryPropsType) => {
 								<Image
 									src={image.sourceUrl}
 									alt={image.altText}
-									{...(image.mediaDetails.width
-										? {
-												width: image.mediaDetails.width,
-												height: image.mediaDetails.height,
-										  }
-										: {
-												fill: true,
-												sizes: "(max-width: 400px) 100vw,(max-width: 768px) 50vw,33vw",
-										  })}
+									{...{
+										fill: true,
+										sizes: "(max-width: 400px) 100vw,(max-width: 768px) 50vw,33vw",
+									}}
 									className=" object-cover align-middle rounded-sm"
 								/>
 							</div>
