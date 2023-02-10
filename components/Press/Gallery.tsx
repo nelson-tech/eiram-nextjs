@@ -44,7 +44,7 @@ const PressGallery = ({ press }: PressGalleryPropsType) => {
 
 							<div className="absolute flex items-center w-full h-full bg-black bg-opacity-80 opacity-0 group-hover:opacity-80 transition-all rounded-sm overflow-hidden z-10">
 								<div className="w-full flex justify-center items-center">
-									<h2 className="text-white text-xl text-center font-sans">
+									<h2 className="text-white text-xl text-center">
 										<div dangerouslySetInnerHTML={{ __html: press?.content }} />
 									</h2>
 								</div>

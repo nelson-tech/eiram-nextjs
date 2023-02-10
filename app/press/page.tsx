@@ -10,9 +10,7 @@ const PressPage = async () => {
 				{press && press?.length > 0 && (
 					<>
 						<div className="text-center">
-							<h2 className="text-4xl font-bold uppercase text-gray-500 font-sans tracking-wide">
-								Press
-							</h2>
+							<h2 className="text-4xl font-bold text-gray-900 tracking-wide">Press</h2>
 						</div>
 
 						<PressGallery press={press} />

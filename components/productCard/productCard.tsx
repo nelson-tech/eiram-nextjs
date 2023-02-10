@@ -67,12 +67,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
 				)}
 
 				<div className="flex-1 space-y-2 flex flex-col w-full">
-					<h3 className="font-bold px-4 py-2 text-gray-900 group-hover:text-accent transition-all text-base sm:text-xl">
-						<Link
-							href={`/shop/${product.slug}`}
-							title={product.name || ""}
-							className="flex font-sans"
-						>
+					<h3 className="px-4 py-2 text-gray-900 group-hover:text-accent transition-all text-base sm:text-xl">
+						<Link href={`/shop/${product.slug}`} title={product.name || ""} className="flex">
 							<span aria-hidden="true" className="absolute inset-0" />
 							{product.name}
 						</Link>

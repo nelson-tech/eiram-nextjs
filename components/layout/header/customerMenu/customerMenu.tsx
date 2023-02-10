@@ -11,7 +11,7 @@ const UserMenu = () => {
 	const { processing, isAuth } = useAuth()
 	return (
 		<div className="hidden lg:flex">
-			<Popover as="div" className="relative font-sans h-full">
+			<Popover as="div" className="relative h-full">
 				<Popover.Button
 					className={
 						(isAuth ? "text-accent" : "text-gray-400") +

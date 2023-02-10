@@ -9,7 +9,7 @@ const Collection = ({ collection }: CollectionInputType) => {
 	const images = collection?.gallery.media.images
 	return (
 		<div className="p-8 mx-auto max-w-7xl text-center text-gray-600">
-			<h2 className="text-4xl font-bold font-sans tracking-wide pb-8">{collection?.title}</h2>
+			<h2 className="text-4xl font-bold tracking-wide pb-8">{collection?.title}</h2>
 
 			{collection.content && (
 				<div

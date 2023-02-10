@@ -15,9 +15,7 @@ const CollectionsPage = async () => {
 				<>
 					{" "}
 					<div className="text-center">
-						<h2 className="text-4xl font-bold uppercase text-gray-500 font-sans tracking-wide">
-							Collections
-						</h2>
+						<h2 className="text-4xl font-bold text-gray-900 tracking-wide">Collections</h2>
 					</div>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-2 md:mx-8 lg:mx-16 mt-12">
 						{collections.map((collection) => {
@@ -50,7 +48,7 @@ const CollectionsPage = async () => {
 												className="border border-white my-auto w-full mx-8 flex justify-center items-center"
 												style={{ height: "550px" }}
 											>
-												<h2 className="text-white text-4xl text-center uppercase font-sans">
+												<h2 className="text-white text-4xl text-center uppercase">
 													{collection?.title}
 												</h2>
 											</div>

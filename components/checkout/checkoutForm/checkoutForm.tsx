@@ -510,7 +510,7 @@ const CheckoutForm = ({ stripeData, customer }: CheckoutFormPropsType) => {
 										base: { iconColor: "#8aa29e" },
 									},
 								}}
-								className=" border border-gray-300 focus:ring-accent focus:border-accent p-2 rounded-md font-sans"
+								className=" border border-gray-300 focus:ring-accent focus:border-accent p-2 rounded-md"
 							/>
 						</div>
 					</div>

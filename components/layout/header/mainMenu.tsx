@@ -36,7 +36,7 @@ const MainMenu = ({ menuItems }: { menuItems: MenuItem[] }) => {
 									<Menu
 										key={menuItem.id}
 										as="div"
-										className="relative flex h-full font-sans transition hover-underline-animation"
+										className="relative flex h-full transition hover-underline-animation"
 									>
 										{({ open }) => (
 											<>
@@ -95,7 +95,7 @@ const MainMenu = ({ menuItems }: { menuItems: MenuItem[] }) => {
 
 							return (
 								<div
-									className="relative flex h-full font-sans transition hover-underline-animation"
+									className="relative flex h-full transition hover-underline-animation"
 									key={menuItem.id}
 								>
 									<Link
