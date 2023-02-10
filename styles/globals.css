@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+// Default coloring for fallback
 :root {
 	--highlight: #3d5467;
 	--accent: #8aa29e;
@@ -12,10 +13,17 @@
 	--blue: #3d5467;
 }
 
-@font-face {
-	font-family: "Karla";
-	font-weight: 1 999;
-	src: url("https://cdn.eiramknitwear.com/fonts/Karla/static/Karla-Regular.ttf");
+.custom-img {
+	object-fit: contain;
+	width: 100% !important;
+	position: relative !important;
+}
+
+.unset-img {
+	width: 100%;
+}
+.unset-img > div {
+	position: unset !important;
 }
 
 .social-icon svg {
@@ -66,20 +74,29 @@
 }
 
 .wp-container p {
-	margin-top: 2rem;
+	margin-top: 1rem;
 	line-height: 2rem;
 	font-size: 1rem;
+	padding: 1rem;
 }
 
 .wp-container ul {
 	margin-top: 1rem;
+	margin-left: 1rem;
+	line-height: 2rem;
+	padding: 1rem;
 	list-style-type: disc;
-	list-style-position: inside;
+	list-style-position: outside;
 }
 
 .wp-container a {
 	text-decoration-line: underline;
 	color: var(--accent);
+}
+
+.wp-container .wp-block-table {
+	overflow-x: scroll;
+	white-space: nowrap;
 }
 
 .wp-container table {
@@ -137,6 +154,13 @@
 	justify-content: space-between;
 }
 
+/* phone-screens */
+@media (max-width: 640px) {
+	.wp-container img {
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+}
 /* small-screens */
 @media (min-width: 640px) {
 	.wp-container .wp-block-columns {

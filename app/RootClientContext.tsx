@@ -6,11 +6,9 @@ import { CartProvider } from "machines/cartContext"
 import { ModalsProvider } from "machines/modalsContext"
 
 import RootStyleRegistry from "./RootStyleRegistry"
-// import useNavigationEvent from "@lib/hooks/useNavigationEvent"
 import { Menu_Sitesettings_Colors } from "@lib/api/codegen/graphql"
 import getTokensClient from "@lib/utils/getTokensClient"
 import getClient from "@api/client"
-// import isServer from "@lib/utils/isServer"
 
 type RootClientContextProps = {
 	children: React.ReactNode
@@ -18,21 +16,19 @@ type RootClientContextProps = {
 }
 
 const RootClientContext = ({ children, colors }: RootClientContextProps) => {
-	// useNavigationEvent()
-
-	getTokensClient().then(({ tokens, isAuth }) => {
+	getTokensClient().then(({ tokens }) => {
 		const client = getClient(tokens)
 	})
 
 	return (
 		<AuthProvider>
-			<AlertsProvider>
-				<CartProvider>
+			<CartProvider>
+				<AlertsProvider>
 					<ModalsProvider>
 						<RootStyleRegistry colors={colors}>{children}</RootStyleRegistry>
 					</ModalsProvider>
-				</CartProvider>
-			</AlertsProvider>
+				</AlertsProvider>
+			</CartProvider>
 		</AuthProvider>
 	)
 }

@@ -1,8 +1,6 @@
 "use client"
 
-import { ServerStyleSheet, StyleSheetManager } from "styled-components"
-import { useServerInsertedHTML } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Menu_Sitesettings_Colors } from "@lib/api/codegen/graphql"
 
 export default function RootStyleRegistry({
@@ -59,26 +57,5 @@ export default function RootStyleRegistry({
 		}
 	}, [colors])
 
-	// const [StyledComponentsRegistry, styledComponentsFlushEffect] =
-	//   useStyledComponentsRegistry();
-
-	const [styledComponentsStyleSheet] = useState(() => new ServerStyleSheet())
-
-	const styledComponentsFlushEffect = () => {
-		const styles = styledComponentsStyleSheet.getStyleElement()
-		// styledComponentsStyleSheet.seal();
-		return <>{styles}</>
-	}
-
-	const StyledComponentsRegistry = ({ children }: { children: React.ReactNode }) => (
-		<StyleSheetManager sheet={styledComponentsStyleSheet.instance}>{children}</StyleSheetManager>
-	)
-
-	// return [StyledComponentsRegistry, styledComponentsFlushEffect] as const
-
-	useServerInsertedHTML(() => {
-		return <>{styledComponentsFlushEffect()}</>
-	})
-
-	return <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+	return <div id="style-registry">{children}</div>
 }

@@ -9,28 +9,7 @@ module.exports = {
 	],
 	theme: {
 		extend: {
-			animation: {
-				"reverse-spin": "reverse-spin 1s linear infinite",
-			},
-			keyframes: {
-				"reverse-spin": {
-					from: {
-						transform: "rotate(360deg)",
-					},
-				},
-			},
 			colors: {
-				electric: "#db00ff",
-				ribbon: "#0047ff",
-				primary: "var(--primary)",
-				text: {
-					primary: "var(--text-primary)",
-					secondary: "#111",
-				},
-				"primary-2": "var(--primary-2)",
-				secondary: "var(--secondary)",
-				"secondary-2": "var(--secondary-2)",
-				hover: "var(--hover)",
 				violet: { main: "var(--violet)", light: "var(--violet-light)" },
 				pink: { main: "var(--pink)" },
 				cyan: { main: "var(--cyan)" },
@@ -60,5 +39,4 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
 }
