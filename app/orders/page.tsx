@@ -29,26 +29,26 @@ const OrdersPage = async () => {
 			<div className="max-w-7xl mx-auto py-8 px-8 sm:px-6 lg:pb-24 lg:px-8">
 				<div className="max-w-xl">
 					<div className="w-full relative flex items-center">
-						<h1 className="text-2xl uppercase font-extrabold tracking-tight text-gray-900 sm:text-3xl">
+						<h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
 							Order History
 						</h1>
 					</div>
-					<p className="mt-2 text-sm text-gray-500">
+					{/* <p className="mt-2 text-sm text-gray-500">
 						Check the status of recent orders, manage returns, and download invoices.
-					</p>
+					</p> */}
 				</div>
-				<div className="mt-16">
+				<div className="mt-8">
 					<h2 className="sr-only">Recent orders</h2>
 
 					{orders && orders.length > 1 ? (
-						<div className="overflow-hidden bg-white shadow sm:rounded-md">
-							<ul role="list" className="divide-y divide-gray-200">
+						<div className="mx-auto max-w-7xl sm:px-2 lg:px-8">
+							<div className="mx-auto max-w-2xl space-y-8 sm:px-4 lg:max-w-4xl lg:px-0">
 								{orders
 									.filter((order) => order.status.toLowerCase() !== "checkout-draft")
 									.map((order) => {
 										return <OrderSummary order={order} detailsLink key={order.id} />
 									})}
-							</ul>
+							</div>
 						</div>
 					) : (
 						<div className="text-gray-600">

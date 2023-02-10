@@ -6,9 +6,46 @@ query GetOrdersData {
 			orderNumber
 			total
 			status
+			tracking {
+				date
+				fieldGroupName
+				number
+				provider
+				url
+			}
 			lineItems {
 				nodes {
-					databaseId
+					quantity
+					total
+					variationId
+					product {
+						node {
+							...ProductMinBase
+							shortDescription
+							image {
+								...ImageBase
+							}
+							... on SimpleProduct {
+								price
+								salePrice
+							}
+
+							... on VariableProduct {
+								price
+								salePrice
+								variations {
+									nodes {
+										...ProductVariationBase
+									}
+								}
+								attributes {
+									nodes {
+										...ProductAttributeBase
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}

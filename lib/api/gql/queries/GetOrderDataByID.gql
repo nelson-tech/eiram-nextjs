@@ -3,39 +3,66 @@ query GetOrderDataByID($id: ID) {
 		id
 		date
 		orderNumber
+		subtotal
+		discountTotal
+		shippingTotal
+		totalTax
 		total
 		status
+		tracking {
+			date
+			fieldGroupName
+			number
+			provider
+			url
+		}
+		hasBillingAddress
+		billing {
+			address1
+			address2
+			city
+			company
+			country
+			email
+			firstName
+			lastName
+			phone
+			postcode
+			state
+		}
+		hasShippingAddress
+		shipping {
+			address1
+			address2
+			city
+			company
+			country
+			email
+			firstName
+			lastName
+			phone
+			postcode
+			state
+		}
+		paymentMethod
 		lineItems {
 			nodes {
 				quantity
 				total
+				variationId
 				product {
 					node {
+						...ProductMinBase
+						shortDescription
+						image {
+							...ImageBase
+						}
 						... on SimpleProduct {
-							...ProductMinBase
-							image {
-								...ImageBase
-							}
-							galleryImages {
-								nodes {
-									...ImageBase
-								}
-							}
 							price
 							salePrice
 						}
-						...VariableProductFragment
 
 						... on VariableProduct {
-							...ProductMinBase
-							image {
-								...ImageBase
-							}
-							galleryImages {
-								nodes {
-									...ImageBase
-								}
-							}
 							price
 							salePrice
 							variations {
