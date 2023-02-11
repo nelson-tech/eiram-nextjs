@@ -7,12 +7,23 @@ const Analytics = () => {
 	const trackingPixel = process.env.NEXT_PUBLIC_TRACKING_PIXEL_URL
 	const trackingScript = process.env.NEXT_PUBLIC_TRACKING_SCRIPT_URL
 
+	const gTagId = process.env.NEXT_PUBLIC_GTAG_ID
+
 	return (
 		<>
-			<noscript>
-				<Image alt="Info Pixel" src={trackingPixel} width={1} height={1} />
-			</noscript>
-			<Script src={trackingScript} defer />
+			<Script
+				src={`https://www.googletagmanager.com/gtag/js?id=${gTagId}`}
+				strategy="afterInteractive"
+			/>
+			<Script id="gtag" strategy="afterInteractive">
+				{`
+						window.dataLayer = window.dataLayer || [];
+						function gtag(){dataLayer.push(arguments);}
+						gtag('js', new Date());
+
+						gtag('config', '${gTagId}');
+				`}
+			</Script>
 		</>
 	)
 }

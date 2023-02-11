@@ -18,7 +18,7 @@ import useCart from "@lib/hooks/useCart"
 
 import Link from "@components/Link"
 import LoadingSpinner from "@components/LoadingSpinner"
-import ImageMagnifier from "@components/ImageMagnifier"
+import InnerImageZoom from "@components/InnerImageZoom"
 
 type ProductDetailsProps = {
 	product: Product & SimpleProduct & VariableProduct
@@ -94,13 +94,13 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 					<Tab.Group as="div" className="flex flex-col-reverse">
 						{/* <!-- Image selector --> */}
 						<div className="mx-auto mt-6 px-8 sm:px-0 w-full max-w-2xl sm:block lg:max-w-none">
-							<Tab.List className="grid grid-cols-4 gap-6">
+							<Tab.List className="grid grid-cols-3 sm:grid-cols-4 gap-6">
 								{images.map(
 									(image: MediaItem, i) =>
 										image.sourceUrl && (
 											<Tab
 												key={image.id + "thumbs"}
-												className="relative flex h-24 cursor-pointer items-center justify-center rounded-md focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-accent focus:ring-offset-4"
+												className="relative flex h-24 aspect-square cursor-pointer items-center justify-center rounded-md focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-accent focus:ring-offset-4"
 											>
 												<span className="sr-only"> {image.altText} </span>
 												<span className="absolute inset-0 overflow-hidden rounded-md">
@@ -130,11 +130,13 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 								(image: MediaItem, i) =>
 									image.sourceUrl && (
 										<Tab.Panel key={image.id + "main"}>
-											<ImageMagnifier
+											<InnerImageZoom
 												src={image.sourceUrl}
-												zoomLevel={2}
-												magnifieWidth={350}
-												magnifierHeight={350}
+												alt={image.altText}
+												zoomSrc={image.sourceUrl}
+												width={image.mediaDetails.width}
+												height={image.mediaDetails.height}
+												className="rounded-md"
 											/>
 										</Tab.Panel>
 									),
@@ -248,14 +250,6 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 									)}
 									Add to bag
 								</button>
-
-								{/* <button
-          type="button"
-          className="ml-4 flex items-center justify-center rounded-md py-3 px-3 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
-        >
-          <HeartIcon className="h-6 w-6 flex-shrink-0" aria-hidden="true" />
-          <span className="sr-only">Add to favorites</span>
-        </button> */}
 							</div>
 						</form>
 					</div>

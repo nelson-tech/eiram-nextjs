@@ -1,9 +1,5 @@
 "use client"
 
-import { Fragment } from "react"
-import { Menu, Transition } from "@headlessui/react"
-import EllipsisVerticalIcon from "@heroicons/react/20/solid/EllipsisVerticalIcon"
-
 import { LineItem, Order } from "@api/codegen/graphql"
 
 import Link from "@components/Link"
@@ -110,78 +106,6 @@ const OrderSummary = ({ order, detailsLink = false }: OrderSummaryInputType) => 
 					))}
 			</ul>
 		</div>
-		// <li className="font-karla">
-		// 	<LinkOrDiv>
-		// 		<div className="flex items-center px-4 py-4 sm:px-6">
-		// 			<div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
-		// 				<div className="truncate">
-		// 					<div className="flex text-sm">
-		// 						<p className="truncate font-medium text-accent">Order #: {order.orderNumber}</p>
-
-		// 						<div className="ml-4 flex text-gray-500">
-		// 							<div className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400">
-		// 								<svg
-		// 									fill="none"
-		// 									stroke="currentColor"
-		// 									viewBox="0 0 24 24"
-		// 									xmlns="http://www.w3.org/2000/svg"
-		// 								>
-		// 									<path
-		// 										strokeLinecap="round"
-		// 										strokeLinejoin="round"
-		// 										strokeWidth="2"
-		// 										d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-		// 									></path>
-		// 								</svg>
-		// 							</div>
-		// 							Items: {order.lineItems.nodes.length}
-		// 						</div>
-		// 						<div className="ml-4 flex text-gray-500">
-		// 							<div className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400">
-		// 								<svg
-		// 									xmlns="http://www.w3.org/2000/svg"
-		// 									fill="none"
-		// 									viewBox="0 0 24 24"
-		// 									strokeWidth={1.5}
-		// 									stroke="currentColor"
-		// 								>
-		// 									<path
-		// 										strokeLinecap="round"
-		// 										strokeLinejoin="round"
-		// 										d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
-		// 									/>
-		// 								</svg>
-		// 							</div>
-		// 							Total: {order.total}
-		// 						</div>
-		// 					</div>
-		// 					<div className="mt-4 flex items-center">
-		// 						<div className="flex items-center text-sm text-gray-500">
-		// 							<CalendarIcon
-		// 								className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-		// 								aria-hidden="true"
-		// 							/>
-		// 							<p>
-		// 								<time dateTime={order.date}>{orderDate}</time>
-		// 							</p>
-		// 						</div>
-		// 						<div className=" sm:hidden">
-		// 							<OrderStatus />
-		// 						</div>
-		// 					</div>
-		// 				</div>
-		// 				<div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5 hidden sm:block">
-		// 					<OrderStatus />
-		// 				</div>
-		// 			</div>
-		// 			{detailsLink && (
-		// 				<div className="ml-5 flex-shrink-0">
-		// 					<ChevronRightIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-		// 				</div>
-		// 			)}
-		// 		</div>
-		// 	</LinkOrDiv>
-		// </li>
 	)
 }
 

@@ -1,11 +1,12 @@
-import getCollection from "@lib/server/getCollection"
+import { RankMathPostTypeSeo } from "@api/codegen/graphql"
+import getCollectionBySlug from "@lib/server/getCollectionBySlug"
+import getCollections from "@lib/server/getCollections"
+import parseMetaData from "@lib/utils/parseMetaData"
 
 import Collection from "@components/Collection"
-import getCachedQuery from "@lib/server/getCachedQuery"
-import { GetCollectionsDataQuery } from "@api/codegen/graphql"
 
 const CollectionPage = async ({ params }: { params: { slug: string } }) => {
-	const collection = await getCollection(params.slug)
+	const collection = await getCollectionBySlug(params.slug)
 
 	return collection ? (
 		<Collection collection={collection} />
@@ -16,14 +17,23 @@ const CollectionPage = async ({ params }: { params: { slug: string } }) => {
 	)
 }
 
+export default CollectionPage
+
 export const revalidate = 60 // revalidate this page every 60 seconds
 
 export async function generateStaticParams() {
-	const { data } = await getCachedQuery<GetCollectionsDataQuery>("getCollectionsData")
+	const collections = await getCollections()
 
-	return data?.collections?.nodes?.map((collection) => ({
+	return collections?.map((collection) => ({
 		slug: collection.slug,
 	}))
 }
 
-export default CollectionPage
+// @ts-ignore
+export async function generateMetadata({ params }) {
+	const collection = await getCollectionBySlug(params.slug)
+
+	const metaData = parseMetaData(collection?.seo as RankMathPostTypeSeo, collection?.title)
+
+	return metaData
+}

@@ -11,3 +11,9 @@ const LoginPage = ({ searchParams }: { searchParams?: { redirect: string } }) =>
 }
 
 export default LoginPage
+
+export const metadata = {
+	title: "Login",
+	description: "Login to your account to check the status of your order.",
+	keywords: ["Login", "Account", "Eiram", "Knitwear", "Fashion", "Shopping"],
+}

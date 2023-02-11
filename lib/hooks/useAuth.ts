@@ -8,8 +8,6 @@ import {
 	ResetUserPasswordInput,
 	SendPasswordResetEmailInput,
 } from "@api/codegen/graphql"
-import { AuthContext } from "machines/authContext"
-import useAlerts from "./useAlerts"
 import {
 	AuthLoginEvent_Type,
 	AuthLogoutEvent_Type,
@@ -17,6 +15,8 @@ import {
 	AuthResetPasswordEvent_Type,
 	AuthSendResetEmailEvent_Type,
 } from "@lib/types/auth"
+import { AuthContext } from "machines/authContext"
+import useAlerts from "./useAlerts"
 
 const processingStates = ["loggedIn", "loggedOut"]
 

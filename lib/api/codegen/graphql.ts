@@ -623,7 +623,7 @@ export enum CatalogVisibilityEnum {
 }
 
 /** The category type */
-export type Category = DatabaseIdentifier & HierarchicalNode & HierarchicalTermNode & MenuItemLinkable & Node & TermNode & UniformResourceIdentifiable & {
+export type Category = DatabaseIdentifier & HierarchicalNode & HierarchicalTermNode & MenuItemLinkable & Node & NodeWithRankMathSeo & TermNode & UniformResourceIdentifiable & {
   __typename?: 'Category';
   /** The ancestors of the node. Default ordered as lowest (closest to the child) to highest (closest to the root). */
   ancestors?: Maybe<CategoryToAncestorsCategoryConnection>;
@@ -666,6 +666,8 @@ export type Category = DatabaseIdentifier & HierarchicalNode & HierarchicalTermN
   parentId?: Maybe<Scalars['ID']>;
   /** Connection between the Category type and the post type */
   posts?: Maybe<CategoryToPostConnection>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** An alphanumeric identifier for the object unique to its type. */
   slug?: Maybe<Scalars['String']>;
   /** Connection between the Category type and the Taxonomy type */
@@ -766,6 +768,27 @@ export enum CategoryIdType {
   /** The URI for the node */
   Uri = 'URI'
 }
+
+/** The RankMath SEO meta settings for Categories. */
+export type CategoryMetaSettings = RankMathMetaSettingWithArchive & RankMathMetaSettingWithRobots & {
+  __typename?: 'CategoryMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** Description for archive pages. */
+  archiveDescription?: Maybe<Scalars['String']>;
+  /** Default title tag for archive page. */
+  archiveTitle?: Maybe<Scalars['String']>;
+  /** Whether custom robots meta for author page are set. Otherwise the default meta will be used, as set in the Global Meta tab. */
+  hasCustomRobotsMeta?: Maybe<Scalars['Boolean']>;
+  /** Whether the SEO Controls meta box for user profile pages is enabled. */
+  hasSeoControls?: Maybe<Scalars['Boolean']>;
+  /** Whether to show additional information (name &amp; total number of posts) when an author archive is shared on Slack. */
+  hasSlackEnhancedSharing?: Maybe<Scalars['Boolean']>;
+  /** Whether to include snippet data for this taxonomy. */
+  hasSnippetData?: Maybe<Scalars['Boolean']>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+};
 
 /** Connection between the Category type and the category type */
 export type CategoryToAncestorsCategoryConnection = CategoryConnection & Connection & {
@@ -1055,7 +1078,7 @@ export type CheckoutPayload = {
 };
 
 /** The Collection type */
-export type Collection = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithContentEditor & NodeWithFeaturedImage & NodeWithTemplate & NodeWithTitle & Previewable & UniformResourceIdentifiable & {
+export type Collection = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithContentEditor & NodeWithFeaturedImage & NodeWithRankMathSeo & NodeWithTemplate & NodeWithTitle & Previewable & UniformResourceIdentifiable & {
   __typename?: 'Collection';
   /**
    * The id field matches the WP_Post-&gt;ID field.
@@ -1118,6 +1141,8 @@ export type Collection = ContentNode & DatabaseIdentifier & MenuItemLinkable & N
   previewRevisionDatabaseId?: Maybe<Scalars['Int']>;
   /** Whether the object is a node in the preview state */
   previewRevisionId?: Maybe<Scalars['ID']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
   slug?: Maybe<Scalars['String']>;
   /** The current status of the object */
@@ -1187,6 +1212,43 @@ export enum CollectionIdType {
   /** Identify a resource by the URI. */
   Uri = 'URI'
 }
+
+/** The RankMath SEO meta settings for Collections. */
+export type CollectionMetaSettings = RankMathMetaSettingWithRobots & {
+  __typename?: 'CollectionMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** List of custom fields name to include in the Page analysis */
+  analyzedFields?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Default article type when creating a new Collections. */
+  articleType?: Maybe<RankMathArticleTypeEnum>;
+  /** Default description for single Collections pages. */
+  description?: Maybe<Scalars['String']>;
+  /** Whether to list bulk editing columns to the post listing screen. */
+  hasBulkEditing?: Maybe<RankMathBulkEditingTypeEnum>;
+  /** Whether custom robots meta for author page are set. Otherwise the default meta will be used, as set in the Global Meta tab. */
+  hasCustomRobotsMeta?: Maybe<Scalars['Boolean']>;
+  /** Whether Link Suggestions meta box and the Pillar Content featured are enabled for this post type. */
+  hasLinkSuggestions?: Maybe<Scalars['Boolean']>;
+  /** Whether the SEO Controls meta box for user profile pages is enabled. */
+  hasSeoControls?: Maybe<Scalars['Boolean']>;
+  /** Whether to show additional information (name &amp; total number of posts) when an author archive is shared on Slack. */
+  hasSlackEnhancedSharing?: Maybe<Scalars['Boolean']>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+  /** Whether to use the Focus Keyword as the default text for the links instead of the post titles. */
+  shouldUseFocusKeyword?: Maybe<Scalars['Boolean']>;
+  /** Default rich snippet headline. */
+  snippetDescription?: Maybe<Scalars['String']>;
+  /** Default rich snippet headline. */
+  snippetHeadline?: Maybe<Scalars['String']>;
+  /** Default rich snippet select when creating a new Collections. */
+  snippetType?: Maybe<RankMathSnippetTypeEnum>;
+  /** The default image to display when sharing this post type on social media */
+  socialImage?: Maybe<MediaItem>;
+  /** Default title tag for single Collections pages. */
+  title?: Maybe<Scalars['String']>;
+};
 
 /** Connection between the Collection type and the Collection type */
 export type CollectionToPreviewConnectionEdge = CollectionConnectionEdge & Edge & OneToOneConnection & {
@@ -1614,7 +1676,7 @@ export type ContentNode = {
   enqueuedStylesheets?: Maybe<ContentNodeToEnqueuedStylesheetConnection>;
   /** The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table. */
   guid?: Maybe<Scalars['String']>;
-  /** The unique resource identifier path */
+  /** The globally unique ID for the object */
   id: Scalars['ID'];
   /** Whether the node is a Content Node */
   isContentNode: Scalars['Boolean'];
@@ -1636,6 +1698,8 @@ export type ContentNode = {
   previewRevisionDatabaseId?: Maybe<Scalars['Int']>;
   /** Whether the object is a node in the preview state */
   previewRevisionId?: Maybe<Scalars['ID']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
   slug?: Maybe<Scalars['String']>;
   /** The current status of the object */
@@ -1766,7 +1830,7 @@ export type ContentTemplate = {
 };
 
 /** An Post Type object */
-export type ContentType = Node & UniformResourceIdentifiable & {
+export type ContentType = Node & NodeWithRankMathSeo & UniformResourceIdentifiable & {
   __typename?: 'ContentType';
   /** Whether this content type should can be exported. */
   canExport?: Maybe<Scalars['Boolean']>;
@@ -1818,6 +1882,8 @@ export type ContentType = Node & UniformResourceIdentifiable & {
   restBase?: Maybe<Scalars['String']>;
   /** The REST Controller class assigned to handling this content type. */
   restControllerClass?: Maybe<Scalars['String']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** Makes this content type available via the admin bar. */
   showInAdminBar?: Maybe<Scalars['Boolean']>;
   /** Whether to add the content type to the GraphQL Schema. */
@@ -4430,7 +4496,7 @@ export type EnqueuedStylesheetConnectionEdge = {
 };
 
 /** A external product object */
-export type ExternalProduct = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithComments & NodeWithContentEditor & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithTemplate & NodeWithTitle & Previewable & Product & UniformResourceIdentifiable & {
+export type ExternalProduct = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithComments & NodeWithContentEditor & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithRankMathSeo & NodeWithTemplate & NodeWithTitle & Previewable & Product & UniformResourceIdentifiable & {
   __typename?: 'ExternalProduct';
   /** Connection between the Product type and the ProductAttribute type */
   attributes?: Maybe<ProductToProductAttributeConnection>;
@@ -4559,6 +4625,8 @@ export type ExternalProduct = ContentNode & DatabaseIdentifier & MenuItemLinkabl
   reviewsAllowed?: Maybe<Scalars['Boolean']>;
   /** Product&#039;s sale price */
   salePrice?: Maybe<Scalars['String']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** Connection between the Product type and the shippingClass type */
   shippingClasses?: Maybe<ProductToShippingClassConnection>;
   /** Product short description */
@@ -5074,7 +5142,7 @@ export type GlobalProductAttributeToTermNodeConnectionWhereArgs = {
 };
 
 /** The graphqlDocument type */
-export type GraphqlDocument = ContentNode & DatabaseIdentifier & Node & NodeWithContentEditor & NodeWithTemplate & NodeWithTitle & UniformResourceIdentifiable & {
+export type GraphqlDocument = ContentNode & DatabaseIdentifier & Node & NodeWithContentEditor & NodeWithRankMathSeo & NodeWithTemplate & NodeWithTitle & UniformResourceIdentifiable & {
   __typename?: 'GraphqlDocument';
   /** Alias names for saved GraphQL query documents */
   alias?: Maybe<Array<Scalars['String']>>;
@@ -5140,6 +5208,8 @@ export type GraphqlDocument = ContentNode & DatabaseIdentifier & Node & NodeWith
   previewRevisionDatabaseId?: Maybe<Scalars['Int']>;
   /** Whether the object is a node in the preview state */
   previewRevisionId?: Maybe<Scalars['ID']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
   slug?: Maybe<Scalars['String']>;
   /** The current status of the object */
@@ -5223,7 +5293,7 @@ export type GraphqlDocumentToPreviewConnectionEdge = Edge & GraphqlDocumentConne
 };
 
 /** A group product object */
-export type GroupProduct = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithComments & NodeWithContentEditor & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithTemplate & NodeWithTitle & Previewable & Product & UniformResourceIdentifiable & {
+export type GroupProduct = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithComments & NodeWithContentEditor & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithRankMathSeo & NodeWithTemplate & NodeWithTitle & Previewable & Product & UniformResourceIdentifiable & {
   __typename?: 'GroupProduct';
   /** Product&#039;s add to cart button text description */
   addToCartDescription?: Maybe<Scalars['String']>;
@@ -5350,6 +5420,8 @@ export type GroupProduct = ContentNode & DatabaseIdentifier & MenuItemLinkable &
   reviews?: Maybe<ProductToCommentConnection>;
   /** If reviews are allowed */
   reviewsAllowed?: Maybe<Scalars['Boolean']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** Connection between the Product type and the shippingClass type */
   shippingClasses?: Maybe<ProductToShippingClassConnection>;
   /** Product short description */
@@ -5773,6 +5845,8 @@ export type HierarchicalContentNode = {
   previewRevisionDatabaseId?: Maybe<Scalars['Int']>;
   /** Whether the object is a node in the preview state */
   previewRevisionId?: Maybe<Scalars['ID']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
   slug?: Maybe<Scalars['String']>;
   /** The current status of the object */
@@ -5990,6 +6064,8 @@ export type HierarchicalTermNode = {
   parentDatabaseId?: Maybe<Scalars['Int']>;
   /** The globally unique identifier of the parent node. */
   parentId?: Maybe<Scalars['ID']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** An alphanumeric identifier for the object unique to its type. */
   slug?: Maybe<Scalars['String']>;
   /** The name of the taxonomy that the object is associated with */
@@ -6341,7 +6417,7 @@ export type MediaDetailsSizesArgs = {
 };
 
 /** The mediaItem type */
-export type MediaItem = ContentNode & DatabaseIdentifier & HierarchicalContentNode & HierarchicalNode & Node & NodeWithAuthor & NodeWithComments & NodeWithTemplate & NodeWithTitle & UniformResourceIdentifiable & {
+export type MediaItem = ContentNode & DatabaseIdentifier & HierarchicalContentNode & HierarchicalNode & Node & NodeWithAuthor & NodeWithComments & NodeWithRankMathSeo & NodeWithTemplate & NodeWithTitle & UniformResourceIdentifiable & {
   __typename?: 'MediaItem';
   /** Alternative text to display when resource is not displayed */
   altText?: Maybe<Scalars['String']>;
@@ -6430,6 +6506,8 @@ export type MediaItem = ContentNode & DatabaseIdentifier & HierarchicalContentNo
   previewRevisionDatabaseId?: Maybe<Scalars['Int']>;
   /** Whether the object is a node in the preview state */
   previewRevisionId?: Maybe<Scalars['ID']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** The sizes attribute value for an image. */
   sizes?: Maybe<Scalars['String']>;
   /** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
@@ -7356,6 +7434,14 @@ export type NodeWithPageAttributes = {
   menuOrder?: Maybe<Scalars['Int']>;
 };
 
+/** A node with RankMath SEO data. */
+export type NodeWithRankMathSeo = {
+  /** The globally unique ID for the object */
+  id: Scalars['ID'];
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
+};
+
 /** A node that can have revisions */
 export type NodeWithRevisions = {
   /** The globally unique ID for the object */
@@ -8032,7 +8118,7 @@ export type OrdersOrderbyInput = {
 };
 
 /** The page type */
-export type Page = ContentNode & DatabaseIdentifier & HierarchicalContentNode & HierarchicalNode & MenuItemLinkable & Node & NodeWithAuthor & NodeWithComments & NodeWithContentEditor & NodeWithFeaturedImage & NodeWithPageAttributes & NodeWithRevisions & NodeWithTemplate & NodeWithTitle & Previewable & UniformResourceIdentifiable & {
+export type Page = ContentNode & DatabaseIdentifier & HierarchicalContentNode & HierarchicalNode & MenuItemLinkable & Node & NodeWithAuthor & NodeWithComments & NodeWithContentEditor & NodeWithFeaturedImage & NodeWithPageAttributes & NodeWithRankMathSeo & NodeWithRevisions & NodeWithTemplate & NodeWithTitle & Previewable & UniformResourceIdentifiable & {
   __typename?: 'Page';
   /** Returns ancestors of the node. Default ordered as lowest (closest to the child) to highest (closest to the root). */
   ancestors?: Maybe<HierarchicalContentNodeToContentNodeAncestorsConnection>;
@@ -8131,6 +8217,8 @@ export type Page = ContentNode & DatabaseIdentifier & HierarchicalContentNode & 
   revisionOf?: Maybe<NodeWithRevisionsToContentNodeConnectionEdge>;
   /** Connection between the Page type and the page type */
   revisions?: Maybe<PageToRevisionConnection>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
   slug?: Maybe<Scalars['String']>;
   /** The current status of the object */
@@ -8238,6 +8326,43 @@ export enum PageIdType {
   /** Identify a resource by the URI. */
   Uri = 'URI'
 }
+
+/** The RankMath SEO meta settings for Pages. */
+export type PageMetaSettings = RankMathMetaSettingWithRobots & {
+  __typename?: 'PageMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** List of custom fields name to include in the Page analysis */
+  analyzedFields?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Default article type when creating a new Pages. */
+  articleType?: Maybe<RankMathArticleTypeEnum>;
+  /** Default description for single Pages pages. */
+  description?: Maybe<Scalars['String']>;
+  /** Whether to list bulk editing columns to the post listing screen. */
+  hasBulkEditing?: Maybe<RankMathBulkEditingTypeEnum>;
+  /** Whether custom robots meta for author page are set. Otherwise the default meta will be used, as set in the Global Meta tab. */
+  hasCustomRobotsMeta?: Maybe<Scalars['Boolean']>;
+  /** Whether Link Suggestions meta box and the Pillar Content featured are enabled for this post type. */
+  hasLinkSuggestions?: Maybe<Scalars['Boolean']>;
+  /** Whether the SEO Controls meta box for user profile pages is enabled. */
+  hasSeoControls?: Maybe<Scalars['Boolean']>;
+  /** Whether to show additional information (name &amp; total number of posts) when an author archive is shared on Slack. */
+  hasSlackEnhancedSharing?: Maybe<Scalars['Boolean']>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+  /** Whether to use the Focus Keyword as the default text for the links instead of the post titles. */
+  shouldUseFocusKeyword?: Maybe<Scalars['Boolean']>;
+  /** Default rich snippet headline. */
+  snippetDescription?: Maybe<Scalars['String']>;
+  /** Default rich snippet headline. */
+  snippetHeadline?: Maybe<Scalars['String']>;
+  /** Default rich snippet select when creating a new Pages. */
+  snippetType?: Maybe<RankMathSnippetTypeEnum>;
+  /** The default image to display when sharing this post type on social media */
+  socialImage?: Maybe<MediaItem>;
+  /** Default title tag for single Pages pages. */
+  title?: Maybe<Scalars['String']>;
+};
 
 /** Connection between the Page type and the Comment type */
 export type PageToCommentConnection = CommentConnection & Connection & {
@@ -8492,7 +8617,7 @@ export enum PluginStatusEnum {
 }
 
 /** The post type */
-export type Post = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithAuthor & NodeWithComments & NodeWithContentEditor & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithRevisions & NodeWithTemplate & NodeWithTitle & NodeWithTrackbacks & Previewable & UniformResourceIdentifiable & {
+export type Post = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithAuthor & NodeWithComments & NodeWithContentEditor & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithRankMathSeo & NodeWithRevisions & NodeWithTemplate & NodeWithTitle & NodeWithTrackbacks & Previewable & UniformResourceIdentifiable & {
   __typename?: 'Post';
   /** Connection between the NodeWithAuthor type and the User type */
   author?: Maybe<NodeWithAuthorToUserConnectionEdge>;
@@ -8583,6 +8708,8 @@ export type Post = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & 
   revisionOf?: Maybe<NodeWithRevisionsToContentNodeConnectionEdge>;
   /** Connection between the Post type and the post type */
   revisions?: Maybe<PostToRevisionConnection>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
   slug?: Maybe<Scalars['String']>;
   /** The current status of the object */
@@ -8734,7 +8861,7 @@ export type PostConnectionEdge = {
 };
 
 /** The postFormat type */
-export type PostFormat = DatabaseIdentifier & Node & TermNode & UniformResourceIdentifiable & {
+export type PostFormat = DatabaseIdentifier & Node & NodeWithRankMathSeo & TermNode & UniformResourceIdentifiable & {
   __typename?: 'PostFormat';
   /** Connection between the PostFormat type and the ContentNode type */
   contentNodes?: Maybe<PostFormatToContentNodeConnection>;
@@ -8748,7 +8875,7 @@ export type PostFormat = DatabaseIdentifier & Node & TermNode & UniformResourceI
   enqueuedScripts?: Maybe<TermNodeToEnqueuedScriptConnection>;
   /** Connection between the TermNode type and the EnqueuedStylesheet type */
   enqueuedStylesheets?: Maybe<TermNodeToEnqueuedStylesheetConnection>;
-  /** The unique resource identifier path */
+  /** The globally unique ID for the object */
   id: Scalars['ID'];
   /** Whether the node is a Content Node */
   isContentNode: Scalars['Boolean'];
@@ -8767,6 +8894,8 @@ export type PostFormat = DatabaseIdentifier & Node & TermNode & UniformResourceI
   postFormatId?: Maybe<Scalars['Int']>;
   /** Connection between the PostFormat type and the post type */
   posts?: Maybe<PostFormatToPostConnection>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** An alphanumeric identifier for the object unique to its type. */
   slug?: Maybe<Scalars['String']>;
   /** Connection between the PostFormat type and the Taxonomy type */
@@ -8848,6 +8977,23 @@ export enum PostFormatIdType {
   /** The URI for the node */
   Uri = 'URI'
 }
+
+/** The RankMath SEO meta settings for Formats. */
+export type PostFormatMetaSettings = RankMathMetaSettingWithArchive & RankMathMetaSettingWithRobots & {
+  __typename?: 'PostFormatMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** Description for archive pages. */
+  archiveDescription?: Maybe<Scalars['String']>;
+  /** Default title tag for archive page. */
+  archiveTitle?: Maybe<Scalars['String']>;
+  /** Whether custom robots meta for author page are set. Otherwise the default meta will be used, as set in the Global Meta tab. */
+  hasCustomRobotsMeta?: Maybe<Scalars['Boolean']>;
+  /** Whether to show additional information (name &amp; total number of posts) when an author archive is shared on Slack. */
+  hasSlackEnhancedSharing?: Maybe<Scalars['Boolean']>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+};
 
 /** Connection between the PostFormat type and the ContentNode type */
 export type PostFormatToContentNodeConnection = Connection & ContentNodeConnection & {
@@ -9015,6 +9161,43 @@ export enum PostIdType {
   /** Identify a resource by the URI. */
   Uri = 'URI'
 }
+
+/** The RankMath SEO meta settings for Posts. */
+export type PostMetaSettings = RankMathMetaSettingWithRobots & {
+  __typename?: 'PostMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** List of custom fields name to include in the Page analysis */
+  analyzedFields?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Default article type when creating a new Posts. */
+  articleType?: Maybe<RankMathArticleTypeEnum>;
+  /** Default description for single Posts pages. */
+  description?: Maybe<Scalars['String']>;
+  /** Whether to list bulk editing columns to the post listing screen. */
+  hasBulkEditing?: Maybe<RankMathBulkEditingTypeEnum>;
+  /** Whether custom robots meta for author page are set. Otherwise the default meta will be used, as set in the Global Meta tab. */
+  hasCustomRobotsMeta?: Maybe<Scalars['Boolean']>;
+  /** Whether Link Suggestions meta box and the Pillar Content featured are enabled for this post type. */
+  hasLinkSuggestions?: Maybe<Scalars['Boolean']>;
+  /** Whether the SEO Controls meta box for user profile pages is enabled. */
+  hasSeoControls?: Maybe<Scalars['Boolean']>;
+  /** Whether to show additional information (name &amp; total number of posts) when an author archive is shared on Slack. */
+  hasSlackEnhancedSharing?: Maybe<Scalars['Boolean']>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+  /** Whether to use the Focus Keyword as the default text for the links instead of the post titles. */
+  shouldUseFocusKeyword?: Maybe<Scalars['Boolean']>;
+  /** Default rich snippet headline. */
+  snippetDescription?: Maybe<Scalars['String']>;
+  /** Default rich snippet headline. */
+  snippetHeadline?: Maybe<Scalars['String']>;
+  /** Default rich snippet select when creating a new Posts. */
+  snippetType?: Maybe<RankMathSnippetTypeEnum>;
+  /** The default image to display when sharing this post type on social media */
+  socialImage?: Maybe<MediaItem>;
+  /** Default title tag for single Posts pages. */
+  title?: Maybe<Scalars['String']>;
+};
 
 /** The format of post field data. */
 export enum PostObjectFieldFormatEnum {
@@ -9673,7 +9856,7 @@ export type PostTypeOrderbyInput = {
 };
 
 /** The PressItem type */
-export type PressItem = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithContentEditor & NodeWithFeaturedImage & NodeWithTemplate & NodeWithTitle & Previewable & UniformResourceIdentifiable & {
+export type PressItem = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithContentEditor & NodeWithFeaturedImage & NodeWithRankMathSeo & NodeWithTemplate & NodeWithTitle & Previewable & UniformResourceIdentifiable & {
   __typename?: 'PressItem';
   /** The content of the post. */
   content?: Maybe<Scalars['String']>;
@@ -9734,6 +9917,8 @@ export type PressItem = ContentNode & DatabaseIdentifier & MenuItemLinkable & No
   previewRevisionDatabaseId?: Maybe<Scalars['Int']>;
   /** Whether the object is a node in the preview state */
   previewRevisionId?: Maybe<Scalars['ID']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
   slug?: Maybe<Scalars['String']>;
   /** The current status of the object */
@@ -9803,6 +9988,43 @@ export enum PressItemIdType {
   /** Identify a resource by the URI. */
   Uri = 'URI'
 }
+
+/** The RankMath SEO meta settings for Press. */
+export type PressItemMetaSettings = RankMathMetaSettingWithRobots & {
+  __typename?: 'PressItemMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** List of custom fields name to include in the Page analysis */
+  analyzedFields?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Default article type when creating a new Press. */
+  articleType?: Maybe<RankMathArticleTypeEnum>;
+  /** Default description for single Press pages. */
+  description?: Maybe<Scalars['String']>;
+  /** Whether to list bulk editing columns to the post listing screen. */
+  hasBulkEditing?: Maybe<RankMathBulkEditingTypeEnum>;
+  /** Whether custom robots meta for author page are set. Otherwise the default meta will be used, as set in the Global Meta tab. */
+  hasCustomRobotsMeta?: Maybe<Scalars['Boolean']>;
+  /** Whether Link Suggestions meta box and the Pillar Content featured are enabled for this post type. */
+  hasLinkSuggestions?: Maybe<Scalars['Boolean']>;
+  /** Whether the SEO Controls meta box for user profile pages is enabled. */
+  hasSeoControls?: Maybe<Scalars['Boolean']>;
+  /** Whether to show additional information (name &amp; total number of posts) when an author archive is shared on Slack. */
+  hasSlackEnhancedSharing?: Maybe<Scalars['Boolean']>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+  /** Whether to use the Focus Keyword as the default text for the links instead of the post titles. */
+  shouldUseFocusKeyword?: Maybe<Scalars['Boolean']>;
+  /** Default rich snippet headline. */
+  snippetDescription?: Maybe<Scalars['String']>;
+  /** Default rich snippet headline. */
+  snippetHeadline?: Maybe<Scalars['String']>;
+  /** Default rich snippet select when creating a new Press. */
+  snippetType?: Maybe<RankMathSnippetTypeEnum>;
+  /** The default image to display when sharing this post type on social media */
+  socialImage?: Maybe<MediaItem>;
+  /** Default title tag for single Press pages. */
+  title?: Maybe<Scalars['String']>;
+};
 
 /** Connection between the PressItem type and the PressItem type */
 export type PressItemToPreviewConnectionEdge = Edge & OneToOneConnection & PressItemConnectionEdge & {
@@ -9946,6 +10168,8 @@ export type Product = {
   reviews?: Maybe<ProductToCommentConnection>;
   /** If reviews are allowed */
   reviewsAllowed?: Maybe<Scalars['Boolean']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** Connection between the Product type and the shippingClass type */
   shippingClasses?: Maybe<ProductToShippingClassConnection>;
   /** Product short description */
@@ -10238,7 +10462,7 @@ export enum ProductAttributeTypesEnum {
 }
 
 /** The productCategory type */
-export type ProductCategory = DatabaseIdentifier & HierarchicalNode & HierarchicalTermNode & MenuItemLinkable & Node & TermNode & UniformResourceIdentifiable & {
+export type ProductCategory = DatabaseIdentifier & HierarchicalNode & HierarchicalTermNode & MenuItemLinkable & Node & NodeWithRankMathSeo & TermNode & UniformResourceIdentifiable & {
   __typename?: 'ProductCategory';
   /** The ancestors of the node. Default ordered as lowest (closest to the child) to highest (closest to the root). */
   ancestors?: Maybe<ProductCategoryToAncestorsProductCategoryConnection>;
@@ -10287,6 +10511,8 @@ export type ProductCategory = DatabaseIdentifier & HierarchicalNode & Hierarchic
   productCategoryId?: Maybe<Scalars['Int']>;
   /** Connection between the ProductCategory type and the Product type */
   products?: Maybe<ProductCategoryToProductConnection>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** An alphanumeric identifier for the object unique to its type. */
   slug?: Maybe<Scalars['String']>;
   /** Connection between the ProductCategory type and the Taxonomy type */
@@ -10399,6 +10625,27 @@ export enum ProductCategoryIdType {
   /** The URI for the node */
   Uri = 'URI'
 }
+
+/** The RankMath SEO meta settings for Product categories. */
+export type ProductCategoryMetaSettings = RankMathMetaSettingWithArchive & RankMathMetaSettingWithRobots & {
+  __typename?: 'ProductCategoryMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** Description for archive pages. */
+  archiveDescription?: Maybe<Scalars['String']>;
+  /** Default title tag for archive page. */
+  archiveTitle?: Maybe<Scalars['String']>;
+  /** Whether custom robots meta for author page are set. Otherwise the default meta will be used, as set in the Global Meta tab. */
+  hasCustomRobotsMeta?: Maybe<Scalars['Boolean']>;
+  /** Whether the SEO Controls meta box for user profile pages is enabled. */
+  hasSeoControls?: Maybe<Scalars['Boolean']>;
+  /** Whether to show additional information (name &amp; total number of posts) when an author archive is shared on Slack. */
+  hasSlackEnhancedSharing?: Maybe<Scalars['Boolean']>;
+  /** Whether to include snippet data for this taxonomy. */
+  hasSnippetData?: Maybe<Scalars['Boolean']>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+};
 
 /** Connection between the ProductCategory type and the productCategory type */
 export type ProductCategoryToAncestorsProductCategoryConnection = Connection & ProductCategoryConnection & {
@@ -10711,6 +10958,41 @@ export enum ProductIdTypeEnum {
   Slug = 'SLUG'
 }
 
+/** The RankMath SEO meta settings for Products. */
+export type ProductMetaSettings = RankMathMetaSettingWithArchive & RankMathMetaSettingWithRobots & {
+  __typename?: 'ProductMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** List of custom fields name to include in the Page analysis */
+  analyzedFields?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Description for archive pages. */
+  archiveDescription?: Maybe<Scalars['String']>;
+  /** Default title tag for archive page. */
+  archiveTitle?: Maybe<Scalars['String']>;
+  /** Default article type when creating a new Products. */
+  articleType?: Maybe<RankMathArticleTypeEnum>;
+  /** Default description for single Products pages. */
+  description?: Maybe<Scalars['String']>;
+  /** Whether to list bulk editing columns to the post listing screen. */
+  hasBulkEditing?: Maybe<RankMathBulkEditingTypeEnum>;
+  /** Whether custom robots meta for author page are set. Otherwise the default meta will be used, as set in the Global Meta tab. */
+  hasCustomRobotsMeta?: Maybe<Scalars['Boolean']>;
+  /** Whether Link Suggestions meta box and the Pillar Content featured are enabled for this post type. */
+  hasLinkSuggestions?: Maybe<Scalars['Boolean']>;
+  /** Whether the SEO Controls meta box for user profile pages is enabled. */
+  hasSeoControls?: Maybe<Scalars['Boolean']>;
+  /** Whether to show additional information (name &amp; total number of posts) when an author archive is shared on Slack. */
+  hasSlackEnhancedSharing?: Maybe<Scalars['Boolean']>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+  /** Whether to use the Focus Keyword as the default text for the links instead of the post titles. */
+  shouldUseFocusKeyword?: Maybe<Scalars['Boolean']>;
+  /** Default rich snippet select when creating a new Products. */
+  snippetType?: Maybe<RankMathSnippetTypeEnum>;
+  /** Default title tag for single Products pages. */
+  title?: Maybe<Scalars['String']>;
+};
+
 /** Set relationships between the Product to productCategories */
 export type ProductProductCategoriesInput = {
   /** If true, this will append the productCategory to existing related productCategories. If false, this will replace existing relationships. Default true. */
@@ -10792,7 +11074,7 @@ export type ProductShippingClassesNodeInput = {
 };
 
 /** The productTag type */
-export type ProductTag = DatabaseIdentifier & MenuItemLinkable & Node & TermNode & UniformResourceIdentifiable & {
+export type ProductTag = DatabaseIdentifier & MenuItemLinkable & Node & NodeWithRankMathSeo & TermNode & UniformResourceIdentifiable & {
   __typename?: 'ProductTag';
   /** Connection between the ProductTag type and the ContentNode type */
   contentNodes?: Maybe<ProductTagToContentNodeConnection>;
@@ -10825,6 +11107,8 @@ export type ProductTag = DatabaseIdentifier & MenuItemLinkable & Node & TermNode
   productTagId?: Maybe<Scalars['Int']>;
   /** Connection between the ProductTag type and the Product type */
   products?: Maybe<ProductTagToProductConnection>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** An alphanumeric identifier for the object unique to its type. */
   slug?: Maybe<Scalars['String']>;
   /** Connection between the ProductTag type and the Taxonomy type */
@@ -10906,6 +11190,27 @@ export enum ProductTagIdType {
   /** The URI for the node */
   Uri = 'URI'
 }
+
+/** The RankMath SEO meta settings for Product tags. */
+export type ProductTagMetaSettings = RankMathMetaSettingWithArchive & RankMathMetaSettingWithRobots & {
+  __typename?: 'ProductTagMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** Description for archive pages. */
+  archiveDescription?: Maybe<Scalars['String']>;
+  /** Default title tag for archive page. */
+  archiveTitle?: Maybe<Scalars['String']>;
+  /** Whether custom robots meta for author page are set. Otherwise the default meta will be used, as set in the Global Meta tab. */
+  hasCustomRobotsMeta?: Maybe<Scalars['Boolean']>;
+  /** Whether the SEO Controls meta box for user profile pages is enabled. */
+  hasSeoControls?: Maybe<Scalars['Boolean']>;
+  /** Whether to show additional information (name &amp; total number of posts) when an author archive is shared on Slack. */
+  hasSlackEnhancedSharing?: Maybe<Scalars['Boolean']>;
+  /** Whether to include snippet data for this taxonomy. */
+  hasSnippetData?: Maybe<Scalars['Boolean']>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+};
 
 /** Connection between the ProductTag type and the ContentNode type */
 export type ProductTagToContentNodeConnection = Connection & ContentNodeConnection & {
@@ -12097,7 +12402,7 @@ export type ProductToVisibleProductConnectionWhereArgs = {
 };
 
 /** The productType type */
-export type ProductType = DatabaseIdentifier & Node & TermNode & UniformResourceIdentifiable & {
+export type ProductType = DatabaseIdentifier & Node & NodeWithRankMathSeo & TermNode & UniformResourceIdentifiable & {
   __typename?: 'ProductType';
   /** Connection between the ProductType type and the ContentNode type */
   contentNodes?: Maybe<ProductTypeToContentNodeConnection>;
@@ -12111,7 +12416,7 @@ export type ProductType = DatabaseIdentifier & Node & TermNode & UniformResource
   enqueuedScripts?: Maybe<TermNodeToEnqueuedScriptConnection>;
   /** Connection between the TermNode type and the EnqueuedStylesheet type */
   enqueuedStylesheets?: Maybe<TermNodeToEnqueuedStylesheetConnection>;
-  /** The unique resource identifier path */
+  /** The globally unique ID for the object */
   id: Scalars['ID'];
   /** Whether the node is a Content Node */
   isContentNode: Scalars['Boolean'];
@@ -12130,6 +12435,8 @@ export type ProductType = DatabaseIdentifier & Node & TermNode & UniformResource
   productTypeId?: Maybe<Scalars['Int']>;
   /** Connection between the ProductType type and the Product type */
   products?: Maybe<ProductTypeToProductConnection>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** An alphanumeric identifier for the object unique to its type. */
   slug?: Maybe<Scalars['String']>;
   /** Connection between the ProductType type and the Taxonomy type */
@@ -12394,7 +12701,7 @@ export enum ProductTypesEnum {
 }
 
 /** A product variation object */
-export type ProductVariation = ContentNode & Node & NodeWithFeaturedImage & UniformResourceIdentifiable & {
+export type ProductVariation = ContentNode & Node & NodeWithFeaturedImage & NodeWithRankMathSeo & UniformResourceIdentifiable & {
   __typename?: 'ProductVariation';
   /** Connection between the ProductVariation type and the VariationAttribute type */
   attributes?: Maybe<ProductVariationToVariationAttributeConnection>;
@@ -12498,6 +12805,8 @@ export type ProductVariation = ContentNode & Node & NodeWithFeaturedImage & Unif
   regularPrice?: Maybe<Scalars['String']>;
   /** Product variation&#039;s sale price */
   salePrice?: Maybe<Scalars['String']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** Product variation shipping class */
   shippingClass?: Maybe<Scalars['String']>;
   /** Connection between the ProductVariation type and the shippingClass type */
@@ -12848,6 +13157,1720 @@ export enum ProductsOrderByEnum {
 export type ProductsOrderbyInput = {
   field: ProductsOrderByEnum;
   order?: InputMaybe<OrderEnum>;
+};
+
+/** The config for an advanced robots meta values. */
+export type RankMathAdvancedRobotsMeta = {
+  __typename?: 'RankMathAdvancedRobotsMeta';
+  /** Whether to specify a maximum size of image preview to be shown for images on the page. */
+  hasImagePreview?: Maybe<Scalars['Boolean']>;
+  /** Whether to specify a maximum text length of a snippet of your page */
+  hasSnippet?: Maybe<Scalars['Boolean']>;
+  /** Whether to specify a maximum duration of an animated video preview. */
+  hasVideoPreview?: Maybe<Scalars['Boolean']>;
+  /** The maximum size of image preview to be shown for images. */
+  imagePreviewSize?: Maybe<RankMathImagePreviewSize>;
+  /** The maximum text length (in characters) of the snippet. -1 for no limit. */
+  snippetLength?: Maybe<Scalars['Int']>;
+  /** The maximum duration (seconds characters) of the snippet. -1 for no limit. */
+  videoDuration?: Maybe<Scalars['Int']>;
+};
+
+/** The SEO Article Type */
+export enum RankMathArticleTypeEnum {
+  /** Article. */
+  Article = 'ARTICLE',
+  /** Blog post. */
+  BlogPost = 'BLOG_POST',
+  /** News article. */
+  NewsArticle = 'NEWS_ARTICLE'
+}
+
+/** The RankMath SEO Author Archive meta settings. */
+export type RankMathAuthorArchiveMetaSettings = RankMathMetaSettingWithArchive & RankMathMetaSettingWithRobots & {
+  __typename?: 'RankMathAuthorArchiveMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** Description for archive pages. */
+  archiveDescription?: Maybe<Scalars['String']>;
+  /** Default title tag for archive page. */
+  archiveTitle?: Maybe<Scalars['String']>;
+  /** Change the `/author/` part in author archive URLs. */
+  baseSlug?: Maybe<Scalars['String']>;
+  /** Whether author archives are enabled. */
+  hasArchives?: Maybe<Scalars['Boolean']>;
+  /** Whether custom robots meta for author page are set. Otherwise the default meta will be used, as set in the Global Meta tab. */
+  hasCustomRobotsMeta?: Maybe<Scalars['Boolean']>;
+  /** Whether the SEO Controls meta box for user profile pages is enabled. */
+  hasSeoControls?: Maybe<Scalars['Boolean']>;
+  /** Whether to show additional information (name &amp; total number of posts) when an author archive is shared on Slack. */
+  hasSlackEnhancedSharing?: Maybe<Scalars['Boolean']>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+};
+
+/** The RankMath SEO breadcrumbs settings. */
+export type RankMathBreadcrumbsConfig = {
+  __typename?: 'RankMathBreadcrumbsConfig';
+  /** Format the label used for archive pages. */
+  archiveFormat?: Maybe<Scalars['String']>;
+  /** Whether to show all ancestor categories, if a category is a child category. */
+  hasAncestorCategories?: Maybe<Scalars['Boolean']>;
+  /** Whether to display the homepage breadcrumb in trail. */
+  hasHome?: Maybe<Scalars['Boolean']>;
+  /** Whether the post title is visible in the breadcrumbs. */
+  hasPostTitle?: Maybe<Scalars['Boolean']>;
+  /** Whether the taxonomy name is visible in the breadcrumbs. */
+  hasTaxonomyName?: Maybe<Scalars['Boolean']>;
+  /** Label used for homepage link (first item) in breadcrumbs. */
+  homeLabel?: Maybe<Scalars['String']>;
+  /** Link to use for homepage (first item) in breadcrumbs. */
+  homeUrl?: Maybe<Scalars['String']>;
+  /** Label used for 404 error item in breadcrumbs. */
+  notFoundLabel?: Maybe<Scalars['String']>;
+  /** Prefix for the breadcrumb path. */
+  prefix?: Maybe<Scalars['String']>;
+  /** Format the label used for search results pages. */
+  searchFormat?: Maybe<Scalars['String']>;
+  /** Separator character or string that appears between breadcrumb items. */
+  separator?: Maybe<Scalars['String']>;
+};
+
+/** The setting chosen for the RankMath Bulk Editing feature */
+export enum RankMathBulkEditingTypeEnum {
+  /** Disabled. */
+  Disabled = 'DISABLED',
+  /** Enabled. */
+  Enabled = 'ENABLED',
+  /** Read only. */
+  ReadOnly = 'READ_ONLY'
+}
+
+/** The category term object SEO data */
+export type RankMathCategoryTermSeo = RankMathSeo & {
+  __typename?: 'RankMathCategoryTermSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The collection post object SEO data */
+export type RankMathCollectionObjectSeo = RankMathContentNodeSeo & RankMathSeo & {
+  __typename?: 'RankMathCollectionObjectSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** Whether the item is considered pillar (cornerstone) content */
+  isPillarContent?: Maybe<Scalars['Boolean']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The SEO score */
+  seoScore?: Maybe<RankMathSeoScore>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The collection post type object SEO data */
+export type RankMathCollectionTypeSeo = RankMathSeo & {
+  __typename?: 'RankMathCollectionTypeSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The seo data for Post Objects */
+export type RankMathContentNodeSeo = {
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** Whether the item is considered pillar (cornerstone) content */
+  isPillarContent?: Maybe<Scalars['Boolean']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The SEO score */
+  seoScore?: Maybe<RankMathSeoScore>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The RankMath SEO Post Type settings. */
+export type RankMathContentTypeMetaSettings = {
+  __typename?: 'RankMathContentTypeMetaSettings';
+  /** The RankMath SEO meta settings for Collections. */
+  collection?: Maybe<CollectionMetaSettings>;
+  /** The RankMath SEO meta settings for Pages. */
+  page?: Maybe<PageMetaSettings>;
+  /** The RankMath SEO meta settings for Posts. */
+  post?: Maybe<PostMetaSettings>;
+  /** The RankMath SEO meta settings for Press. */
+  pressItem?: Maybe<PressItemMetaSettings>;
+  /** The RankMath SEO meta settings for Products. */
+  product?: Maybe<ProductMetaSettings>;
+};
+
+/** The RankMath SEO DateArchive meta settings. */
+export type RankMathDateArchiveMetaSettings = RankMathMetaSettingWithArchive & RankMathMetaSettingWithRobots & {
+  __typename?: 'RankMathDateArchiveMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** Description for archive pages. */
+  archiveDescription?: Maybe<Scalars['String']>;
+  /** Default title tag for archive page. */
+  archiveTitle?: Maybe<Scalars['String']>;
+  /** Whether archives are enabled. */
+  hasArchives?: Maybe<Scalars['Boolean']>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+};
+
+/** RankMath Frontend SEO Score settings. */
+export type RankMathFrontendSeoScore = {
+  __typename?: 'RankMathFrontendSeoScore';
+  /** The list of post types which should display the calculated SEO score. */
+  enabledPostTypes?: Maybe<Array<Maybe<ContentTypeEnum>>>;
+  /** Whether to insert a backlink to RankMath.com to show your support, if you are showing the SEO scores on the front end. */
+  hasRankMathBacklink?: Maybe<Scalars['Boolean']>;
+  /** Where the SEO score badges should be displayed automatically, or if the `[rank_math_seo_score]` shortcode is used instead. */
+  position?: Maybe<RankMathSeoScorePositionEnum>;
+  /** The list of post types which should display the calculated SEO score. */
+  template?: Maybe<RankMathSeoScoreTemplateTypeEnum>;
+};
+
+/** The RankMath SEO general site settings */
+export type RankMathGeneral = {
+  __typename?: 'RankMathGeneral';
+  /** Breadcrumbs settings. */
+  breadcrumbs?: Maybe<RankMathBreadcrumbsConfig>;
+  /** Frontend SEO score settings. */
+  frontendSeoScore?: Maybe<RankMathFrontendSeoScore>;
+  /** Whether RankMath breadcrumbs are enabled. */
+  hasBreadcrumbs?: Maybe<Scalars['Boolean']>;
+  /** Whether to display the calculated SEO Score as a badge on the frontend. It can be disabled for specific posts in the post editor. */
+  hasFrontendSeoScore?: Maybe<Scalars['Boolean']>;
+  /** Link settings. */
+  links?: Maybe<RankMathLinks>;
+  /** The content to add after each post in your site feeds */
+  rssAfterContent?: Maybe<Scalars['String']>;
+  /** The content to add before each post in your site feeds */
+  rssBeforeContent?: Maybe<Scalars['String']>;
+  /** Webmaster Tools settings. */
+  webmaster?: Maybe<RankMathWebmaster>;
+};
+
+/** The RankMath SEO Global settings. */
+export type RankMathGlobalMetaSettings = RankMathMetaSettingWithRobots & {
+  __typename?: 'RankMathGlobalMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** When a featured image or an OpenGraph Image is not set for individual posts/pages/CPTs, this image will be used as a fallback thumbnail when your post is shared on Facebook. */
+  openGraphImage?: Maybe<MediaItem>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+  /** The separator character used in titles. */
+  separator?: Maybe<Scalars['String']>;
+  /** Whether to automatically capitalize the first character of each word in the titles. */
+  shouldCapitalizeTitles?: Maybe<Scalars['Boolean']>;
+  /** Whether to index enpty Taxonomy archives */
+  shouldIndexEmptyTaxonomies?: Maybe<Scalars['Boolean']>;
+  /** Card type selected when creating a new post. This will also be applied for posts without a card type selected. */
+  twitterCardType?: Maybe<RankMathTwitterCardTypeEnum>;
+};
+
+/** The graphql_document post object SEO data */
+export type RankMathGraphqlDocumentObjectSeo = RankMathContentNodeSeo & RankMathSeo & {
+  __typename?: 'RankMathGraphqlDocumentObjectSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** Whether the item is considered pillar (cornerstone) content */
+  isPillarContent?: Maybe<Scalars['Boolean']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The SEO score */
+  seoScore?: Maybe<RankMathSeoScore>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The graphql_document post type object SEO data */
+export type RankMathGraphqlDocumentTypeSeo = RankMathSeo & {
+  __typename?: 'RankMathGraphqlDocumentTypeSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The RankMath SEO Homepage settings. Only used when the Settings &gt; Reading &gt; Your homepage displays is set to `Your latest posts`. */
+export type RankMathHomepageMetaSettings = RankMathMetaSettingWithRobots & {
+  __typename?: 'RankMathHomepageMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** Meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** Whether custom robots meta for author page are set. Otherwise the default meta will be used, as set in the Global Meta tab. */
+  hasCustomRobotsMeta?: Maybe<Scalars['Boolean']>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+  /** Description when shared on Facebook, Twitter and other social networks. */
+  socialDescription?: Maybe<Scalars['String']>;
+  /** Image displayed when your homepage is shared on Facebook and other social networks. */
+  socialImage?: Maybe<MediaItem>;
+  /** Title when shared on Facebook, Twitter and other social networks. */
+  socialTitle?: Maybe<Scalars['String']>;
+  /** Title tag. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** Robots meta image preview size. */
+export enum RankMathImagePreviewSize {
+  /** Large */
+  Large = 'LARGE',
+  /** Prevents search engines from following links on the pages */
+  None = 'NONE',
+  /** Standard. */
+  Standard = 'STANDARD'
+}
+
+/** The JSON+LD information. */
+export type RankMathJsonLd = {
+  __typename?: 'RankMathJsonLd';
+  /** The raw JSON+LD output */
+  raw?: Maybe<Scalars['String']>;
+};
+
+/** The knowledge graph type */
+export enum RankMathKnowledgeGraphTypeEnum {
+  /** Company. */
+  Company = 'COMPANY',
+  /** Person. */
+  Person = 'PERSON'
+}
+
+/** The RankMath SEO links settings. */
+export type RankMathLinks = {
+  __typename?: 'RankMathLinks';
+  /** The default redirection url for attachments without a parent post */
+  defaultAttachmentRedirectUrl?: Maybe<Scalars['String']>;
+  /** Whether  /category/ should be included in category archive URLs. */
+  hasCategoryBase?: Maybe<Scalars['Boolean']>;
+  /** Only add `nofollow` attributes to links with the following target domains. If null, `nofollow` will be applied to &lt;em&gt;all&lt;/em&gt; external domains. */
+  nofollowDomains?: Maybe<Scalars['String']>;
+  /** `nofollow` attributes will &lt;em&gt;not&lt;/em&gt; be added to links with the following target domains. */
+  nofollowExcludedDomains?: Maybe<Scalars['String']>;
+  /** Whether to automatically add the `rel=&quot;nofollow&quot; attribute to links pointing to external image files. */
+  shouldNofollowImageLinks?: Maybe<Scalars['Boolean']>;
+  /** Whether to automatically add the `rel=&quot;nofollow&quot; attribute to external links appearing in your posts, pages, and other post types. */
+  shouldNofollowLinks?: Maybe<Scalars['Boolean']>;
+  /** Whether to automatically add `target=&quot;_blank&quot;` attribute for external links appearing in your posts, pages, and other post types to make them open in a new browser tab or window. */
+  shouldOpenInNewWindow?: Maybe<Scalars['Boolean']>;
+  /** Whether to redirect all attachment page URLs to the post they appear in. */
+  shouldRedirectAttachments?: Maybe<Scalars['Boolean']>;
+};
+
+/** The RankMath SEO Local settings. */
+export type RankMathLocalMetaSettings = {
+  __typename?: 'RankMathLocalMetaSettings';
+  /** The logo to be used in the Google&#039;s Knowledge Graph. */
+  logo?: Maybe<MediaItem>;
+  /** Your name or company name to be used in Google&#039;s Knowledge Graph */
+  name?: Maybe<Scalars['String']>;
+  /** Whether the site represents a person or an organization. */
+  type?: Maybe<RankMathKnowledgeGraphTypeEnum>;
+  /** URL of the item. */
+  url?: Maybe<Scalars['String']>;
+};
+
+/** The attachment post object SEO data */
+export type RankMathMediaItemObjectSeo = RankMathContentNodeSeo & RankMathSeo & {
+  __typename?: 'RankMathMediaItemObjectSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** Whether the item is considered pillar (cornerstone) content */
+  isPillarContent?: Maybe<Scalars['Boolean']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The SEO score */
+  seoScore?: Maybe<RankMathSeoScore>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The attachment post type object SEO data */
+export type RankMathMediaItemTypeSeo = RankMathSeo & {
+  __typename?: 'RankMathMediaItemTypeSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The RankMath SEO titles and meta site settings */
+export type RankMathMeta = {
+  __typename?: 'RankMathMeta';
+  /** Author Archive settings. */
+  authorArchives?: Maybe<RankMathAuthorArchiveMetaSettings>;
+  /** Content type settings. */
+  contentTypes?: Maybe<RankMathContentTypeMetaSettings>;
+  /** Date Archive settings. */
+  dateArchives?: Maybe<RankMathDateArchiveMetaSettings>;
+  /** Global settings. */
+  global?: Maybe<RankMathGlobalMetaSettings>;
+  /** Homepage settings. Only used is the Homepage is set to display a list of posts. */
+  homepage?: Maybe<RankMathHomepageMetaSettings>;
+  /** Local settings. */
+  local?: Maybe<RankMathLocalMetaSettings>;
+  /** Title tag on 404 Not Found error page. */
+  notFoundTitle?: Maybe<Scalars['String']>;
+  /** Title tag on search results page. */
+  searchTitle?: Maybe<Scalars['String']>;
+  /** Whether to index paginated archive pages from getting. */
+  shouldIndexArchiveSubpages?: Maybe<Scalars['Boolean']>;
+  /** Whether to index /page/2 and further of any archive. */
+  shouldIndexPaginatedPages?: Maybe<Scalars['Boolean']>;
+  /** Whether to index password protected pages and posts. */
+  shouldIndexPasswordProtected?: Maybe<Scalars['Boolean']>;
+  /** Whether to index search result pages. */
+  shouldIndexSearch?: Maybe<Scalars['Boolean']>;
+  /** Social settings. */
+  social?: Maybe<RankMathSocialMetaSettings>;
+  /** Taxonomy settings. */
+  taxonomies?: Maybe<RankMathTaxonomyMetaSettings>;
+};
+
+/** Meta Settings with archive fields. */
+export type RankMathMetaSettingWithArchive = {
+  /** Description for archive pages. */
+  archiveDescription?: Maybe<Scalars['String']>;
+  /** Default title tag for archive page. */
+  archiveTitle?: Maybe<Scalars['String']>;
+};
+
+/** Meta settings with robots fields. */
+export type RankMathMetaSettingWithRobots = {
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+};
+
+/** The OpenGraph Article meta. */
+export type RankMathOpenGraphArticle = {
+  __typename?: 'RankMathOpenGraphArticle';
+  /** The author. */
+  author?: Maybe<Scalars['String']>;
+  /** The date modified. */
+  modifiedTime?: Maybe<Scalars['String']>;
+  /** The date published. */
+  publishedTime?: Maybe<Scalars['String']>;
+  /** The publisher */
+  publisher?: Maybe<Scalars['String']>;
+  /** The article category. */
+  section?: Maybe<Scalars['String']>;
+  /** The article tags. */
+  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+/** The OpenGraph Facebook meta. */
+export type RankMathOpenGraphFacebook = {
+  __typename?: 'RankMathOpenGraphFacebook';
+  /** The Facebook admins associated with this resource */
+  admins?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The Facebook app ID associated with this resource */
+  appId?: Maybe<Scalars['ID']>;
+};
+
+/** The OpenGraph Image meta. */
+export type RankMathOpenGraphImage = {
+  __typename?: 'RankMathOpenGraphImage';
+  /** Height of image in pixels.  */
+  height?: Maybe<Scalars['Float']>;
+  /** The https:// URL for the image. */
+  secureUrl?: Maybe<Scalars['String']>;
+  /** MIME type of the image.  */
+  type?: Maybe<Scalars['String']>;
+  /** URL for the image. */
+  url?: Maybe<Scalars['String']>;
+  /** Width of image in pixels. */
+  width?: Maybe<Scalars['Float']>;
+};
+
+/** The Facebook OpenGraph Locale. */
+export enum RankMathOpenGraphLocaleEnum {
+  /** af_ZA. */
+  AfZa = 'AF_ZA',
+  /** ak_GH. */
+  AkGh = 'AK_GH',
+  /** am_ET. */
+  AmEt = 'AM_ET',
+  /** ar_AR. */
+  ArAr = 'AR_AR',
+  /** as_IN. */
+  AsIn = 'AS_IN',
+  /** ay_BO. */
+  AyBo = 'AY_BO',
+  /** az_AZ. */
+  AzAz = 'AZ_AZ',
+  /** be_BY. */
+  BeBy = 'BE_BY',
+  /** bg_BG. */
+  BgBg = 'BG_BG',
+  /** bn_IN. */
+  BnIn = 'BN_IN',
+  /** bp_IN. */
+  BpIn = 'BP_IN',
+  /** br_FR. */
+  BrFr = 'BR_FR',
+  /** bs_BA. */
+  BsBa = 'BS_BA',
+  /** ca_ES. */
+  CaEs = 'CA_ES',
+  /** cb_IQ. */
+  CbIq = 'CB_IQ',
+  /** ck_US. */
+  CkUs = 'CK_US',
+  /** co_FR. */
+  CoFr = 'CO_FR',
+  /** cs_CZ. */
+  CsCz = 'CS_CZ',
+  /** cx_PH. */
+  CxPh = 'CX_PH',
+  /** cy_GB. */
+  CyGb = 'CY_GB',
+  /** da_DK. */
+  DaDk = 'DA_DK',
+  /** de_DE. */
+  DeDe = 'DE_DE',
+  /** el_GR. */
+  ElGr = 'EL_GR',
+  /** em_ZM. */
+  EmZm = 'EM_ZM',
+  /** en_GB. */
+  EnGb = 'EN_GB',
+  /** en_PI. */
+  EnPi = 'EN_PI',
+  /** en_UD. */
+  EnUd = 'EN_UD',
+  /** en_US. */
+  EnUs = 'EN_US',
+  /** eo_EO. */
+  EoEo = 'EO_EO',
+  /** es_ES. */
+  EsEs = 'ES_ES',
+  /** es_LA. */
+  EsLa = 'ES_LA',
+  /** es_MX. */
+  EsMx = 'ES_MX',
+  /** et_EE. */
+  EtEe = 'ET_EE',
+  /** eu_ES. */
+  EuEs = 'EU_ES',
+  /** fa_IR. */
+  FaIr = 'FA_IR',
+  /** fb_LT. */
+  FbLt = 'FB_LT',
+  /** ff_NG. */
+  FfNg = 'FF_NG',
+  /** fi_FI. */
+  FiFi = 'FI_FI',
+  /** fo_FO. */
+  FoFo = 'FO_FO',
+  /** fr_CA. */
+  FrCa = 'FR_CA',
+  /** fr_FR. */
+  FrFr = 'FR_FR',
+  /** fy_NL. */
+  FyNl = 'FY_NL',
+  /** ga_IE. */
+  GaIe = 'GA_IE',
+  /** gl_ES. */
+  GlEs = 'GL_ES',
+  /** gn_PY. */
+  GnPy = 'GN_PY',
+  /** gu_IN. */
+  GuIn = 'GU_IN',
+  /** gx_GR. */
+  GxGr = 'GX_GR',
+  /** ha_NG. */
+  HaNg = 'HA_NG',
+  /** he_IL. */
+  HeIl = 'HE_IL',
+  /** hi_IN. */
+  HiIn = 'HI_IN',
+  /** hr_HR. */
+  HrHr = 'HR_HR',
+  /** ht_HT. */
+  HtHt = 'HT_HT',
+  /** hu_HU. */
+  HuHu = 'HU_HU',
+  /** hy_AM. */
+  HyAm = 'HY_AM',
+  /** id_ID. */
+  IdId = 'ID_ID',
+  /** ig_NG. */
+  IgNg = 'IG_NG',
+  /** ik_US. */
+  IkUs = 'IK_US',
+  /** is_IS. */
+  IsIs = 'IS_IS',
+  /** it_IT. */
+  ItIt = 'IT_IT',
+  /** iu_CA. */
+  IuCa = 'IU_CA',
+  /** ja_JP. */
+  JaJp = 'JA_JP',
+  /** ja_KS. */
+  JaKs = 'JA_KS',
+  /** jv_ID. */
+  JvId = 'JV_ID',
+  /** ka_GE. */
+  KaGe = 'KA_GE',
+  /** kk_KZ. */
+  KkKz = 'KK_KZ',
+  /** km_KH. */
+  KmKh = 'KM_KH',
+  /** kn_IN. */
+  KnIn = 'KN_IN',
+  /** ko_KR. */
+  KoKr = 'KO_KR',
+  /** ks_IN. */
+  KsIn = 'KS_IN',
+  /** ku_TR. */
+  KuTr = 'KU_TR',
+  /** ky_KG. */
+  KyKg = 'KY_KG',
+  /** la_VA. */
+  LaVa = 'LA_VA',
+  /** lg_UG. */
+  LgUg = 'LG_UG',
+  /** li_NL. */
+  LiNl = 'LI_NL',
+  /** ln_CD. */
+  LnCd = 'LN_CD',
+  /** lo_LA. */
+  LoLa = 'LO_LA',
+  /** lt_LT. */
+  LtLt = 'LT_LT',
+  /** lv_LV. */
+  LvLv = 'LV_LV',
+  /** mg_MG. */
+  MgMg = 'MG_MG',
+  /** mi_NZ. */
+  MiNz = 'MI_NZ',
+  /** mk_MK. */
+  MkMk = 'MK_MK',
+  /** ml_IN. */
+  MlIn = 'ML_IN',
+  /** mn_MN. */
+  MnMn = 'MN_MN',
+  /** mr_IN. */
+  MrIn = 'MR_IN',
+  /** ms_MY. */
+  MsMy = 'MS_MY',
+  /** mt_MT. */
+  MtMt = 'MT_MT',
+  /** my_MM. */
+  MyMm = 'MY_MM',
+  /** nb_NO. */
+  NbNo = 'NB_NO',
+  /** nd_ZW. */
+  NdZw = 'ND_ZW',
+  /** ne_NP. */
+  NeNp = 'NE_NP',
+  /** nl_BE. */
+  NlBe = 'NL_BE',
+  /** nl_NL. */
+  NlNl = 'NL_NL',
+  /** nn_NO. */
+  NnNo = 'NN_NO',
+  /** nr_ZA. */
+  NrZa = 'NR_ZA',
+  /** ns_ZA. */
+  NsZa = 'NS_ZA',
+  /** ny_MW. */
+  NyMw = 'NY_MW',
+  /** om_ET. */
+  OmEt = 'OM_ET',
+  /** or_IN. */
+  OrIn = 'OR_IN',
+  /** pa_IN. */
+  PaIn = 'PA_IN',
+  /** pl_PL. */
+  PlPl = 'PL_PL',
+  /** ps_AF. */
+  PsAf = 'PS_AF',
+  /** pt_BR. */
+  PtBr = 'PT_BR',
+  /** pt_PT. */
+  PtPt = 'PT_PT',
+  /** qc_GT. */
+  QcGt = 'QC_GT',
+  /** qr_GR. */
+  QrGr = 'QR_GR',
+  /** qu_PE. */
+  QuPe = 'QU_PE',
+  /** qz_MM. */
+  QzMm = 'QZ_MM',
+  /** rm_CH. */
+  RmCh = 'RM_CH',
+  /** ro_RO. */
+  RoRo = 'RO_RO',
+  /** ru_RU. */
+  RuRu = 'RU_RU',
+  /** rw_RW. */
+  RwRw = 'RW_RW',
+  /** sa_IN. */
+  SaIn = 'SA_IN',
+  /** sc_IT. */
+  ScIt = 'SC_IT',
+  /** se_NO. */
+  SeNo = 'SE_NO',
+  /** si_LK. */
+  SiLk = 'SI_LK',
+  /** sk_SK. */
+  SkSk = 'SK_SK',
+  /** sl_SI. */
+  SlSi = 'SL_SI',
+  /** sn_ZW. */
+  SnZw = 'SN_ZW',
+  /** so_SO. */
+  SoSo = 'SO_SO',
+  /** sq_AL. */
+  SqAl = 'SQ_AL',
+  /** sr_RS. */
+  SrRs = 'SR_RS',
+  /** ss_SZ. */
+  SsSz = 'SS_SZ',
+  /** st_ZA. */
+  StZa = 'ST_ZA',
+  /** su_ID. */
+  SuId = 'SU_ID',
+  /** sv_SE. */
+  SvSe = 'SV_SE',
+  /** sw_KE. */
+  SwKe = 'SW_KE',
+  /** sy_SY. */
+  SySy = 'SY_SY',
+  /** sz_PL. */
+  SzPl = 'SZ_PL',
+  /** ta_IN. */
+  TaIn = 'TA_IN',
+  /** te_IN. */
+  TeIn = 'TE_IN',
+  /** tg_TJ. */
+  TgTj = 'TG_TJ',
+  /** th_TH. */
+  ThTh = 'TH_TH',
+  /** tk_TM. */
+  TkTm = 'TK_TM',
+  /** tl_PH. */
+  TlPh = 'TL_PH',
+  /** tl_ST. */
+  TlSt = 'TL_ST',
+  /** tn_BW. */
+  TnBw = 'TN_BW',
+  /** tr_TR. */
+  TrTr = 'TR_TR',
+  /** ts_ZA. */
+  TsZa = 'TS_ZA',
+  /** tt_RU. */
+  TtRu = 'TT_RU',
+  /** tz_MA. */
+  TzMa = 'TZ_MA',
+  /** uk_UA. */
+  UkUa = 'UK_UA',
+  /** ur_PK. */
+  UrPk = 'UR_PK',
+  /** uz_UZ. */
+  UzUz = 'UZ_UZ',
+  /** ve_ZA. */
+  VeZa = 'VE_ZA',
+  /** vi_VN. */
+  ViVn = 'VI_VN',
+  /** wo_SN. */
+  WoSn = 'WO_SN',
+  /** xh_ZA. */
+  XhZa = 'XH_ZA',
+  /** yi_DE. */
+  YiDe = 'YI_DE',
+  /** yo_NG. */
+  YoNg = 'YO_NG',
+  /** zh_CN. */
+  ZhCn = 'ZH_CN',
+  /** zh_HK. */
+  ZhHk = 'ZH_HK',
+  /** zh_TW. */
+  ZhTw = 'ZH_TW',
+  /** zu_ZA. */
+  ZuZa = 'ZU_ZA',
+  /** zz_TR. */
+  ZzTr = 'ZZ_TR'
+}
+
+/** The OpenGraph meta. */
+export type RankMathOpenGraphMeta = {
+  __typename?: 'RankMathOpenGraphMeta';
+  /** A list of other locales this page is available in */
+  alternateLocales?: Maybe<Array<Maybe<RankMathOpenGraphLocaleEnum>>>;
+  /** The OpenGraph Article meta. */
+  articleMeta?: Maybe<RankMathOpenGraphArticle>;
+  /** A brief description of the content, usually between 2 and 4 sentences.  */
+  description?: Maybe<Scalars['String']>;
+  /** The Facebook OpenGraph meta values. */
+  facebookMeta?: Maybe<RankMathOpenGraphFacebook>;
+  /** The OpenGraph image meta */
+  image?: Maybe<RankMathOpenGraphImage>;
+  /** The locale of the resource. */
+  locale?: Maybe<RankMathOpenGraphLocaleEnum>;
+  /** The Facebook OpenGraph meta values. */
+  productMeta?: Maybe<RankMathProduct>;
+  /** The name of the site this resource is associated with. */
+  siteName?: Maybe<Scalars['String']>;
+  /** The Slack Enhanced Data meta values. */
+  slackEnhancedData?: Maybe<Array<Maybe<RankMathOpenGraphSlackEnhancedData>>>;
+  /** The title of your object as it should appear within the graph. */
+  title?: Maybe<Scalars['String']>;
+  /** The Twitter OpenGraph meta values. */
+  twitterMeta?: Maybe<RankMathOpenGraphTwitter>;
+  /** The OpenGraph object type. */
+  type?: Maybe<Scalars['String']>;
+  /** The updated time */
+  updatedTime?: Maybe<Scalars['String']>;
+  /** The canonical URL of your object that will be used as its permanent ID in the graph. */
+  url?: Maybe<Scalars['String']>;
+  /** The Twitter OpenGraph meta values. */
+  videoMeta?: Maybe<RankMathOpenGraphVideo>;
+};
+
+/** The OpenGraph Product availibility */
+export enum RankMathOpenGraphProductAvailabilityEnum {
+  /** The product is in stock */
+  InStock = 'IN_STOCK',
+  /** The product is out of stock */
+  OutOfStock = 'OUT_OF_STOCK'
+}
+
+/** The Enhanced Data Tags for Slack Sharing. */
+export type RankMathOpenGraphSlackEnhancedData = {
+  __typename?: 'RankMathOpenGraphSlackEnhancedData';
+  /** The Enhanced Data */
+  data?: Maybe<Scalars['String']>;
+  /** The Enhanced Data label */
+  label?: Maybe<Scalars['String']>;
+};
+
+/** The OpenGraph Twitter meta. */
+export type RankMathOpenGraphTwitter = {
+  __typename?: 'RankMathOpenGraphTwitter';
+  /** The app country. */
+  appCountry?: Maybe<Scalars['String']>;
+  /** The Twitter card type */
+  card?: Maybe<RankMathTwitterCardTypeEnum>;
+  /** @username of content creator */
+  creator?: Maybe<Scalars['String']>;
+  /** Description of content (maximum 200 characters) */
+  description?: Maybe<Scalars['String']>;
+  /** The Twitter Google Play app meta */
+  googleplayApp?: Maybe<RankMathOpenGraphTwitterApp>;
+  /** URL of image to use in the card. */
+  image?: Maybe<Scalars['String']>;
+  /** The Twitter iPad app meta */
+  ipadApp?: Maybe<RankMathOpenGraphTwitterApp>;
+  /** The Twitter iPhone app meta */
+  iphoneApp?: Maybe<RankMathOpenGraphTwitterApp>;
+  /** URL to raw video or audio stream */
+  playerStream?: Maybe<Scalars['String']>;
+  /** The content type of the stream */
+  playerStreamContentType?: Maybe<Scalars['String']>;
+  /** URL of the twitter player. */
+  playerUrl?: Maybe<Scalars['Int']>;
+  /** @username of website */
+  site?: Maybe<Scalars['String']>;
+  /** Title of content */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The OpenGraph Twitter App meta. */
+export type RankMathOpenGraphTwitterApp = {
+  __typename?: 'RankMathOpenGraphTwitterApp';
+  /** The App ID . */
+  id?: Maybe<Scalars['ID']>;
+  /** The name of the Twitter app. */
+  name?: Maybe<Scalars['String']>;
+  /** Your app\’s custom URL scheme. */
+  url?: Maybe<Scalars['String']>;
+};
+
+/** The OpenGraph Video meta. */
+export type RankMathOpenGraphVideo = {
+  __typename?: 'RankMathOpenGraphVideo';
+  /** The duration of the video. */
+  duration?: Maybe<Scalars['String']>;
+  /** The URL of the video. */
+  url?: Maybe<Scalars['String']>;
+};
+
+/** The page post object SEO data */
+export type RankMathPageObjectSeo = RankMathContentNodeSeo & RankMathSeo & {
+  __typename?: 'RankMathPageObjectSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** Whether the item is considered pillar (cornerstone) content */
+  isPillarContent?: Maybe<Scalars['Boolean']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The SEO score */
+  seoScore?: Maybe<RankMathSeoScore>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The page post type object SEO data */
+export type RankMathPageTypeSeo = RankMathSeo & {
+  __typename?: 'RankMathPageTypeSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The post_format term object SEO data */
+export type RankMathPostFormatTermSeo = RankMathSeo & {
+  __typename?: 'RankMathPostFormatTermSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The post post object SEO data */
+export type RankMathPostObjectSeo = RankMathContentNodeSeo & RankMathSeo & {
+  __typename?: 'RankMathPostObjectSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** Whether the item is considered pillar (cornerstone) content */
+  isPillarContent?: Maybe<Scalars['Boolean']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The SEO score */
+  seoScore?: Maybe<RankMathSeoScore>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The post post type object SEO data */
+export type RankMathPostTypeSeo = RankMathSeo & {
+  __typename?: 'RankMathPostTypeSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The press post object SEO data */
+export type RankMathPressItemObjectSeo = RankMathContentNodeSeo & RankMathSeo & {
+  __typename?: 'RankMathPressItemObjectSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** Whether the item is considered pillar (cornerstone) content */
+  isPillarContent?: Maybe<Scalars['Boolean']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The SEO score */
+  seoScore?: Maybe<RankMathSeoScore>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The press post type object SEO data */
+export type RankMathPressItemTypeSeo = RankMathSeo & {
+  __typename?: 'RankMathPressItemTypeSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The OpenGraph Product meta. */
+export type RankMathProduct = {
+  __typename?: 'RankMathProduct';
+  /** The currency of the object price. */
+  availability?: Maybe<RankMathOpenGraphProductAvailabilityEnum>;
+  /** The brand of the product. */
+  brand?: Maybe<Scalars['String']>;
+  /** The currency of the object price. */
+  currency?: Maybe<Scalars['String']>;
+  /** The price of the object */
+  price?: Maybe<Scalars['Float']>;
+};
+
+/** The product_cat term object SEO data */
+export type RankMathProductCategoryTermSeo = RankMathSeo & {
+  __typename?: 'RankMathProductCategoryTermSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The product post object SEO data */
+export type RankMathProductObjectSeo = RankMathContentNodeSeo & RankMathSeo & {
+  __typename?: 'RankMathProductObjectSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** Whether the item is considered pillar (cornerstone) content */
+  isPillarContent?: Maybe<Scalars['Boolean']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The SEO score */
+  seoScore?: Maybe<RankMathSeoScore>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The product_tag term object SEO data */
+export type RankMathProductTagTermSeo = RankMathSeo & {
+  __typename?: 'RankMathProductTagTermSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The product post type object SEO data */
+export type RankMathProductTypeSeo = RankMathSeo & {
+  __typename?: 'RankMathProductTypeSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The product_type term object SEO data */
+export type RankMathProductTypeTermSeo = RankMathSeo & {
+  __typename?: 'RankMathProductTypeTermSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** Robot meta value tag. */
+export enum RankMathRobotsMetaValueEnum {
+  /** IndexInstructs search engines to index and show these pages in the search results. */
+  Index = 'INDEX',
+  /** No ArchivePrevents search engines from showing Cached links for pages */
+  Noarchive = 'NOARCHIVE',
+  /** No FollowPrevents search engines from following links on the pages */
+  Nofollow = 'NOFOLLOW',
+  /** No Image IndexPrevents images on a page from being indexed by Google and other search engines */
+  Noimageindex = 'NOIMAGEINDEX',
+  /** No IndexPrevents pages from being indexed and displayed in search engine result pages */
+  Noindex = 'NOINDEX',
+  /** No SnippetPrevents a snippet from being shown in the search results */
+  Nosnippet = 'NOSNIPPET'
+}
+
+/** Base SEO fields shared across WP types. */
+export type RankMathSeo = {
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The SEO rating */
+export enum RankMathSeoRatingEnum {
+  /** Bad ( < 50 ) score */
+  Bad = 'BAD',
+  /** Good (50-79) score */
+  Good = 'GOOD',
+  /** Great ( > 80 ) score */
+  Great = 'GREAT',
+  /** Unknown score. */
+  Unknown = 'UNKNOWN'
+}
+
+/** The Seo score information. */
+export type RankMathSeoScore = {
+  __typename?: 'RankMathSeoScore';
+  /** The html output for the Frontend SEO badge */
+  badgeHtml?: Maybe<Scalars['String']>;
+  /** Whether the SEO score should be displayed on the frontend */
+  hasFrontendScore?: Maybe<Scalars['Boolean']>;
+  /** The SEO score */
+  rating?: Maybe<RankMathSeoRatingEnum>;
+  /** The SEO score */
+  score?: Maybe<Scalars['Int']>;
+};
+
+/** The frontend SEO Score position */
+export enum RankMathSeoScorePositionEnum {
+  /** Above & below content */
+  Both = 'BOTH',
+  /** Below content */
+  Bottom = 'BOTTOM',
+  /** Custom (use shortcode) */
+  Custom = 'CUSTOM',
+  /** Above content */
+  Top = 'TOP'
+}
+
+/** The frontend SEO Score template type */
+export enum RankMathSeoScoreTemplateTypeEnum {
+  /** Circle template */
+  Circle = 'CIRCLE',
+  /** Square template */
+  Square = 'SQUARE'
+}
+
+/** The RankMath SEO site settings */
+export type RankMathSettings = {
+  __typename?: 'RankMathSettings';
+  /** General settings. */
+  general?: Maybe<RankMathGeneral>;
+  /** Meta settings. */
+  meta?: Maybe<RankMathMeta>;
+  /** Sitemap settings. */
+  sitemap?: Maybe<RankMathSitemap>;
+};
+
+/** The product_shipping_class term object SEO data */
+export type RankMathShippingClassTermSeo = RankMathSeo & {
+  __typename?: 'RankMathShippingClassTermSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The RankMath SEO titles and meta site settings */
+export type RankMathSitemap = {
+  __typename?: 'RankMathSitemap';
+  /** Author sitemap settings. Null if authors are not indexable. */
+  author?: Maybe<RankMathSitemapAuthorSettings>;
+  /** Content types included in the sitemap. */
+  contentTypes?: Maybe<Array<Maybe<RankMathSitemapContentTypeSettings>>>;
+  /** Sitemap general settings. */
+  general?: Maybe<RankMathSitemapGeneralSettings>;
+  /** The URL to the sitemap index. */
+  sitemapIndexUrl?: Maybe<Scalars['String']>;
+  /** Content types included in the sitemap. */
+  taxonomies?: Maybe<Array<Maybe<RankMathSitemapTaxonomySettings>>>;
+};
+
+
+/** The RankMath SEO titles and meta site settings */
+export type RankMathSitemapContentTypesArgs = {
+  include?: InputMaybe<Array<InputMaybe<ContentTypeEnum>>>;
+};
+
+
+/** The RankMath SEO titles and meta site settings */
+export type RankMathSitemapTaxonomiesArgs = {
+  include?: InputMaybe<Array<InputMaybe<TaxonomyEnum>>>;
+};
+
+/** The RankMath SEO Sitemap general settings. */
+export type RankMathSitemapAuthorSettings = {
+  __typename?: 'RankMathSitemapAuthorSettings';
+  /** The connected authors whose URLs are included in the sitemap */
+  connectedAuthors?: Maybe<RankMathSitemapAuthorSettingsToUserConnection>;
+  /** List of user roles excluded from the sitemap. */
+  excludedRoles?: Maybe<Array<Maybe<UserRoleEnum>>>;
+  /** List of user IDs excluded from the sitemap. */
+  excludedUserDatabaseIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** The sitemap URL. */
+  sitemapUrl?: Maybe<Scalars['String']>;
+};
+
+
+/** The RankMath SEO Sitemap general settings. */
+export type RankMathSitemapAuthorSettingsConnectedAuthorsArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+/** Connection between the RankMathSitemapAuthorSettings type and the User type */
+export type RankMathSitemapAuthorSettingsToUserConnection = Connection & UserConnection & {
+  __typename?: 'RankMathSitemapAuthorSettingsToUserConnection';
+  /** Edges for the RankMathSitemapAuthorSettingsToUserConnection connection */
+  edges: Array<RankMathSitemapAuthorSettingsToUserConnectionEdge>;
+  /** The nodes of the connection, without the edges */
+  nodes: Array<User>;
+  /** Information about pagination in a connection. */
+  pageInfo?: Maybe<WpPageInfo>;
+};
+
+/** An edge in a connection */
+export type RankMathSitemapAuthorSettingsToUserConnectionEdge = Edge & UserConnectionEdge & {
+  __typename?: 'RankMathSitemapAuthorSettingsToUserConnectionEdge';
+  /** A cursor for use in pagination */
+  cursor?: Maybe<Scalars['String']>;
+  /** The item at the end of the edge */
+  node: User;
+};
+
+/** The RankMath SEO Sitemap general settings. */
+export type RankMathSitemapContentTypeSettings = {
+  __typename?: 'RankMathSitemapContentTypeSettings';
+  /** The connected authors whose URLs are included in the sitemap */
+  connectedContentNodes?: Maybe<RankMathSitemapContentTypeSettingsToContentNodeConnection>;
+  /** List of custom field (post meta) names which contain image URLs to include them in the sitemaps. */
+  customImageMetaKeys?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Whether the content type is included in the sitemap. */
+  isInSitemap?: Maybe<Scalars['Boolean']>;
+  /** The sitemap URL. */
+  sitemapUrl?: Maybe<Scalars['String']>;
+  /** The content type. */
+  type?: Maybe<ContentTypeEnum>;
+};
+
+
+/** The RankMath SEO Sitemap general settings. */
+export type RankMathSitemapContentTypeSettingsConnectedContentNodesArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+/** Connection between the RankMathSitemapContentTypeSettings type and the ContentNode type */
+export type RankMathSitemapContentTypeSettingsToContentNodeConnection = Connection & ContentNodeConnection & {
+  __typename?: 'RankMathSitemapContentTypeSettingsToContentNodeConnection';
+  /** Edges for the RankMathSitemapContentTypeSettingsToContentNodeConnection connection */
+  edges: Array<RankMathSitemapContentTypeSettingsToContentNodeConnectionEdge>;
+  /** The nodes of the connection, without the edges */
+  nodes: Array<ContentNode>;
+  /** Information about pagination in a connection. */
+  pageInfo?: Maybe<WpPageInfo>;
+};
+
+/** An edge in a connection */
+export type RankMathSitemapContentTypeSettingsToContentNodeConnectionEdge = ContentNodeConnectionEdge & Edge & {
+  __typename?: 'RankMathSitemapContentTypeSettingsToContentNodeConnectionEdge';
+  /** A cursor for use in pagination */
+  cursor?: Maybe<Scalars['String']>;
+  /** The item at the end of the edge */
+  node: ContentNode;
+};
+
+/** The RankMath SEO Sitemap general settings. */
+export type RankMathSitemapGeneralSettings = {
+  __typename?: 'RankMathSitemapGeneralSettings';
+  /** Whether to notify search engines when the sitemap is updated. */
+  canPingSearchEngines?: Maybe<Scalars['Boolean']>;
+  /** A list of post IDs excluded from the sitemap. This option **applies** to all posts types including posts, pages, and custom post types. */
+  excludedPostDatabaseIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** A list of term IDs excluded from the sitemap. This option **applies** to all taxonomies. */
+  excludedTermDatabaseIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Whether the Featured Image is included in sitemaps too, even if it does not appear directly in the post content. */
+  hasFeaturedImage?: Maybe<Scalars['Boolean']>;
+  /** Whether reference to images from the post content is included in sitemaps. */
+  hasImages?: Maybe<Scalars['Boolean']>;
+  /** Max number of links on each sitemap page. */
+  linksPerSitemap?: Maybe<Scalars['Int']>;
+};
+
+/** The RankMath SEO Sitemap general settings. */
+export type RankMathSitemapTaxonomySettings = {
+  __typename?: 'RankMathSitemapTaxonomySettings';
+  /** The connected authors whose URLs are included in the sitemap */
+  connectedTerms?: Maybe<RankMathSitemapTaxonomySettingsToTermNodeConnection>;
+  /** Whether to archive pages of terms that have no posts associated. */
+  hasEmptyTerms?: Maybe<Scalars['Boolean']>;
+  /** Whether the content type is included in the sitemap. */
+  isInSitemap?: Maybe<Scalars['Boolean']>;
+  /** The sitemap URL. */
+  sitemapUrl?: Maybe<Scalars['String']>;
+  /** The taxonomy type. */
+  type?: Maybe<TaxonomyEnum>;
+};
+
+
+/** The RankMath SEO Sitemap general settings. */
+export type RankMathSitemapTaxonomySettingsConnectedTermsArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+/** Connection between the RankMathSitemapTaxonomySettings type and the TermNode type */
+export type RankMathSitemapTaxonomySettingsToTermNodeConnection = Connection & TermNodeConnection & {
+  __typename?: 'RankMathSitemapTaxonomySettingsToTermNodeConnection';
+  /** Edges for the RankMathSitemapTaxonomySettingsToTermNodeConnection connection */
+  edges: Array<RankMathSitemapTaxonomySettingsToTermNodeConnectionEdge>;
+  /** The nodes of the connection, without the edges */
+  nodes: Array<TermNode>;
+  /** Information about pagination in a connection. */
+  pageInfo?: Maybe<WpPageInfo>;
+};
+
+/** An edge in a connection */
+export type RankMathSitemapTaxonomySettingsToTermNodeConnectionEdge = Edge & TermNodeConnectionEdge & {
+  __typename?: 'RankMathSitemapTaxonomySettingsToTermNodeConnectionEdge';
+  /** A cursor for use in pagination */
+  cursor?: Maybe<Scalars['String']>;
+  /** The item at the end of the edge */
+  node: TermNode;
+};
+
+/** The rich snippet type. */
+export enum RankMathSnippetTypeEnum {
+  /** Article */
+  Article = 'ARTICLE',
+  /** Book */
+  Book = 'BOOK',
+  /** Course */
+  Course = 'COURSE',
+  /** Event */
+  Event = 'EVENT',
+  /** Job Posting */
+  Jobposting = 'JOBPOSTING',
+  /** Local Business */
+  LocalBusiness = 'LOCAL_BUSINESS',
+  /** Music */
+  Music = 'MUSIC',
+  /** None. */
+  Off = 'OFF',
+  /** Person */
+  Person = 'PERSON',
+  /** Product. */
+  Product = 'PRODUCT',
+  /** Recipe */
+  Recipe = 'RECIPE',
+  /** Restaurant */
+  Restaurant = 'RESTAURANT',
+  /** Service */
+  Service = 'SERVICE',
+  /** Software Application */
+  Software = 'SOFTWARE',
+  /** Video */
+  Video = 'VIDEO'
+}
+
+/** The RankMath SEO Social settings. */
+export type RankMathSocialMetaSettings = {
+  __typename?: 'RankMathSocialMetaSettings';
+  /** A list of numeric Facebook admin User Ids. */
+  facebookAdminId?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** The facebook Facebook app ID. */
+  facebookAppId?: Maybe<Scalars['Int']>;
+  /** The personal Facebook profile URL used to show authorship when articles are shared on Facebook. */
+  facebookAuthorUrl?: Maybe<Scalars['String']>;
+  /** The complete Facebook page URL. */
+  facebookPageUrl?: Maybe<Scalars['String']>;
+  /** Twitter Username of the auther used in the `twitter:creater` tag. */
+  twitterAuthorName?: Maybe<Scalars['String']>;
+};
+
+/** The post_tag term object SEO data */
+export type RankMathTagTermSeo = RankMathSeo & {
+  __typename?: 'RankMathTagTermSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The RankMath SEO Taxonomy meta settings. */
+export type RankMathTaxonomyMetaSettings = {
+  __typename?: 'RankMathTaxonomyMetaSettings';
+  /** The RankMath SEO meta settings for Categories. */
+  category?: Maybe<CategoryMetaSettings>;
+  /** The RankMath SEO meta settings for Formats. */
+  postFormat?: Maybe<PostFormatMetaSettings>;
+  /** The RankMath SEO meta settings for Product categories. */
+  productCategory?: Maybe<ProductCategoryMetaSettings>;
+  /** The RankMath SEO meta settings for Product tags. */
+  productTag?: Maybe<ProductTagMetaSettings>;
+  /** The RankMath SEO meta settings for Product shipping classes. */
+  shippingClass?: Maybe<ShippingClassMetaSettings>;
+  /** The RankMath SEO meta settings for Tags. */
+  tag?: Maybe<TagMetaSettings>;
+};
+
+/** The Twitter Card Type Enum */
+export enum RankMathTwitterCardTypeEnum {
+  /** The twitter App card */
+  App = 'APP',
+  /** The twitter Player card */
+  Player = 'PLAYER',
+  /** Summary Card. */
+  Summary = 'SUMMARY',
+  /** Summary Card with Large Image. */
+  SummaryLargeImage = 'SUMMARY_LARGE_IMAGE'
+}
+
+/** The user object SEO data */
+export type RankMathUserSeo = RankMathSeo & {
+  __typename?: 'RankMathUserSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The product_visibility term object SEO data */
+export type RankMathVisibleProductTermSeo = RankMathSeo & {
+  __typename?: 'RankMathVisibleProductTermSeo';
+  /** The title to use in the breadcrumbs for this post */
+  breadcrumbTitle?: Maybe<Scalars['String']>;
+  /** The canonical url. */
+  canonicalUrl?: Maybe<Scalars['String']>;
+  /** The meta description. */
+  description?: Maybe<Scalars['String']>;
+  /** The focus keywords you want to rank for */
+  focusKeywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The fully-rendered `head` tag for the given item */
+  fullHead?: Maybe<Scalars['String']>;
+  /** The JSON+LD data */
+  jsonLd?: Maybe<RankMathJsonLd>;
+  /** The open graph meta properties. */
+  openGraph?: Maybe<RankMathOpenGraphMeta>;
+  /** A list of the robots meta properties to output. */
+  robots?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The title. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** The RankMath SEO Webmaster Tools settings */
+export type RankMathWebmaster = {
+  __typename?: 'RankMathWebmaster';
+  /** The Baidu Webmaster Tools verification HTML code or ID. */
+  baidu?: Maybe<Scalars['String']>;
+  /** The Bing Webmaster Tools verification HTML code or ID. */
+  bing?: Maybe<Scalars['String']>;
+  /** The Google Search Console verification HTML code or ID. */
+  google?: Maybe<Scalars['String']>;
+  /** The Norton Safe Web verification HTML code or ID. */
+  norton?: Maybe<Scalars['String']>;
+  /** The Pinterest verification HTML code or ID. */
+  pinterest?: Maybe<Scalars['String']>;
+  /** The Yandex verification HTML code or ID. */
+  yandex?: Maybe<Scalars['String']>;
 };
 
 /** The reading setting type */
@@ -13998,6 +16021,8 @@ export type RootQuery = {
   productVariation?: Maybe<ProductVariation>;
   /** Connection between the RootQuery type and the Product type */
   products?: Maybe<RootQueryToProductConnection>;
+  /** RankMath SEO site settings */
+  rankMathSettings?: Maybe<RankMathSettings>;
   /** Fields of the &#039;ReadingSettings&#039; settings group */
   readingSettings?: Maybe<ReadingSettings>;
   /** A refund object */
@@ -16627,7 +18652,7 @@ export type Settings = {
 };
 
 /** The shippingClass type */
-export type ShippingClass = DatabaseIdentifier & Node & TermNode & UniformResourceIdentifiable & {
+export type ShippingClass = DatabaseIdentifier & Node & NodeWithRankMathSeo & TermNode & UniformResourceIdentifiable & {
   __typename?: 'ShippingClass';
   /** Connection between the ShippingClass type and the ContentNode type */
   contentNodes?: Maybe<ShippingClassToContentNodeConnection>;
@@ -16641,7 +18666,7 @@ export type ShippingClass = DatabaseIdentifier & Node & TermNode & UniformResour
   enqueuedScripts?: Maybe<TermNodeToEnqueuedScriptConnection>;
   /** Connection between the TermNode type and the EnqueuedStylesheet type */
   enqueuedStylesheets?: Maybe<TermNodeToEnqueuedStylesheetConnection>;
-  /** The unique resource identifier path */
+  /** The globally unique ID for the object */
   id: Scalars['ID'];
   /** Whether the node is a Content Node */
   isContentNode: Scalars['Boolean'];
@@ -16655,6 +18680,8 @@ export type ShippingClass = DatabaseIdentifier & Node & TermNode & UniformResour
   name?: Maybe<Scalars['String']>;
   /** Connection between the ShippingClass type and the Product type */
   products?: Maybe<ShippingClassToProductConnection>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /**
    * The id field matches the WP_Post-&gt;ID field.
    * @deprecated Deprecated in favor of databaseId
@@ -16741,6 +18768,27 @@ export enum ShippingClassIdType {
   /** The URI for the node */
   Uri = 'URI'
 }
+
+/** The RankMath SEO meta settings for Product shipping classes. */
+export type ShippingClassMetaSettings = RankMathMetaSettingWithArchive & RankMathMetaSettingWithRobots & {
+  __typename?: 'ShippingClassMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** Description for archive pages. */
+  archiveDescription?: Maybe<Scalars['String']>;
+  /** Default title tag for archive page. */
+  archiveTitle?: Maybe<Scalars['String']>;
+  /** Whether custom robots meta for author page are set. Otherwise the default meta will be used, as set in the Global Meta tab. */
+  hasCustomRobotsMeta?: Maybe<Scalars['Boolean']>;
+  /** Whether the SEO Controls meta box for user profile pages is enabled. */
+  hasSeoControls?: Maybe<Scalars['Boolean']>;
+  /** Whether to show additional information (name &amp; total number of posts) when an author archive is shared on Slack. */
+  hasSlackEnhancedSharing?: Maybe<Scalars['Boolean']>;
+  /** Whether to include snippet data for this taxonomy. */
+  hasSnippetData?: Maybe<Scalars['Boolean']>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+};
 
 /** Connection between the ShippingClass type and the ContentNode type */
 export type ShippingClassToContentNodeConnection = Connection & ContentNodeConnection & {
@@ -17049,7 +19097,7 @@ export type SimpleAttribute = Attribute & Node & {
 };
 
 /** A product object */
-export type SimpleProduct = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithComments & NodeWithContentEditor & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithTemplate & NodeWithTitle & Previewable & Product & UniformResourceIdentifiable & {
+export type SimpleProduct = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithComments & NodeWithContentEditor & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithRankMathSeo & NodeWithTemplate & NodeWithTitle & Previewable & Product & UniformResourceIdentifiable & {
   __typename?: 'SimpleProduct';
   /** Connection between the Product type and the ProductAttribute type */
   attributes?: Maybe<ProductToProductAttributeConnection>;
@@ -17194,6 +19242,8 @@ export type SimpleProduct = ContentNode & DatabaseIdentifier & MenuItemLinkable 
   reviewsAllowed?: Maybe<Scalars['Boolean']>;
   /** Product&#039;s sale price */
   salePrice?: Maybe<Scalars['String']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** shipping class ID */
   shippingClassId?: Maybe<Scalars['Int']>;
   /** Connection between the Product type and the shippingClass type */
@@ -17609,7 +19659,7 @@ export enum StockStatusEnum {
 }
 
 /** The tag type */
-export type Tag = DatabaseIdentifier & MenuItemLinkable & Node & TermNode & UniformResourceIdentifiable & {
+export type Tag = DatabaseIdentifier & MenuItemLinkable & Node & NodeWithRankMathSeo & TermNode & UniformResourceIdentifiable & {
   __typename?: 'Tag';
   /** Connection between the Tag type and the ContentNode type */
   contentNodes?: Maybe<TagToContentNodeConnection>;
@@ -17637,6 +19687,8 @@ export type Tag = DatabaseIdentifier & MenuItemLinkable & Node & TermNode & Unif
   name?: Maybe<Scalars['String']>;
   /** Connection between the Tag type and the post type */
   posts?: Maybe<TagToPostConnection>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** An alphanumeric identifier for the object unique to its type. */
   slug?: Maybe<Scalars['String']>;
   /**
@@ -17723,6 +19775,27 @@ export enum TagIdType {
   /** The URI for the node */
   Uri = 'URI'
 }
+
+/** The RankMath SEO meta settings for Tags. */
+export type TagMetaSettings = RankMathMetaSettingWithArchive & RankMathMetaSettingWithRobots & {
+  __typename?: 'TagMetaSettings';
+  /** Advanced robots meta tag settings. */
+  advancedRobotsMeta?: Maybe<RankMathAdvancedRobotsMeta>;
+  /** Description for archive pages. */
+  archiveDescription?: Maybe<Scalars['String']>;
+  /** Default title tag for archive page. */
+  archiveTitle?: Maybe<Scalars['String']>;
+  /** Whether custom robots meta for author page are set. Otherwise the default meta will be used, as set in the Global Meta tab. */
+  hasCustomRobotsMeta?: Maybe<Scalars['Boolean']>;
+  /** Whether the SEO Controls meta box for user profile pages is enabled. */
+  hasSeoControls?: Maybe<Scalars['Boolean']>;
+  /** Whether to show additional information (name &amp; total number of posts) when an author archive is shared on Slack. */
+  hasSlackEnhancedSharing?: Maybe<Scalars['Boolean']>;
+  /** Whether to include snippet data for this taxonomy. */
+  hasSnippetData?: Maybe<Scalars['Boolean']>;
+  /** Custom values for robots meta tag. */
+  robotsMeta?: Maybe<Array<Maybe<RankMathRobotsMetaValueEnum>>>;
+};
 
 /** Connection between the Tag type and the ContentNode type */
 export type TagToContentNodeConnection = Connection & ContentNodeConnection & {
@@ -18165,7 +20238,7 @@ export type TermNode = {
   enqueuedScripts?: Maybe<TermNodeToEnqueuedScriptConnection>;
   /** Connection between the TermNode type and the EnqueuedStylesheet type */
   enqueuedStylesheets?: Maybe<TermNodeToEnqueuedStylesheetConnection>;
-  /** The unique resource identifier path */
+  /** The globally unique ID for the object */
   id: Scalars['ID'];
   /** Whether the node is a Content Node */
   isContentNode: Scalars['Boolean'];
@@ -18177,6 +20250,8 @@ export type TermNode = {
   link?: Maybe<Scalars['String']>;
   /** The human friendly name of the object. */
   name?: Maybe<Scalars['String']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** An alphanumeric identifier for the object unique to its type. */
   slug?: Maybe<Scalars['String']>;
   /** The name of the taxonomy that the object is associated with */
@@ -19223,7 +21298,7 @@ export type UpdateVisibleProductPayload = {
 };
 
 /** A User object */
-export type User = Commenter & DatabaseIdentifier & Node & UniformResourceIdentifiable & {
+export type User = Commenter & DatabaseIdentifier & Node & NodeWithRankMathSeo & UniformResourceIdentifiable & {
   __typename?: 'User';
   /** Avatar object for user. The avatar object can be retrieved in different sizes by specifying the size argument. */
   avatar?: Maybe<Avatar>;
@@ -19287,6 +21362,8 @@ export type User = Commenter & DatabaseIdentifier & Node & UniformResourceIdenti
   revisions?: Maybe<UserToRevisionsConnection>;
   /** Connection between the User type and the UserRole type */
   roles?: Maybe<UserToUserRoleConnection>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** The slug for the user. This field is equivalent to WP_User-&gt;user_nicename */
   slug?: Maybe<Scalars['String']>;
   /** The unique resource identifier path */
@@ -19931,7 +22008,7 @@ export enum UsersConnectionSearchColumnEnum {
 }
 
 /** A variable product object */
-export type VariableProduct = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithComments & NodeWithContentEditor & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithTemplate & NodeWithTitle & Previewable & Product & UniformResourceIdentifiable & {
+export type VariableProduct = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithComments & NodeWithContentEditor & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithRankMathSeo & NodeWithTemplate & NodeWithTitle & Previewable & Product & UniformResourceIdentifiable & {
   __typename?: 'VariableProduct';
   /** Connection between the Product type and the ProductAttribute type */
   attributes?: Maybe<ProductToProductAttributeConnection>;
@@ -20068,6 +22145,8 @@ export type VariableProduct = ContentNode & DatabaseIdentifier & MenuItemLinkabl
   reviewsAllowed?: Maybe<Scalars['Boolean']>;
   /** Product&#039;s sale price */
   salePrice?: Maybe<Scalars['String']>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** shipping class ID */
   shippingClassId?: Maybe<Scalars['Int']>;
   /** Connection between the Product type and the shippingClass type */
@@ -20623,7 +22702,7 @@ export type VariationAttributeConnectionEdge = {
 };
 
 /** The visibleProduct type */
-export type VisibleProduct = DatabaseIdentifier & Node & TermNode & UniformResourceIdentifiable & {
+export type VisibleProduct = DatabaseIdentifier & Node & NodeWithRankMathSeo & TermNode & UniformResourceIdentifiable & {
   __typename?: 'VisibleProduct';
   /** Connection between the VisibleProduct type and the ContentNode type */
   contentNodes?: Maybe<VisibleProductToContentNodeConnection>;
@@ -20637,7 +22716,7 @@ export type VisibleProduct = DatabaseIdentifier & Node & TermNode & UniformResou
   enqueuedScripts?: Maybe<TermNodeToEnqueuedScriptConnection>;
   /** Connection between the TermNode type and the EnqueuedStylesheet type */
   enqueuedStylesheets?: Maybe<TermNodeToEnqueuedStylesheetConnection>;
-  /** The unique resource identifier path */
+  /** The globally unique ID for the object */
   id: Scalars['ID'];
   /** Whether the node is a Content Node */
   isContentNode: Scalars['Boolean'];
@@ -20651,6 +22730,8 @@ export type VisibleProduct = DatabaseIdentifier & Node & TermNode & UniformResou
   name?: Maybe<Scalars['String']>;
   /** Connection between the VisibleProduct type and the Product type */
   products?: Maybe<VisibleProductToProductConnection>;
+  /** The RankMath SEO data for the node. */
+  seo?: Maybe<RankMathSeo>;
   /** An alphanumeric identifier for the object unique to its type. */
   slug?: Maybe<Scalars['String']>;
   /** Connection between the VisibleProduct type and the Taxonomy type */
@@ -21026,6 +23107,8 @@ export type VariableProductFragmentFragment = { __typename?: 'VariableProduct', 
 
 export type VariationAttributeBaseFragment = { __typename?: 'VariationAttribute', id: string, attributeId?: number | null, name?: string | null, label?: string | null, value?: string | null };
 
+export type SeoBaseFragment = { __typename?: 'Page', seo?: { __typename?: 'RankMathCategoryTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathCollectionObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathCollectionTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathGraphqlDocumentObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathGraphqlDocumentTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathMediaItemObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathMediaItemTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPageObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPageTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostFormatTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPressItemObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPressItemTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductCategoryTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTagTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTypeTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathShippingClassTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathTagTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathUserSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathVisibleProductTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | null };
+
 export type UserAuthBaseFragment = { __typename?: 'User', id: string, databaseId: number, jwtAuthToken?: string | null, jwtRefreshToken?: string | null, firstName?: string | null, lastName?: string | null, username?: string | null, email?: string | null, wooSessionToken?: string | null };
 
 export type UserFragment = { __typename?: 'User', id: string, databaseId: number, firstName?: string | null, lastName?: string | null, username?: string | null, email?: string | null };
@@ -21139,7 +23222,7 @@ export type GetCollectionBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GetCollectionBySlugQuery = { __typename?: 'RootQuery', collection?: { __typename?: 'Collection', id: string, title?: string | null, slug?: string | null, content?: string | null, gallery?: { __typename?: 'Collection_Gallery', media?: { __typename?: 'Collection_Gallery_Media', video?: { __typename?: 'MediaItem', mediaItemUrl?: string | null, id: string, databaseId: number, altText?: string | null, sourceUrl?: string | null, mimeType?: string | null, fileSize?: number | null, mediaDetails?: { __typename?: 'MediaDetails', height?: number | null, width?: number | null } | null } | null, images?: Array<{ __typename?: 'MediaItem', id: string, databaseId: number, altText?: string | null, sourceUrl?: string | null, mimeType?: string | null, fileSize?: number | null, mediaDetails?: { __typename?: 'MediaDetails', height?: number | null, width?: number | null } | null } | null> | null } | null } | null } | null };
+export type GetCollectionBySlugQuery = { __typename?: 'RootQuery', collection?: { __typename?: 'Collection', id: string, title?: string | null, slug?: string | null, content?: string | null, seo?: { __typename?: 'RankMathCategoryTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathCollectionObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathCollectionTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathGraphqlDocumentObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathGraphqlDocumentTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathMediaItemObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathMediaItemTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPageObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPageTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostFormatTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPressItemObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPressItemTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductCategoryTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTagTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTypeTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathShippingClassTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathTagTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathUserSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathVisibleProductTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | null, gallery?: { __typename?: 'Collection_Gallery', media?: { __typename?: 'Collection_Gallery_Media', video?: { __typename?: 'MediaItem', mediaItemUrl?: string | null, id: string, databaseId: number, altText?: string | null, sourceUrl?: string | null, mimeType?: string | null, fileSize?: number | null, mediaDetails?: { __typename?: 'MediaDetails', height?: number | null, width?: number | null } | null } | null, images?: Array<{ __typename?: 'MediaItem', id: string, databaseId: number, altText?: string | null, sourceUrl?: string | null, mimeType?: string | null, fileSize?: number | null, mediaDetails?: { __typename?: 'MediaDetails', height?: number | null, width?: number | null } | null } | null> | null } | null } | null } | null };
 
 export type GetCollectionsDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -21183,7 +23266,7 @@ export type GetPageDataBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GetPageDataBySlugQuery = { __typename?: 'RootQuery', page?: { __typename?: 'Page', content?: string | null, id: string, databaseId: number, title?: string | null, slug?: string | null } | null };
+export type GetPageDataBySlugQuery = { __typename?: 'RootQuery', page?: { __typename?: 'Page', content?: string | null, id: string, databaseId: number, title?: string | null, slug?: string | null, seo?: { __typename?: 'RankMathCategoryTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathCollectionObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathCollectionTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathGraphqlDocumentObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathGraphqlDocumentTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathMediaItemObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathMediaItemTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPageObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPageTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostFormatTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPressItemObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPressItemTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductCategoryTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTagTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTypeTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathShippingClassTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathTagTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathUserSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathVisibleProductTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | null } | null };
 
 export type GetPageSlugsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -21205,7 +23288,7 @@ export type GetProductDataBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GetProductDataBySlugQuery = { __typename?: 'RootQuery', product?: { __typename?: 'ExternalProduct' } | { __typename?: 'GroupProduct' } | { __typename?: 'SimpleProduct', price?: string | null, regularPrice?: string | null, salePrice?: string | null, dateOnSaleFrom?: string | null, dateOnSaleTo?: string | null, onSale?: boolean | null, description?: string | null, shortDescription?: string | null, id: string, databaseId: number, name?: string | null, slug?: string | null, type?: ProductTypesEnum | null, productCategories?: { __typename?: 'ProductToProductCategoryConnection', nodes: Array<{ __typename?: 'ProductCategory', name?: string | null, slug?: string | null, ancestors?: { __typename?: 'ProductCategoryToAncestorsProductCategoryConnection', nodes: Array<{ __typename?: 'ProductCategory', name?: string | null, slug?: string | null }> } | null }> } | null, image?: { __typename?: 'MediaItem', id: string, databaseId: number, altText?: string | null, sourceUrl?: string | null, mimeType?: string | null, fileSize?: number | null, mediaDetails?: { __typename?: 'MediaDetails', height?: number | null, width?: number | null } | null } | null, galleryImages?: { __typename?: 'ProductToMediaItemConnection', nodes: Array<{ __typename?: 'MediaItem', id: string, databaseId: number, altText?: string | null, sourceUrl?: string | null, mimeType?: string | null, fileSize?: number | null, mediaDetails?: { __typename?: 'MediaDetails', height?: number | null, width?: number | null } | null }> } | null } | { __typename?: 'VariableProduct', price?: string | null, regularPrice?: string | null, salePrice?: string | null, dateOnSaleFrom?: string | null, dateOnSaleTo?: string | null, onSale?: boolean | null, description?: string | null, shortDescription?: string | null, id: string, databaseId: number, name?: string | null, slug?: string | null, type?: ProductTypesEnum | null, variations?: { __typename?: 'VariableProductToProductVariationConnection', nodes: Array<{ __typename?: 'ProductVariation', sku?: string | null, id: string, databaseId: number, description?: string | null, name?: string | null, price?: string | null, salePrice?: string | null, onSale?: boolean | null, dateOnSaleFrom?: string | null, dateOnSaleTo?: string | null, image?: { __typename?: 'MediaItem', id: string, databaseId: number, altText?: string | null, sourceUrl?: string | null, mimeType?: string | null, fileSize?: number | null, mediaDetails?: { __typename?: 'MediaDetails', height?: number | null, width?: number | null } | null } | null, attributes?: { __typename?: 'ProductVariationToVariationAttributeConnection', nodes: Array<{ __typename?: 'VariationAttribute', id: string, attributeId?: number | null, name?: string | null, label?: string | null, value?: string | null }> } | null }> } | null, attributes?: { __typename?: 'ProductToProductAttributeConnection', nodes: Array<{ __typename?: 'GlobalProductAttribute', id: string, attributeId: number, name?: string | null, label?: string | null, options?: Array<string | null> | null } | { __typename?: 'LocalProductAttribute', id: string, attributeId: number, name?: string | null, label?: string | null, options?: Array<string | null> | null }> } | null, productCategories?: { __typename?: 'ProductToProductCategoryConnection', nodes: Array<{ __typename?: 'ProductCategory', name?: string | null, slug?: string | null, ancestors?: { __typename?: 'ProductCategoryToAncestorsProductCategoryConnection', nodes: Array<{ __typename?: 'ProductCategory', name?: string | null, slug?: string | null }> } | null }> } | null, image?: { __typename?: 'MediaItem', id: string, databaseId: number, altText?: string | null, sourceUrl?: string | null, mimeType?: string | null, fileSize?: number | null, mediaDetails?: { __typename?: 'MediaDetails', height?: number | null, width?: number | null } | null } | null, galleryImages?: { __typename?: 'ProductToMediaItemConnection', nodes: Array<{ __typename?: 'MediaItem', id: string, databaseId: number, altText?: string | null, sourceUrl?: string | null, mimeType?: string | null, fileSize?: number | null, mediaDetails?: { __typename?: 'MediaDetails', height?: number | null, width?: number | null } | null }> } | null } | null };
+export type GetProductDataBySlugQuery = { __typename?: 'RootQuery', product?: { __typename?: 'ExternalProduct', seo?: { __typename?: 'RankMathCategoryTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathCollectionObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathCollectionTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathGraphqlDocumentObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathGraphqlDocumentTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathMediaItemObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathMediaItemTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPageObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPageTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostFormatTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPressItemObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPressItemTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductCategoryTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTagTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTypeTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathShippingClassTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathTagTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathUserSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathVisibleProductTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | null } | { __typename?: 'GroupProduct', seo?: { __typename?: 'RankMathCategoryTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathCollectionObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathCollectionTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathGraphqlDocumentObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathGraphqlDocumentTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathMediaItemObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathMediaItemTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPageObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPageTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostFormatTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPressItemObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPressItemTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductCategoryTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTagTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTypeTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathShippingClassTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathTagTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathUserSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathVisibleProductTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | null } | { __typename?: 'SimpleProduct', price?: string | null, regularPrice?: string | null, salePrice?: string | null, dateOnSaleFrom?: string | null, dateOnSaleTo?: string | null, onSale?: boolean | null, description?: string | null, shortDescription?: string | null, id: string, databaseId: number, name?: string | null, slug?: string | null, type?: ProductTypesEnum | null, seo?: { __typename?: 'RankMathCategoryTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathCollectionObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathCollectionTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathGraphqlDocumentObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathGraphqlDocumentTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathMediaItemObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathMediaItemTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPageObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPageTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostFormatTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPressItemObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPressItemTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductCategoryTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTagTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTypeTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathShippingClassTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathTagTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathUserSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathVisibleProductTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | null, productCategories?: { __typename?: 'ProductToProductCategoryConnection', nodes: Array<{ __typename?: 'ProductCategory', name?: string | null, slug?: string | null, ancestors?: { __typename?: 'ProductCategoryToAncestorsProductCategoryConnection', nodes: Array<{ __typename?: 'ProductCategory', name?: string | null, slug?: string | null }> } | null }> } | null, image?: { __typename?: 'MediaItem', id: string, databaseId: number, altText?: string | null, sourceUrl?: string | null, mimeType?: string | null, fileSize?: number | null, mediaDetails?: { __typename?: 'MediaDetails', height?: number | null, width?: number | null } | null } | null, galleryImages?: { __typename?: 'ProductToMediaItemConnection', nodes: Array<{ __typename?: 'MediaItem', id: string, databaseId: number, altText?: string | null, sourceUrl?: string | null, mimeType?: string | null, fileSize?: number | null, mediaDetails?: { __typename?: 'MediaDetails', height?: number | null, width?: number | null } | null }> } | null } | { __typename?: 'VariableProduct', price?: string | null, regularPrice?: string | null, salePrice?: string | null, dateOnSaleFrom?: string | null, dateOnSaleTo?: string | null, onSale?: boolean | null, description?: string | null, shortDescription?: string | null, id: string, databaseId: number, name?: string | null, slug?: string | null, type?: ProductTypesEnum | null, seo?: { __typename?: 'RankMathCategoryTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathCollectionObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathCollectionTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathGraphqlDocumentObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathGraphqlDocumentTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathMediaItemObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathMediaItemTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPageObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPageTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostFormatTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPostTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPressItemObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathPressItemTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductCategoryTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductObjectSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTagTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTypeSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathProductTypeTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathShippingClassTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathTagTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathUserSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | { __typename?: 'RankMathVisibleProductTermSeo', title?: string | null, description?: string | null, focusKeywords?: Array<string | null> | null, openGraph?: { __typename?: 'RankMathOpenGraphMeta', description?: string | null, locale?: RankMathOpenGraphLocaleEnum | null, siteName?: string | null, title?: string | null, type?: string | null, url?: string | null, articleMeta?: { __typename?: 'RankMathOpenGraphArticle', section?: string | null } | null, slackEnhancedData?: Array<{ __typename?: 'RankMathOpenGraphSlackEnhancedData', data?: string | null, label?: string | null } | null> | null, twitterMeta?: { __typename?: 'RankMathOpenGraphTwitter', card?: RankMathTwitterCardTypeEnum | null, description?: string | null, title?: string | null } | null } | null } | null, variations?: { __typename?: 'VariableProductToProductVariationConnection', nodes: Array<{ __typename?: 'ProductVariation', sku?: string | null, id: string, databaseId: number, description?: string | null, name?: string | null, price?: string | null, salePrice?: string | null, onSale?: boolean | null, dateOnSaleFrom?: string | null, dateOnSaleTo?: string | null, image?: { __typename?: 'MediaItem', id: string, databaseId: number, altText?: string | null, sourceUrl?: string | null, mimeType?: string | null, fileSize?: number | null, mediaDetails?: { __typename?: 'MediaDetails', height?: number | null, width?: number | null } | null } | null, attributes?: { __typename?: 'ProductVariationToVariationAttributeConnection', nodes: Array<{ __typename?: 'VariationAttribute', id: string, attributeId?: number | null, name?: string | null, label?: string | null, value?: string | null }> } | null }> } | null, attributes?: { __typename?: 'ProductToProductAttributeConnection', nodes: Array<{ __typename?: 'GlobalProductAttribute', id: string, attributeId: number, name?: string | null, label?: string | null, options?: Array<string | null> | null } | { __typename?: 'LocalProductAttribute', id: string, attributeId: number, name?: string | null, label?: string | null, options?: Array<string | null> | null }> } | null, productCategories?: { __typename?: 'ProductToProductCategoryConnection', nodes: Array<{ __typename?: 'ProductCategory', name?: string | null, slug?: string | null, ancestors?: { __typename?: 'ProductCategoryToAncestorsProductCategoryConnection', nodes: Array<{ __typename?: 'ProductCategory', name?: string | null, slug?: string | null }> } | null }> } | null, image?: { __typename?: 'MediaItem', id: string, databaseId: number, altText?: string | null, sourceUrl?: string | null, mimeType?: string | null, fileSize?: number | null, mediaDetails?: { __typename?: 'MediaDetails', height?: number | null, width?: number | null } | null } | null, galleryImages?: { __typename?: 'ProductToMediaItemConnection', nodes: Array<{ __typename?: 'MediaItem', id: string, databaseId: number, altText?: string | null, sourceUrl?: string | null, mimeType?: string | null, fileSize?: number | null, mediaDetails?: { __typename?: 'MediaDetails', height?: number | null, width?: number | null } | null }> } | null } | null };
 
 export type GetProductsByCategoryQueryVariables = Exact<{
   field: ProductsOrderByEnum;
@@ -21253,6 +23336,7 @@ export const OrderProductBaseFragmentDoc = {"kind":"Document","definitions":[{"k
 export const PageCommonBaseFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PageCommonBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Page"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"databaseId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]} as unknown as DocumentNode<PageCommonBaseFragment, unknown>;
 export const ProductCategoryBaseFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductCategoryBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductCategory"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ImageBase"}}]}}]}}]} as unknown as DocumentNode<ProductCategoryBaseFragment, unknown>;
 export const ProductPriceBaseFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductPriceBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"VariableProduct"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"salePrice"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SimpleProduct"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"salePrice"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"GroupProduct"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ExternalProduct"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"salePrice"}}]}},{"kind":"Field","name":{"kind":"Name","value":"onSale"}}]}}]} as unknown as DocumentNode<ProductPriceBaseFragment, unknown>;
+export const SeoBaseFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SEOBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Page"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"seo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"focusKeywords"}},{"kind":"Field","name":{"kind":"Name","value":"openGraph"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"articleMeta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"section"}}]}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"locale"}},{"kind":"Field","name":{"kind":"Name","value":"siteName"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"slackEnhancedData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}},{"kind":"Field","name":{"kind":"Name","value":"twitterMeta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"card"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]}}]}}]} as unknown as DocumentNode<SeoBaseFragment, unknown>;
 export const UserAuthBaseFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserAuthBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"databaseId"}},{"kind":"Field","name":{"kind":"Name","value":"jwtAuthToken"}},{"kind":"Field","name":{"kind":"Name","value":"jwtRefreshToken"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"wooSessionToken"}}]}}]} as unknown as DocumentNode<UserAuthBaseFragment, unknown>;
 export const UserFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"User"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"databaseId"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]} as unknown as DocumentNode<UserFragment, unknown>;
 export const LoginUserDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"LoginUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LoginInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CustomerBase"}}]}},{"kind":"Field","name":{"kind":"Name","value":"authToken"}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"}}]}}]}},...CustomerBaseFragmentDoc.definitions]} as unknown as DocumentNode<LoginUserMutation, LoginUserMutationVariables>;
@@ -21271,7 +23355,7 @@ export const GetCartDocument = {"kind":"Document", "definitions":[{"kind":"Opera
 export const GetCartForStripeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCartForStripe"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cart"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"format"},"value":{"kind":"EnumValue","value":"RAW"}}]}]}}]}}]} as unknown as DocumentNode<GetCartForStripeQuery, GetCartForStripeQueryVariables>;
 export const GetCategoryBySlugDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCategoryBySlug"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productCategory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"idType"},"value":{"kind":"EnumValue","value":"SLUG"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductCategoryBase"}},{"kind":"Field","name":{"kind":"Name","value":"ancestors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"databaseId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"children"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"hideEmpty"},"value":{"kind":"BooleanValue","value":false}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductCategoryBase"}},{"kind":"Field","name":{"kind":"Name","value":"products"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductMinBase"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"children"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"hideEmpty"},"value":{"kind":"BooleanValue","value":true}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductCategoryBase"}},{"kind":"Field","name":{"kind":"Name","value":"products"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductMinBase"}}]}}]}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"products"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductMinBase"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ImageBase"}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductPriceBase"}},{"kind":"Field","name":{"kind":"Name","value":"shortDescription"}}]}}]}}]}}]}},...ProductCategoryBaseFragmentDoc.definitions,...ImageBaseFragmentDoc.definitions,...ProductMinBaseFragmentDoc.definitions,...ProductPriceBaseFragmentDoc.definitions]} as unknown as DocumentNode<GetCategoryBySlugQuery, GetCategoryBySlugQueryVariables>;
 export const GetCategorySlugsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCategorySlugs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productCategories"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"200"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}}]}}]} as unknown as DocumentNode<GetCategorySlugsQuery, GetCategorySlugsQueryVariables>;
-export const GetCollectionBySlugDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCollectionBySlug"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collection"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}},{"kind":"Argument","name":{"kind":"Name","value":"idType"},"value":{"kind":"EnumValue","value":"SLUG"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"gallery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"media"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"video"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ImageBase"}},{"kind":"Field","name":{"kind":"Name","value":"mediaItemUrl"}}]}},{"kind":"Field","name":{"kind":"Name","value":"images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ImageBase"}}]}}]}}]}}]}}]}},...ImageBaseFragmentDoc.definitions]} as unknown as DocumentNode<GetCollectionBySlugQuery, GetCollectionBySlugQueryVariables>;
+export const GetCollectionBySlugDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCollectionBySlug"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collection"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}},{"kind":"Argument","name":{"kind":"Name","value":"idType"},"value":{"kind":"EnumValue","value":"SLUG"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"seo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"focusKeywords"}},{"kind":"Field","name":{"kind":"Name","value":"openGraph"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"articleMeta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"section"}}]}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"locale"}},{"kind":"Field","name":{"kind":"Name","value":"siteName"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"slackEnhancedData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}},{"kind":"Field","name":{"kind":"Name","value":"twitterMeta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"card"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"gallery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"media"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"video"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ImageBase"}},{"kind":"Field","name":{"kind":"Name","value":"mediaItemUrl"}}]}},{"kind":"Field","name":{"kind":"Name","value":"images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ImageBase"}}]}}]}}]}}]}}]}},...ImageBaseFragmentDoc.definitions]} as unknown as DocumentNode<GetCollectionBySlugQuery, GetCollectionBySlugQueryVariables>;
 export const GetCollectionsDataDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCollectionsData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collections"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"100"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"gallery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"media"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"coverimage"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ImageBase"}}]}}]}}]}}]}}]}}]}},...ImageBaseFragmentDoc.definitions]} as unknown as DocumentNode<GetCollectionsDataQuery, GetCollectionsDataQueryVariables>;
 export const GetCustomerDataDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCustomerData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CustomerBase"}}]}}]}},...CustomerBaseFragmentDoc.definitions]} as unknown as DocumentNode<GetCustomerDataQuery, GetCustomerDataQueryVariables>;
 export const GetCustomerDataWithAddressesDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCustomerDataWithAddresses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CustomerBase"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"CustomerAddresses"}}]}}]}},...CustomerBaseFragmentDoc.definitions,...CustomerAddressesFragmentDoc.definitions]} as unknown as DocumentNode<GetCustomerDataWithAddressesQuery, GetCustomerDataWithAddressesQueryVariables>;
@@ -21279,11 +23363,11 @@ export const GetCustomerDataWithOrdersDocument = {"kind":"Document", "definition
 export const GetMenuDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetMenuData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"mainMenu"},"name":{"kind":"Name","value":"menu"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"StringValue","value":"main","block":false}},{"kind":"Argument","name":{"kind":"Name","value":"idType"},"value":{"kind":"EnumValue","value":"SLUG"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"menuItems"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"100"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"parentDatabaseId"},"value":{"kind":"IntValue","value":"0"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"childItems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"siteSettings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"colors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accent"}},{"kind":"Field","name":{"kind":"Name","value":"black"}},{"kind":"Field","name":{"kind":"Name","value":"blue"}},{"kind":"Field","name":{"kind":"Name","value":"green"}},{"kind":"Field","name":{"kind":"Name","value":"highlight"}},{"kind":"Field","name":{"kind":"Name","value":"indigo"}},{"kind":"Field","name":{"kind":"Name","value":"orange"}},{"kind":"Field","name":{"kind":"Name","value":"red"}},{"kind":"Field","name":{"kind":"Name","value":"violet"}},{"kind":"Field","name":{"kind":"Name","value":"white"}},{"kind":"Field","name":{"kind":"Name","value":"yellow"}}]}},{"kind":"Field","name":{"kind":"Name","value":"footer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"socialmedia"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"icon"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"style"}}]}},{"kind":"Field","name":{"kind":"Name","value":"link"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetMenuDataQuery, GetMenuDataQueryVariables>;
 export const GetOrderDataByIdDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetOrderDataByID"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"idType"},"value":{"kind":"EnumValue","value":"DATABASE_ID"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"orderNumber"}},{"kind":"Field","name":{"kind":"Name","value":"subtotal"}},{"kind":"Field","name":{"kind":"Name","value":"discountTotal"}},{"kind":"Field","name":{"kind":"Name","value":"shippingTotal"}},{"kind":"Field","name":{"kind":"Name","value":"totalTax"}},{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"tracking"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"fieldGroupName"}},{"kind":"Field","name":{"kind":"Name","value":"number"}},{"kind":"Field","name":{"kind":"Name","value":"provider"}},{"kind":"Field","name":{"kind":"Name","value":"url"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hasBillingAddress"}},{"kind":"Field","name":{"kind":"Name","value":"billing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address1"}},{"kind":"Field","name":{"kind":"Name","value":"address2"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"company"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"postcode"}},{"kind":"Field","name":{"kind":"Name","value":"state"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hasShippingAddress"}},{"kind":"Field","name":{"kind":"Name","value":"shipping"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address1"}},{"kind":"Field","name":{"kind":"Name","value":"address2"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"company"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"postcode"}},{"kind":"Field","name":{"kind":"Name","value":"state"}}]}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethod"}},{"kind":"Field","name":{"kind":"Name","value":"lineItems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"quantity"}},{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"variationId"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductMinBase"}},{"kind":"Field","name":{"kind":"Name","value":"shortDescription"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ImageBase"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SimpleProduct"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"salePrice"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"VariableProduct"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"salePrice"}},{"kind":"Field","name":{"kind":"Name","value":"variations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductVariationBase"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductAttributeBase"}}]}}]}}]}}]}}]}}]}}]}}]}}]}},...ProductMinBaseFragmentDoc.definitions,...ImageBaseFragmentDoc.definitions,...ProductVariationBaseFragmentDoc.definitions,...VariationAttributeBaseFragmentDoc.definitions,...ProductAttributeBaseFragmentDoc.definitions]} as unknown as DocumentNode<GetOrderDataByIdQuery, GetOrderDataByIdQueryVariables>;
 export const GetOrdersDataDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetOrdersData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orders"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"orderNumber"}},{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"tracking"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"fieldGroupName"}},{"kind":"Field","name":{"kind":"Name","value":"number"}},{"kind":"Field","name":{"kind":"Name","value":"provider"}},{"kind":"Field","name":{"kind":"Name","value":"url"}}]}},{"kind":"Field","name":{"kind":"Name","value":"lineItems"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"quantity"}},{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"variationId"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductMinBase"}},{"kind":"Field","name":{"kind":"Name","value":"shortDescription"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ImageBase"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SimpleProduct"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"salePrice"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"VariableProduct"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"salePrice"}},{"kind":"Field","name":{"kind":"Name","value":"variations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductVariationBase"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductAttributeBase"}}]}}]}}]}}]}}]}}]}}]}}]}}]}}]}},...ProductMinBaseFragmentDoc.definitions,...ImageBaseFragmentDoc.definitions,...ProductVariationBaseFragmentDoc.definitions,...VariationAttributeBaseFragmentDoc.definitions,...ProductAttributeBaseFragmentDoc.definitions]} as unknown as DocumentNode<GetOrdersDataQuery, GetOrdersDataQueryVariables>;
-export const GetPageDataBySlugDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetPageDataBySlug"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"page"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}},{"kind":"Argument","name":{"kind":"Name","value":"idType"},"value":{"kind":"EnumValue","value":"URI"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PageCommonBase"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}},...PageCommonBaseFragmentDoc.definitions]} as unknown as DocumentNode<GetPageDataBySlugQuery, GetPageDataBySlugQueryVariables>;
+export const GetPageDataBySlugDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetPageDataBySlug"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"page"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}},{"kind":"Argument","name":{"kind":"Name","value":"idType"},"value":{"kind":"EnumValue","value":"URI"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PageCommonBase"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"SEOBase"}}]}}]}},...PageCommonBaseFragmentDoc.definitions,...SeoBaseFragmentDoc.definitions]} as unknown as DocumentNode<GetPageDataBySlugQuery, GetPageDataBySlugQueryVariables>;
 export const GetPageSlugsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetPageSlugs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}}]}}]} as unknown as DocumentNode<GetPageSlugsQuery, GetPageSlugsQueryVariables>;
 export const GetPressDataDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetPressData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"press"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"100"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"featuredImage"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ImageBase"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}}]}},...ImageBaseFragmentDoc.definitions]} as unknown as DocumentNode<GetPressDataQuery, GetPressDataQueryVariables>;
 export const GetProductCategoriesDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProductCategories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productCategories"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"hideEmpty"},"value":{"kind":"BooleanValue","value":true}}]}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"99"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductCategoryBase"}},{"kind":"Field","name":{"kind":"Name","value":"ancestors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductCategoryBase"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"children"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"hideEmpty"},"value":{"kind":"BooleanValue","value":true}}]}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"99"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductCategoryBase"}},{"kind":"Field","name":{"kind":"Name","value":"children"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"hideEmpty"},"value":{"kind":"BooleanValue","value":true}}]}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"99"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductCategoryBase"}}]}}]}}]}}]}}]}}]}}]}},...ProductCategoryBaseFragmentDoc.definitions,...ImageBaseFragmentDoc.definitions]} as unknown as DocumentNode<GetProductCategoriesQuery, GetProductCategoriesQueryVariables>;
-export const GetProductDataBySlugDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProductDataBySlug"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"idType"},"value":{"kind":"EnumValue","value":"SLUG"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"VariableProductFragment"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"SimpleProductFragment"}}]}}]}},...VariableProductFragmentFragmentDoc.definitions,...ProductBaseFragmentDoc.definitions,...ProductMinBaseFragmentDoc.definitions,...ImageBaseFragmentDoc.definitions,...ProductVariationBaseFragmentDoc.definitions,...VariationAttributeBaseFragmentDoc.definitions,...ProductAttributeBaseFragmentDoc.definitions,...SimpleProductFragmentFragmentDoc.definitions]} as unknown as DocumentNode<GetProductDataBySlugQuery, GetProductDataBySlugQueryVariables>;
+export const GetProductDataBySlugDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProductDataBySlug"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"idType"},"value":{"kind":"EnumValue","value":"SLUG"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"VariableProductFragment"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"SimpleProductFragment"}},{"kind":"Field","name":{"kind":"Name","value":"seo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"focusKeywords"}},{"kind":"Field","name":{"kind":"Name","value":"openGraph"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"articleMeta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"section"}}]}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"locale"}},{"kind":"Field","name":{"kind":"Name","value":"siteName"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"slackEnhancedData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}},{"kind":"Field","name":{"kind":"Name","value":"twitterMeta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"card"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]}}]}}]}},...VariableProductFragmentFragmentDoc.definitions,...ProductBaseFragmentDoc.definitions,...ProductMinBaseFragmentDoc.definitions,...ImageBaseFragmentDoc.definitions,...ProductVariationBaseFragmentDoc.definitions,...VariationAttributeBaseFragmentDoc.definitions,...ProductAttributeBaseFragmentDoc.definitions,...SimpleProductFragmentFragmentDoc.definitions]} as unknown as DocumentNode<GetProductDataBySlugQuery, GetProductDataBySlugQueryVariables>;
 export const GetProductsByCategoryDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProductsByCategory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"field"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ProductsOrderByEnum"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"order"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"OrderEnum"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"categories"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"last"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"before"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orderby"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"field"},"value":{"kind":"Variable","name":{"kind":"Name","value":"field"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"order"},"value":{"kind":"Variable","name":{"kind":"Name","value":"order"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"categoryIn"},"value":{"kind":"Variable","name":{"kind":"Name","value":"categories"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first"}}},{"kind":"Argument","name":{"kind":"Name","value":"last"},"value":{"kind":"Variable","name":{"kind":"Name","value":"last"}}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}},{"kind":"Argument","name":{"kind":"Name","value":"before"},"value":{"kind":"Variable","name":{"kind":"Name","value":"before"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductMinBase"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ImageBase"}}]}},{"kind":"Field","name":{"kind":"Name","value":"productCategories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductPriceBase"}},{"kind":"Field","name":{"kind":"Name","value":"shortDescription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"hasPreviousPage"}},{"kind":"Field","name":{"kind":"Name","value":"startCursor"}},{"kind":"Field","name":{"kind":"Name","value":"endCursor"}}]}}]}}]}},...ProductMinBaseFragmentDoc.definitions,...ImageBaseFragmentDoc.definitions,...ProductPriceBaseFragmentDoc.definitions]} as unknown as DocumentNode<GetProductsByCategoryQuery, GetProductsByCategoryQueryVariables>;
 export const GetProductsDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProductsData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"200"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"databaseId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"onSale"}},{"kind":"Field","name":{"kind":"Name","value":"shortDescription"}},{"kind":"Field","name":{"kind":"Name","value":"featuredImage"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"databaseId"}},{"kind":"Field","name":{"kind":"Name","value":"altText"}},{"kind":"Field","name":{"kind":"Name","value":"sourceUrl"}},{"kind":"Field","name":{"kind":"Name","value":"mediaDetails"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"width"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"galleryImages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"databaseId"}},{"kind":"Field","name":{"kind":"Name","value":"altText"}},{"kind":"Field","name":{"kind":"Name","value":"sourceUrl"}},{"kind":"Field","name":{"kind":"Name","value":"mediaDetails"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"width"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SimpleProduct"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"regularPrice"}},{"kind":"Field","name":{"kind":"Name","value":"salePrice"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"VariableProduct"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"regularPrice"}},{"kind":"Field","name":{"kind":"Name","value":"salePrice"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetProductsDataQuery, GetProductsDataQueryVariables>;
 export const GetProductsWithCategoriesDocument = {"kind":"Document", "definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProductsWithCategories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"200"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductBase"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"SimpleProductFragment"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"VariableProductFragment"}},{"kind":"Field","name":{"kind":"Name","value":"productCategories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductCategoryBase"}},{"kind":"Field","name":{"kind":"Name","value":"ancestors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}}]}}]}}]}}]}}]}},...ProductBaseFragmentDoc.definitions,...ProductMinBaseFragmentDoc.definitions,...ImageBaseFragmentDoc.definitions,...SimpleProductFragmentFragmentDoc.definitions,...VariableProductFragmentFragmentDoc.definitions,...ProductVariationBaseFragmentDoc.definitions,...VariationAttributeBaseFragmentDoc.definitions,...ProductAttributeBaseFragmentDoc.definitions,...ProductCategoryBaseFragmentDoc.definitions]} as unknown as DocumentNode<GetProductsWithCategoriesQuery, GetProductsWithCategoriesQueryVariables>;

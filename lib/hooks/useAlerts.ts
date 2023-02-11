@@ -1,6 +1,7 @@
-import { AlertsContext } from "machines/alertsContext"
 import { useContext } from "react"
 import { useActor } from "@xstate/react"
+
+import { AlertsContext } from "machines/alertsContext"
 
 const useAlerts = () => {
 	const globalServices = useContext(AlertsContext)

@@ -1,13 +1,10 @@
 import Image from "next/image"
 
 import Link from "@components/Link"
-import { GetCollectionsDataQuery } from "@api/codegen/graphql"
-import getCachedQuery from "@lib/server/getCachedQuery"
+import getCollections from "@lib/server/getCollections"
 
 const CollectionsPage = async () => {
-	const { data } = await getCachedQuery<GetCollectionsDataQuery>("getCollectionsData")
-
-	const collections = data.collections.nodes
+	const collections = await getCollections()
 
 	return (
 		<div className="max-w-7xl m-auto p-8 mb-8">
@@ -64,6 +61,13 @@ const CollectionsPage = async () => {
 	)
 }
 
+export default CollectionsPage
+
 export const revalidate = 60 // revalidate this page every 60 seconds
 
-export default CollectionsPage
+export const metadata = {
+	title: "Collections",
+	description:
+		"Curated collections of innovative knitwear designs worn by various models in various locations.",
+	keywords: ["Collections", "Seasonal", "Fashion", "Eiram", "Knitwear", "Wool", "Fashion"],
+}

@@ -1,6 +1,31 @@
 query GetProductDataBySlug($id: ID!) {
-  product(id: $id, idType: SLUG) {
-    ...VariableProductFragment
-    ...SimpleProductFragment
-  }
+	product(id: $id, idType: SLUG) {
+		...VariableProductFragment
+		...SimpleProductFragment
+		seo {
+			title
+			description
+			focusKeywords
+			openGraph {
+				articleMeta {
+					section
+				}
+				description
+				locale
+				siteName
+				title
+				type
+				url
+				slackEnhancedData {
+					data
+					label
+				}
+				twitterMeta {
+					card
+					description
+					title
+				}
+			}
+		}
+	}
 }

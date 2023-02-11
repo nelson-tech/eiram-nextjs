@@ -1,20 +1,14 @@
-import {
-	GetProductDataBySlugQuery,
-	GetProductsDataQuery,
-	Product,
-	SimpleProduct,
-	VariableProduct,
-} from "@api/codegen/graphql"
+import { GetProductsDataQuery, RankMathProductTypeSeo } from "@api/codegen/graphql"
+import getCachedQuery from "@lib/server/getCachedQuery"
+import getProductBySlug from "@lib/server/getProductBySlug"
+import parseMetaData from "@lib/utils/parseMetaData"
 
 import ProductDetails from "@components/productDetails"
-import getCachedQuery from "@lib/server/getCachedQuery"
 
-const ProductPage = async ({ params }: { params: { slug: string } }) => {
-	const { data } = await getCachedQuery<GetProductDataBySlugQuery>(
-		`getProductDataBySlug&variables={"id":"${params.slug}"}`,
-	)
+type ProductPageParamsType = { params: { slug: string } }
 
-	const product = data?.product as Product & SimpleProduct & VariableProduct
+const ProductPage = async ({ params }: ProductPageParamsType) => {
+	const product = await getProductBySlug(params.slug)
 
 	return (
 		<main className="mx-auto max-w-7xl sm:px-6 sm:pt-16 lg:px-8">
@@ -22,6 +16,8 @@ const ProductPage = async ({ params }: { params: { slug: string } }) => {
 		</main>
 	)
 }
+
+export default ProductPage
 
 export const revalidate = 60 // revalidate this page every 60 seconds
 
@@ -33,4 +29,11 @@ export async function generateStaticParams() {
 	}))
 }
 
-export default ProductPage
+// @ts-ignore
+export async function generateMetadata({ params }: ProductPageParamsType) {
+	const product = await getProductBySlug(params.slug)
+
+	const metaData = parseMetaData(product?.seo as RankMathProductTypeSeo, product?.title)
+
+	return metaData
+}

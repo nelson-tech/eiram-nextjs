@@ -154,6 +154,10 @@
 	justify-content: space-between;
 }
 
+.wp-block-image .wp-element-caption {
+	text-align: center;
+}
+
 /* phone-screens */
 @media (max-width: 640px) {
 	.wp-container img {

@@ -2,5 +2,6 @@ query GetPageDataBySlug($slug: ID!) {
 	page(id: $slug, idType: URI) {
 		...PageCommonBase
 		content
+		...SEOBase
 	}
 }

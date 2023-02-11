@@ -21,6 +21,13 @@ const PressPage = async () => {
 	)
 }
 
+export default PressPage
+
 export const revalidate = 60 // revalidate this page every 60 seconds
 
-export default PressPage
+export const metadata = {
+	title: "Press",
+	description:
+		"A collection of appearances of Eiram's innovative knitwear in various press articles.",
+	keywords: ["Press", "Eiram", "Knitwear", "Wool", "Fashion", "Shopping"],
+}

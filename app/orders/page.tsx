@@ -1,9 +1,12 @@
+import { Metadata } from "next/dist/lib/metadata/types/metadata-interface"
+
 import getClient from "@api/client"
 import { GetOrdersDataDocument, Order } from "@api/codegen/graphql"
+import getTokensServer from "@lib/utils/getTokensServer"
+
 import AuthChecker from "@components/AuthChecker"
 import Link from "@components/Link"
 import OrderSummary from "@components/OrderSummary"
-import getTokensServer from "@lib/utils/getTokensServer"
 
 const getOrders = async () => {
 	try {
@@ -33,9 +36,6 @@ const OrdersPage = async () => {
 							Order History
 						</h1>
 					</div>
-					{/* <p className="mt-2 text-sm text-gray-500">
-						Check the status of recent orders, manage returns, and download invoices.
-					</p> */}
 				</div>
 				<div className="mt-8">
 					<h2 className="sr-only">Recent orders</h2>
@@ -71,6 +71,25 @@ const OrdersPage = async () => {
 	)
 }
 
+export default OrdersPage
+
 export const revalidate = 0 // dynamically serve this page
 
-export default OrdersPage
+// @ts-ignore
+export async function generateMetadata() {
+	const metaData: Metadata = {
+		title: "Orders",
+		robots: {
+			index: false,
+			follow: false,
+			nocache: true,
+			googleBot: {
+				index: false,
+				follow: false,
+				noimageindex: true,
+			},
+		},
+	}
+
+	return metaData
+}

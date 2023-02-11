@@ -11,3 +11,10 @@ const RegisterPage = ({ searchParams }: { searchParams?: { redirect: string } })
 }
 
 export default RegisterPage
+
+export const metadata = {
+	title: "Register",
+	description:
+		"Register for a free account to today. An account makes it easy to see the status of your order and to track the shipment when it's available.",
+	keywords: ["Register", "Account", "Shop", "Eiram", "Knitwear", "Wool", "Fashion"],
+}

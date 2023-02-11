@@ -1,8 +1,11 @@
+import { Metadata } from "next/dist/lib/metadata/types/metadata-interface"
+
 import getClient from "@api/client"
 import { GetOrderDataByIdDocument, Order } from "@api/codegen/graphql"
+import getTokensServer from "@lib/utils/getTokensServer"
+
 import OrderConfirmation from "@components/OrderConfirmation"
 import UserOrderError from "@components/UserOrderError"
-import getTokensServer from "@lib/utils/getTokensServer"
 
 const getOrder = async (id: string) => {
 	const { tokens } = await getTokensServer()
@@ -41,3 +44,24 @@ const ThanksPage = async ({ searchParams }: { searchParams?: { id: string } }) =
 export const revalidate = 0 // dynamically serve this page
 
 export default ThanksPage
+
+// @ts-ignore
+export async function generateMetadata({ searchParams }) {
+	const order = await getOrder(searchParams?.id)
+
+	const metaData: Metadata = {
+		title: order?.orderNumber ? `Order #${order.orderNumber} Confirmation` : `Order Confirmation`,
+		robots: {
+			index: false,
+			follow: false,
+			nocache: true,
+			googleBot: {
+				index: false,
+				follow: false,
+				noimageindex: true,
+			},
+		},
+	}
+
+	return metaData
+}

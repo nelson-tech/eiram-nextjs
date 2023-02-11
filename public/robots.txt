@@ -1,0 +1,10 @@
+# Block all crawlers
+User-agent: *
+Disallow: /orders
+Disallow: /order/
+Disallow: /thanks
+
+
+# Allow all crawlers
+User-agent: *
+Allow: /

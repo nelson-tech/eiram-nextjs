@@ -25,3 +25,9 @@ const ResetPasswordPage = async () => {
 }
 
 export default ResetPasswordPage
+
+export const metadata = {
+	title: "Reset Password",
+	description: "Reset your password easily with your email address if you've forgotten it.",
+	keywords: ["Reset Password", "Account", "Shop", "Eiram", "Knitwear", "Wool", "Fashion"],
+}

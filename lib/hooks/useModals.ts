@@ -1,6 +1,7 @@
-import { ModalsContext } from "machines/modalsContext"
 import { useContext } from "react"
 import { useActor } from "@xstate/react"
+
+import { ModalsContext } from "machines/modalsContext"
 
 const useModals = () => {
 	const globalServices = useContext(ModalsContext)

@@ -1,3 +1,5 @@
+import { Metadata } from "next/dist/lib/metadata/types/metadata-interface"
+
 import getOrderById from "@lib/server/getOrderById"
 
 import AuthChecker from "@components/AuthChecker"
@@ -40,6 +42,26 @@ const OrderPage = async ({ params }: { params: { id: string } }) => {
 	)
 }
 
+export default OrderPage
+
 export const revalidate = 0 // dynamically serve this page
 
-export default OrderPage
+// @ts-ignore
+export async function generateMetadata({ params }) {
+	const order = await getOrderById(params.id)
+	const metaData: Metadata = {
+		title: order?.orderNumber ? `Order #${order.orderNumber}` : "Order Details",
+		robots: {
+			index: false,
+			follow: false,
+			nocache: true,
+			googleBot: {
+				index: false,
+				follow: false,
+				noimageindex: true,
+			},
+		},
+	}
+
+	return metaData
+}

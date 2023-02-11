@@ -1,10 +1,11 @@
-import { GetPageSlugsQuery } from "@api/codegen/graphql"
+import { GetPageSlugsQuery, RankMathPostTypeSeo } from "@api/codegen/graphql"
 import Link from "@components/Link"
 import getCachedQuery from "@lib/server/getCachedQuery"
 import getPageBySlug from "@lib/server/getPageBySlug"
+import parseMetaData from "@lib/utils/parseMetaData"
 
 const OtherPage = async ({ params }: { params: { slug: string } }) => {
-	const { data } = await getPageBySlug(params.slug)
+	const { data } = await getPageBySlug(params?.slug)
 	const pageData = data?.page
 
 	return (
@@ -36,6 +37,8 @@ const OtherPage = async ({ params }: { params: { slug: string } }) => {
 
 export const revalidate = 60 // revalidate this page every 60 seconds
 
+export default OtherPage
+
 export async function generateStaticParams() {
 	const { data } = await getCachedQuery<GetPageSlugsQuery>("getPageSlugs")
 
@@ -44,4 +47,14 @@ export async function generateStaticParams() {
 	}))
 }
 
-export default OtherPage
+// @ts-ignore
+export async function generateMetadata({ params }) {
+	const { data } = await getPageBySlug(params?.slug)
+	const pageData = data?.page
+
+	const seo = pageData?.seo || null
+
+	const metaData = parseMetaData(seo as RankMathPostTypeSeo, pageData?.title)
+
+	return metaData
+}
