@@ -38,7 +38,7 @@ var ZoomImage = function ZoomImage(_ref) {
 		}),
 		onClose &&
 			/*#__PURE__*/ React.createElement("button", {
-				className: "iiz__btn iiz__close " + (isZoomed ? "iiz__close--visible" : ""),
+				className: "iiz__btn iiz__close rounded-md" + (isZoomed ? "iiz__close--visible" : ""),
 				style: {
 					transition:
 						"opacity " + fadeDuration + "ms linear, visibility " + fadeDuration + "ms linear",

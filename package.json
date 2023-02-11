@@ -48,6 +48,7 @@
 		"@graphql-codegen/gql-tag-operations-preset": "^2.0.0",
 		"@graphql-codegen/typescript": "^2.8.8",
 		"@graphql-codegen/typescript-operations": "^2.5.13",
+		"@tailwindcss/forms": "^0.5.3",
 		"@types/node": "18.11.18",
 		"@types/react": "18.0.27",
 		"@types/react-dom": "18.0.10",
