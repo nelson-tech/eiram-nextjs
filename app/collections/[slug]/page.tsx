@@ -3,7 +3,7 @@ import getCollectionBySlug from "@lib/server/getCollectionBySlug"
 import getCollections from "@lib/server/getCollections"
 import parseMetaData from "@lib/utils/parseMetaData"
 
-import Collection from "@components/Collection"
+import Collection from "component/Collection"
 
 const CollectionPage = async ({ params }: { params: { slug: string } }) => {
 	const collection = await getCollectionBySlug(params.slug)

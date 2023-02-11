@@ -1,4 +1,4 @@
-import CollectionIcon from "@icons/Collection"
+import CollectionIcon from "component/icons/Collection"
 
 const customerMenu = [{ label: "Orders", path: "/orders", icon: CollectionIcon }]
 

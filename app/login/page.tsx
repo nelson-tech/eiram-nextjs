@@ -1,5 +1,5 @@
-import AuthChecker from "@components/AuthChecker"
-import LoginForm from "@components/loginForm"
+import AuthChecker from "component/AuthChecker"
+import LoginForm from "component/loginForm"
 
 const LoginPage = ({ searchParams }: { searchParams?: { redirect: string } }) => {
 	return (

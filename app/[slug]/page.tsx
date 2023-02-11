@@ -7,8 +7,8 @@ import getCachedQuery from "@lib/server/getCachedQuery"
 import getPageBySlug from "@lib/server/getPageBySlug"
 import parseMetaData from "@lib/utils/parseMetaData"
 
-import Link from "@components/Link"
-import Image from "@components/Image"
+import Link from "component/Link"
+import Image from "component/Image"
 
 const OtherPage = async ({ params }: { params: { slug: string } }) => {
 	const { data } = await getPageBySlug(params?.slug)

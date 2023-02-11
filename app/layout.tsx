@@ -6,12 +6,12 @@ import { MenuItem } from "@lib/api/codegen/graphql"
 import getMenu from "@lib/server/getMenu"
 
 import RootClientContext from "./RootClientContext"
-import Header from "@components/layout/header"
-import Modals from "@components/layout/modals"
-import Footer from "@components/layout/footer"
-import Alerts from "@components/Alerts"
-import ScrollToTop from "@components/ScrollToTop"
-import Analytics from "@components/Analytics"
+import Header from "component/layout/header"
+import Modals from "component/layout/modals"
+import Footer from "component/layout/footer"
+import Alerts from "component/Alerts"
+import ScrollToTop from "component/ScrollToTop"
+import Analytics from "component/Analytics"
 import { Metadata } from "next/dist/lib/metadata/types/metadata-interface"
 
 const font = localFont({

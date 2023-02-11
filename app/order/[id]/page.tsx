@@ -2,10 +2,10 @@ import { Metadata } from "next/dist/lib/metadata/types/metadata-interface"
 
 import getOrderById from "@lib/server/getOrderById"
 
-import AuthChecker from "@components/AuthChecker"
-import Link from "@components/Link"
-import OrderDetails from "@components/OrderDetails"
-import ArrowLeftIcon from "@icons/ArrowLeft"
+import AuthChecker from "component/AuthChecker"
+import Link from "component/Link"
+import OrderDetails from "component/OrderDetails"
+import ArrowLeftIcon from "component/icons/ArrowLeft"
 import { Order } from "@api/codegen/graphql"
 
 const OrderPage = async ({ params }: { params: { id: string } }) => {
