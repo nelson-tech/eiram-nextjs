@@ -4,8 +4,8 @@ import getClient from "@api/client"
 import { GetOrderDataByIdDocument, Order } from "@api/codegen/graphql"
 import getTokensServer from "@lib/utils/getTokensServer"
 
-import OrderConfirmation from "component/OrderConfirmation"
-import UserOrderError from "component/UserOrderError"
+import OrderConfirmation from "components/OrderConfirmation"
+import UserOrderError from "components/UserOrderError"
 
 const getOrder = async (id: string) => {
 	const { tokens } = await getTokensServer()

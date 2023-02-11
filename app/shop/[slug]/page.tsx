@@ -3,7 +3,7 @@ import getCachedQuery from "@lib/server/getCachedQuery"
 import getProductBySlug from "@lib/server/getProductBySlug"
 import parseMetaData from "@lib/utils/parseMetaData"
 
-import ProductDetails from "component/productDetails"
+import ProductDetails from "components/productDetails"
 
 type ProductPageParamsType = { params: { slug: string } }
 

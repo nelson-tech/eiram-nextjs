@@ -23,8 +23,8 @@
 		"paths": {
 			"@api": ["lib/api"],
 			"@api/*": ["lib/api/*"],
-			"@icons/*": ["component/icons/*"],
-			"@components/*": ["component/*"],
+			"@icons/*": ["components/icons/*"],
+			"@components/*": ["components/*"],
 			"@lib/*": ["lib/*"]
 		}
 	},

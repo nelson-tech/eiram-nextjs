@@ -1,4 +1,4 @@
-import Checkout from "component/Checkout"
+import Checkout from "components/Checkout"
 import getCheckoutData from "@lib/server/getCheckoutData"
 
 const CheckoutPage = async () => {

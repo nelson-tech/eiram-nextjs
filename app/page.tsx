@@ -2,7 +2,7 @@ import { MediaItem, RankMathPostTypeSeo } from "@api/codegen/graphql"
 import getHomeData from "@lib/server/getHomeData"
 import parseMetaData from "@lib/utils/parseMetaData"
 
-import BackgroundVideo from "component/BackgroundVideo"
+import BackgroundVideo from "components/BackgroundVideo"
 
 const HomePage = async () => {
 	const home = await getHomeData()
