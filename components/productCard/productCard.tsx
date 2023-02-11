@@ -1,11 +1,12 @@
 "use client"
 
-import Image from "next/image"
+import { useState } from "react"
+import { Transition } from "@headlessui/react"
+
+import { Product, SimpleProduct, VariableProduct } from "@api/codegen/graphql"
 
 import Link from "@components/Link"
-import { Transition } from "@headlessui/react"
-import { useState } from "react"
-import { Product, SimpleProduct, VariableProduct } from "@api/codegen/graphql"
+import Image from "@components/Image"
 
 type ProductCardProps = {
 	product: Product & SimpleProduct & VariableProduct
@@ -38,6 +39,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 								<Image
 									src={product?.featuredImage?.node?.sourceUrl}
 									alt={product?.featuredImage?.node?.altText || ""}
+									priority
 									fill
 									sizes="(max-width: 400px) 100vw,(max-width: 768px) 50vw,33vw"
 									className="custom-img aspect-square"
@@ -57,6 +59,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 								<Image
 									src={product.galleryImages?.nodes[0]?.sourceUrl}
 									alt={product.galleryImages?.nodes[0]?.altText || ""}
+									priority
 									fill
 									sizes="(max-width: 400px) 100vw,(max-width: 768px) 50vw,33vw"
 									className="custom-img"

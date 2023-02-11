@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
+import Image from "@components/Image"
 
 import { MediaItem, PressItem } from "@api/codegen/graphql"
 
@@ -37,6 +37,7 @@ const PressGallery = ({ press }: PressGalleryPropsType) => {
 							<Image
 								src={image.sourceUrl}
 								alt={image.altText}
+								priority
 								fill
 								sizes="(max-width: 400px) 100vw,(max-width: 768px) 50vw,33vw"
 								className=" object-cover align-middle rounded-sm"

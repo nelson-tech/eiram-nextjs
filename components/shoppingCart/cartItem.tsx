@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
+import Image from "@components/Image"
 
 import useCart from "@lib/hooks/useCart"
 import Link from "@components/Link"

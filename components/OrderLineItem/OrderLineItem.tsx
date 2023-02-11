@@ -12,7 +12,7 @@ import Link from "@components/Link"
 import LoadingSpinner from "@components/LoadingSpinner"
 import useCart from "@lib/hooks/useCart"
 import formatCurrencyString from "@lib/utils/formatCurrencyString"
-import Image from "next/image"
+import Image from "@components/Image"
 
 type OrderLineItemInputType = {
 	lineItem: LineItem

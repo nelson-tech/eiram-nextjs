@@ -1,12 +1,28 @@
+import { ImageProps } from "next/image"
+import parse, { attributesToProps } from "html-react-parser"
+import { HTMLReactParserOptions, Element } from "html-react-parser"
+
 import { GetPageSlugsQuery, RankMathPostTypeSeo } from "@api/codegen/graphql"
-import Link from "@components/Link"
 import getCachedQuery from "@lib/server/getCachedQuery"
 import getPageBySlug from "@lib/server/getPageBySlug"
 import parseMetaData from "@lib/utils/parseMetaData"
 
+import Link from "@components/Link"
+import Image from "@components/Image"
+
 const OtherPage = async ({ params }: { params: { slug: string } }) => {
 	const { data } = await getPageBySlug(params?.slug)
 	const pageData = data?.page
+
+	const options: HTMLReactParserOptions = {
+		replace: (item) => {
+			if (item instanceof Element && item.name === "img") {
+				const { loading, ...props } = attributesToProps(item.attribs) as unknown as ImageProps
+
+				return <Image {...{ ...props, alt: props.alt ?? "" }} priority />
+			}
+		},
+	}
 
 	return (
 		<div className="sm:px-16 py-8 max-w-7xl mx-auto text-gray-900">
@@ -14,7 +30,7 @@ const OtherPage = async ({ params }: { params: { slug: string } }) => {
 				{pageData?.title ?? "Oops..."}
 			</h2>
 			{pageData?.content ? (
-				<div className="wp-container" dangerouslySetInnerHTML={{ __html: pageData.content }} />
+				<div className="wp-container">{parse(pageData.content, options)}</div>
 			) : (
 				<div className="text-center">
 					<p>The page requested could not be found.</p>

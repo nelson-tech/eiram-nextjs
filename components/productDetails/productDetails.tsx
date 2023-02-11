@@ -1,7 +1,7 @@
 "use client"
 
 import { FormEvent, useState } from "react"
-import Image from "next/image"
+import Image from "@components/Image"
 import { RadioGroup, Tab } from "@headlessui/react"
 
 import {

@@ -1,7 +1,7 @@
 "use client"
 
 import { Menu_Sitesettings_Footer_Socialmedia } from "@lib/api/codegen/graphql"
-import Image from "next/image"
+import Image from "@components/Image"
 
 type FooterProps = {
 	socialMedia: Menu_Sitesettings_Footer_Socialmedia[]

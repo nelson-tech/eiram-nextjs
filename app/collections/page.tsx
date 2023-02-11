@@ -1,4 +1,4 @@
-import Image from "next/image"
+import Image from "@components/Image"
 
 import Link from "@components/Link"
 import getCollections from "@lib/server/getCollections"
@@ -32,12 +32,15 @@ const CollectionsPage = async () => {
 										<Image
 											src={coverImage.sourceUrl}
 											alt={coverImage.altText}
-											{...(coverImage.mediaDetails.width
-												? {
-														width: coverImage.mediaDetails.width,
-														height: coverImage.mediaDetails.height,
-												  }
-												: { fill: true, sizes: "(max-width: 800px) 100vw,33vw" })}
+											priority
+											width={464}
+											height={550}
+											// {...(coverImage.mediaDetails.width
+											// 	? {
+											// 			width: coverImage.mediaDetails.width,
+											// 			height: coverImage.mediaDetails.height,
+											// 	  }
+											// 	: { fill: true, sizes: "(max-width: 800px) 100vw,33vw" })}
 											className="absolute object-cover w-full h-full rounded-sm"
 										/>
 										<div className="absolute flex items-center w-full h-full bg-black bg-opacity-80 opacity-0 group-hover:opacity-80 transition-all rounded-sm overflow-hidden z-10">

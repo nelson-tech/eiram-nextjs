@@ -17,6 +17,8 @@ const Lightbox = ({ open, close, slide }: LightboxPropsType) => {
 
 	const { modalSize, imageSize } = useSizes({ slide })
 
+	console.log("Modal", modalSize, imageSize)
+
 	return slide ? (
 		<Modal open={open} closeModal={close} panelStyle={"inline-block  overflow-hidden rounded-2xl"}>
 			<>
@@ -45,15 +47,10 @@ const Lightbox = ({ open, close, slide }: LightboxPropsType) => {
 							// loading="eager"
 							// placeholder="blur"
 							alt={slide.altText}
-							{...(slide.mediaDetails.width
-								? {
-										width: slide.mediaDetails.width,
-										height: slide.mediaDetails.height,
-								  }
-								: {
-										fill: true,
-										sizes: "100vw",
-								  })}
+							{...{
+								width: slide.mediaDetails.width ?? parseInt(modalSize.width),
+								height: slide.mediaDetails.height ?? parseInt(modalSize.height),
+							}}
 							className=" object-contain rounded-lg overflow-hidden"
 						/>
 					)}

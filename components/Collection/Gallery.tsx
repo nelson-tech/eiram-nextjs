@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
+import Image from "@components/Image"
 import Lightbox from "@components/Lightbox"
 import { MediaItem } from "@api/codegen/graphql"
 
