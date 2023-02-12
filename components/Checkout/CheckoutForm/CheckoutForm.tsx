@@ -8,11 +8,11 @@ import { LockClosedIcon, DocumentDuplicateIcon } from "@heroicons/react/20/solid
 
 import { Customer, CustomerAddress } from "@api/codegen/graphql"
 import useCheckout from "@lib/hooks/useCheckout"
+import useAuth from "@lib/hooks/useAuth"
 
 import LoadingSpinner from "components/LoadingSpinner"
 import schema from "./FormSchema"
 import FormField from "./FormField"
-import useAuth from "@lib/hooks/useAuth"
 import GuestWarning from "../GuestWarning"
 
 // ####

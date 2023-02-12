@@ -97,7 +97,7 @@ const useCheckout = (stripeData: STRIPE_PaymentIntentType) => {
 
 		const paymentMethod: Omit<CreatePaymentMethodCardData, "type"> = {
 			card: elements.getElement(CardElement),
-			billing_details: { email: customerEmail },
+			billing_details: { email: customerEmail, address: { postal_code: input.billing.postcode } },
 		}
 
 		if (!paymentMethod.card) {
