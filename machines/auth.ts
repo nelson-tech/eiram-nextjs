@@ -1,29 +1,30 @@
+import { assign, createMachine } from "xstate"
+import { deleteCookie, getCookie } from "cookies-next"
+
 import getClient from "@api/client"
+import type { Customer, User } from "@api/codegen/graphql"
 import {
-	Customer,
 	GetCustomerDataDocument,
 	LoginUserDocument,
 	LogoutUserDocument,
 	RegisterCustomerDocument,
 	ResetUserPasswordDocument,
 	SendPasswordResetEmailDocument,
-	User,
 } from "@api/codegen/graphql"
-import { AUTH_TOKEN_KEY, CUSTOMER_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@lib/constants"
-import {
+import type {
 	AuthLoginEvent_Type,
 	AuthLogoutEvent_Type,
 	AuthMachine_Type,
 	AuthRegisterEvent_Type,
 	AuthResetPasswordEvent_Type,
 	AuthSendResetEmailEvent_Type,
+	AuthUpdateCustomerEvent_Type,
 } from "@lib/types/auth"
 import { decodeCustomerToken } from "@lib/utils/decodeJwt"
 import encodeToken from "@lib/utils/encodeJwt"
 import getTokensClient from "@lib/utils/getTokensClient"
 import setCookie from "@lib/utils/setCookie"
-import { deleteCookie } from "cookies-next"
-import { assign, createMachine } from "xstate"
+import { AUTH_TOKEN_KEY, CUSTOMER_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@lib/constants"
 
 import type { Typegen0 } from "./auth.typegen"
 
@@ -41,7 +42,7 @@ export const authMachine = (initialState: string) =>
 					invoke: {
 						src: "authChecker",
 						id: "authChecker",
-						onDone: [{ actions: "setToken", target: "loggedIn" }],
+						onDone: [{ actions: "setState", target: "loggedIn" }],
 						onError: [{ target: "loggedOut" }],
 					},
 				},
@@ -54,6 +55,9 @@ export const authMachine = (initialState: string) =>
 						},
 						RESETPASSWORD: {
 							target: "resettingPassword",
+						},
+						UPDATECUSTOMER: {
+							target: "updatingCustomer",
 						},
 					},
 				},
@@ -80,7 +84,7 @@ export const authMachine = (initialState: string) =>
 					invoke: {
 						src: "login",
 						id: "login",
-						onDone: [{ actions: "setToken", target: "loggedIn" }],
+						onDone: [{ actions: "setState", target: "loggedIn" }],
 						onError: [{ target: "loggedOut" }],
 					},
 				},
@@ -88,7 +92,7 @@ export const authMachine = (initialState: string) =>
 					invoke: {
 						src: "logout",
 						id: "logout",
-						onDone: [{ actions: "setToken", target: "loggedOut" }],
+						onDone: [{ actions: "setState", target: "loggedOut" }],
 						onError: [{ target: "loggedOut" }],
 					},
 				},
@@ -96,7 +100,7 @@ export const authMachine = (initialState: string) =>
 					invoke: {
 						src: "register",
 						id: "register",
-						onDone: [{ actions: "setToken", target: "loggedIn" }],
+						onDone: [{ actions: "setState", target: "loggedIn" }],
 						onError: [{ target: "loggedOut" }],
 					},
 				},
@@ -112,8 +116,15 @@ export const authMachine = (initialState: string) =>
 					invoke: {
 						src: "resetPassword",
 						id: "resetPassword",
-						onDone: [{ actions: "setToken", target: "loggedIn" }],
+						onDone: [{ actions: "setState", target: "loggedIn" }],
 						onError: [{ target: "loggedOut" }],
+					},
+				},
+				updatingCustomer: {
+					invoke: {
+						src: "updateCustomer",
+						id: "updateCustomer",
+						onDone: [{ actions: "setCustomer", target: "loggedIn" }],
 					},
 				},
 			},
@@ -134,12 +145,16 @@ export const authMachine = (initialState: string) =>
 					resetPassword: {
 						data: AuthMachine_Type
 					}
+					updateCustomer: {
+						data: Customer
+					}
 				},
 			},
 		},
 		{
 			actions: {
-				setToken: assign((ctx, { data }) => ({ ...ctx, ...data })),
+				setState: assign((ctx, { data }) => ({ ...ctx, ...data })),
+				setCustomer: assign((ctx, { data }) => ({ ...ctx, customer: data })),
 			},
 			services: {
 				authChecker: async () => {
@@ -300,6 +315,17 @@ export const authMachine = (initialState: string) =>
 
 						return authData
 					}
+				},
+				updateCustomer: async (_, { customer }: AuthUpdateCustomerEvent_Type) => {
+					// Get refreshToken (for expiration date)
+					const refreshToken = getCookie(REFRESH_TOKEN_KEY).valueOf()
+
+					// Encode customer into token
+					const customerToken = encodeToken(customer)
+
+					setCookie(CUSTOMER_TOKEN_KEY, customerToken, {}, refreshToken as string)
+
+					return customer
 				},
 			},
 		},

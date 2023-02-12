@@ -1,14 +1,15 @@
-import Link from "components/Link"
+import { Fragment } from "react"
 import { Dialog, Transition } from "@headlessui/react"
-import ClipboardCheckIcon from "components/icons/ClipboardCheck"
-import LoginIcon from "components/icons/Login"
-import LogoutIcon from "components/icons/Logout"
 
-import XIcon from "components/icons/X"
 import { MenuItem } from "@lib/api/codegen/graphql"
 import useAuth from "@lib/hooks/useAuth"
 import customerMenu from "@lib/customerMenu"
-import { Fragment } from "react"
+
+import Link from "components/Link"
+import XIcon from "components/icons/X"
+import ClipboardCheckIcon from "components/icons/ClipboardCheck"
+import LoginIcon from "components/icons/Login"
+import LogoutIcon from "components/icons/Logout"
 
 type MobileMenuInputType = {
 	menuItems: MenuItem[]

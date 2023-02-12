@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation"
 import { useActor } from "@xstate/react"
 
 import {
+	Customer,
 	LoginInput,
 	RegisterCustomerInput,
 	ResetUserPasswordInput,
@@ -14,6 +15,7 @@ import {
 	AuthRegisterEvent_Type,
 	AuthResetPasswordEvent_Type,
 	AuthSendResetEmailEvent_Type,
+	AuthUpdateCustomerEvent_Type,
 } from "@lib/types/auth"
 import { AuthContext } from "machines/authContext"
 import useAlerts from "./useAlerts"
@@ -155,6 +157,13 @@ const useAuth = () => {
 		await globalServices.authService.send("RESETPASSWORD", event)
 	}
 
+	const updateCustomer = async (customer: Customer) => {
+		const event: AuthUpdateCustomerEvent_Type = {
+			customer,
+		}
+		await globalServices.authService.send("UPDATECUSTOMER", event)
+	}
+
 	return {
 		processing,
 		isAuth,
@@ -166,6 +175,7 @@ const useAuth = () => {
 		register,
 		sendResetPasswordEmail,
 		resetUserPassword,
+		updateCustomer,
 	}
 }
 

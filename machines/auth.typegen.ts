@@ -33,12 +33,18 @@ export interface Typegen0 {
 			data: unknown
 			__tip: "See the XState TS docs to learn how to strongly type this."
 		}
+		"done.invoke.updateCustomer": {
+			type: "done.invoke.updateCustomer"
+			data: unknown
+			__tip: "See the XState TS docs to learn how to strongly type this."
+		}
 		"error.platform.authChecker": { type: "error.platform.authChecker"; data: unknown }
 		"error.platform.login": { type: "error.platform.login"; data: unknown }
 		"error.platform.logout": { type: "error.platform.logout"; data: unknown }
 		"error.platform.register": { type: "error.platform.register"; data: unknown }
 		"error.platform.resetPassword": { type: "error.platform.resetPassword"; data: unknown }
 		"error.platform.sendResetEmail": { type: "error.platform.sendResetEmail"; data: unknown }
+		"error.platform.updateCustomer": { type: "error.platform.updateCustomer"; data: unknown }
 		"xstate.init": { type: "xstate.init" }
 	}
 	invokeSrcNameMap: {
@@ -48,6 +54,7 @@ export interface Typegen0 {
 		register: "done.invoke.register"
 		resetPassword: "done.invoke.resetPassword"
 		sendResetEmail: "done.invoke.sendResetEmail"
+		updateCustomer: "done.invoke.updateCustomer"
 	}
 	missingImplementations: {
 		actions: never
@@ -56,7 +63,8 @@ export interface Typegen0 {
 		services: never
 	}
 	eventsCausingActions: {
-		setToken:
+		setCustomer: "done.invoke.updateCustomer"
+		setState:
 			| "done.invoke.authChecker"
 			| "done.invoke.login"
 			| "done.invoke.logout"
@@ -72,6 +80,7 @@ export interface Typegen0 {
 		register: "REGISTER"
 		resetPassword: "RESETPASSWORD"
 		sendResetEmail: "SENDRESETEMAIL"
+		updateCustomer: "UPDATECUSTOMER"
 	}
 	matchesStates:
 		| "authenticating"
@@ -82,5 +91,6 @@ export interface Typegen0 {
 		| "registering"
 		| "resettingPassword"
 		| "sendingResetEmail"
+		| "updatingCustomer"
 	tags: never
 }

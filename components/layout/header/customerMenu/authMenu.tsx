@@ -5,8 +5,8 @@ import { Popover } from "@headlessui/react"
 
 import useAuth from "@lib/hooks/useAuth"
 import customerMenu from "@lib/customerMenu"
-import Link from "components/Link"
 
+import Link from "components/Link"
 import LogoutIcon from "components/icons/Logout"
 
 const AuthMenu = () => {

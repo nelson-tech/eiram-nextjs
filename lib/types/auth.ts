@@ -43,3 +43,7 @@ export type AuthResetPasswordEvent_Type = {
 	input: Exclude<ResetUserPasswordInput, "clientMutationId">
 	callback: AuthCallbackWithName
 }
+
+export type AuthUpdateCustomerEvent_Type = {
+	customer: Customer
+}
