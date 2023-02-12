@@ -59,7 +59,10 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 					let matches = 0
 					Object.entries(selectedAttributes).map(([attribute, value]) => {
 						variation?.attributes?.nodes?.filter((varAttribute: VariationAttribute) => {
-							if (varAttribute?.label === attribute && varAttribute.value === value) {
+							if (
+								varAttribute?.label.toUpperCase() === attribute.toUpperCase() &&
+								varAttribute.value.toUpperCase() === value.toUpperCase()
+							) {
 								matches++
 							}
 						})
