@@ -18,6 +18,16 @@ query GetOrdersData {
 					quantity
 					total
 					variationId
+					variation {
+						node {
+							attributes {
+								nodes {
+									label
+									value
+								}
+							}
+						}
+					}
 					product {
 						node {
 							...ProductMinBase

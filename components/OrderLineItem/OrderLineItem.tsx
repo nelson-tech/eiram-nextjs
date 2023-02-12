@@ -49,9 +49,7 @@ const OrderLineItem = ({ lineItem }: OrderLineItemInputType) => {
 											{" "}
 											{lineItem.variation.node.attributes.nodes.map(
 												(variation: VariationAttribute) => (
-													<div key={variation.id}>
-														{variation.label}: {variation.value}
-													</div>
+													<div key={variation.id}>{variation.value}</div>
 												),
 											)}
 										</p>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { Fragment, useState } from "react"
 import Image from "components/Image"
 
 import useCart from "@lib/hooks/useCart"
@@ -9,8 +9,9 @@ import Link from "components/Link"
 import LoadingSpinner from "components/LoadingSpinner"
 import MinusIcon from "components/icons/Minus"
 import PlusIcon from "components/icons/Plus"
-import { TrashIcon } from "@heroicons/react/20/solid"
+import { CheckIcon, ChevronUpDownIcon, TrashIcon } from "@heroicons/react/20/solid"
 import { CartItem } from "@api/codegen/graphql"
+import { Listbox, Transition } from "@headlessui/react"
 
 type CartItemProps = {
 	lineItem: CartItem
@@ -51,12 +52,12 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 	}
 
 	return (
-		<div className="py-6 relative z-0">
+		<div className="py-6 relative">
 			{lineItem && (
 				<li className="flex items-center">
 					{featuredImage && (
 						<div
-							className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 border border-gray-200 rounded-md overflow-hidden relative`}
+							className={`flex-shrink-0 w-16 h-16 md:w-24 md:h-24 border border-gray-200 rounded-md overflow-hidden relative`}
 						>
 							<Image
 								src={featuredImage.sourceUrl ?? ""}
@@ -80,66 +81,73 @@ const CartItem = ({ lineItem, closeModal }: CartItemProps) => {
 							</h3>
 							<p className="ml-4 text-xs text-gray-500">{lineItem.total}</p>
 						</div>
-						<div className="flex gap-8 mt-4 text-sm text-gray-500">
+						<div className="flex divide-x gap-x-2 text-sm text-gray-500">
 							{lineItem?.variation?.attributes &&
 								lineItem.variation.attributes.map((attribute, i) => (
 									<div
 										key={attribute.id}
-										className=""
-									>{`${attribute.label} - ${attribute.value}`}</div>
+										className={`${i !== 0 ? "pl-2" : ""}`}
+									>{`${attribute.value}`}</div>
 								))}
 						</div>
 
-						<div className="flex-1 flex items-center justify-between text-sm mt-4">
+						<div className="flex-1 flex items-center justify-between text-sm mt-2">
 							{quantity && (
-								<div
-									className={
-										"flex items-center space-x-2 text-xs text-gray-600 transition-opacity " +
-										`${removeLoading?.itemKey === lineItem.key ? "opacity-0" : "opacity-100"}`
-									}
-								>
-									<label htmlFor="quantity" className="pr-2">
-										Quantity:{" "}
-									</label>
-									<div
-										className="cursor-pointer py-2"
-										onClick={() => {
-											quantity &&
-												updateLoading?.itemKey !== lineItem.key &&
-												handleQuantityUpdate(quantity - 1)
-										}}
-									>
-										<MinusIcon size={3} type="solid" />
-									</div>
+								<Listbox value={quantity} onChange={handleQuantityUpdate}>
+									{({ open }) => (
+										<div className="relative mt-1">
+											<Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent sm:text-sm">
+												<span className="block truncate">{quantity}</span>
+												<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+													<ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+												</span>
+											</Listbox.Button>
 
-									{updateLoading?.itemKey === lineItem.key ? (
-										<div className="w-16 flex justify-center items-center">
-											<LoadingSpinner style="" size={4} />
+											<Transition
+												show={open}
+												as={Fragment}
+												leave="transition ease-in duration-100"
+												leaveFrom="opacity-100"
+												leaveTo="opacity-0"
+											>
+												<Listbox.Options className="absolute z-10 mt-1 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+													{[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((number, i) => (
+														<Listbox.Option
+															key={"quantity" + i}
+															className={({ active }) => `${
+																active ? "text-white bg-accent" : "text-gray-900"
+															}
+                        relative cursor-default select-none py-2 pl-3 pr-9
+                      `}
+															value={number}
+														>
+															{({ selected, active }) => (
+																<>
+																	<span
+																		className={`${
+																			selected ? "font-semibold" : "font-normal"
+																		} block truncate`}
+																	>
+																		{number}
+																	</span>
+
+																	{selected ? (
+																		<span
+																			className={`${active ? "text-white" : "text-accent"}
+                              absolute inset-y-0 right-0 flex items-center pr-4`}
+																		>
+																			<CheckIcon className="h-5 w-5" aria-hidden="true" />
+																		</span>
+																	) : null}
+																</>
+															)}
+														</Listbox.Option>
+													))}
+												</Listbox.Options>
+											</Transition>
 										</div>
-									) : (
-										<input
-											className="w-16 text-center border py-1 text-xs rounded outline-none focus:bg-white ring-transparent"
-											value={quantity}
-											id="quantity"
-											name="quantity"
-											type="number"
-											min={1}
-											onChange={async (e) => await handleQuantityUpdate(Number(e.target.value))}
-										/>
 									)}
-
-									<div
-										className="cursor-pointer py-2"
-										onClick={() => {
-											quantity &&
-												updateLoading?.itemKey !== lineItem.key &&
-												handleQuantityUpdate(quantity + 1)
-										}}
-									>
-										<PlusIcon size={3} type="solid" />
-									</div>
-									{/* {quantity} */}
-								</div>
+								</Listbox>
 							)}
 
 							<div className="">

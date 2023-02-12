@@ -40,7 +40,7 @@ const ShoppingCart = ({ closeModal }: ShoppingCartProps) => {
 			>
 				<div className="w-screen max-w-md relative">
 					{loading && (
-						<div className="absolute z-40 w-full h-full items-center justify-center flex bg-black bg-opacity-10 transition">
+						<div className="absolute w-full z-20 h-full items-center justify-center flex bg-black bg-opacity-10 transition">
 							<LoadingSpinner size={24} />
 						</div>
 					)}
