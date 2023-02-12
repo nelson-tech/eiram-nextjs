@@ -39,6 +39,7 @@ export const cartMachine =
 						src: "fetchCart",
 						id: "fetchCart",
 						onDone: [{ actions: "setCart", target: "cartLoaded" }],
+						onError: [{ target: "cartLoaded" }],
 					},
 					entry: ["setLoading"],
 				},
@@ -47,6 +48,7 @@ export const cartMachine =
 						src: "addItem",
 						id: "addItem",
 						onDone: [{ actions: "setCart", target: "cartLoaded" }],
+						onError: [{ target: "fetchingCart" }],
 					},
 					entry: ["setLoading"],
 				},
@@ -55,6 +57,7 @@ export const cartMachine =
 						id: "passUpdateKey",
 						src: "passUpdateKey",
 						onDone: { actions: ["setUpdateLoading"], target: "updatingCartItem" },
+						onError: [{ target: "fetchingCart" }],
 					},
 				},
 				updatingCartItem: {
@@ -62,6 +65,7 @@ export const cartMachine =
 						src: "updateCartItem",
 						id: "updateCartItem",
 						onDone: [{ actions: ["clearUpdateLoading", "setCart"], target: "cartLoaded" }],
+						onError: [{ target: "fetchingCart" }],
 					},
 				},
 				settingRemoveLoading: {
@@ -69,6 +73,7 @@ export const cartMachine =
 						id: "passRemoveKey",
 						src: "passRemoveKey",
 						onDone: { actions: ["setRemoveLoading"], target: "removingItem" },
+						onError: [{ target: "fetchingCart" }],
 					},
 				},
 				removingItem: {
@@ -76,6 +81,7 @@ export const cartMachine =
 						id: "removeItem",
 						src: "removeItem",
 						onDone: [{ actions: ["clearRemoveLoading", "setCart"], target: "cartLoaded" }],
+						onError: [{ target: "fetchingCart" }],
 					},
 				},
 				clearingCart: {
