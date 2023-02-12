@@ -1,8 +1,9 @@
 "use client"
 
-import { FormEvent, useState } from "react"
-import Image from "components/Image"
-import { RadioGroup, Tab } from "@headlessui/react"
+import { FormEvent, Fragment, useState } from "react"
+import { Listbox, RadioGroup, Tab, Transition } from "@headlessui/react"
+import ChevronUpDownIcon from "@heroicons/react/20/solid/ChevronUpDownIcon"
+import CheckIcon from "@heroicons/react/20/solid/CheckIcon"
 
 import {
 	AddToCartInput,
@@ -17,6 +18,7 @@ import {
 import useCart from "@lib/hooks/useCart"
 
 import Link from "components/Link"
+import Image from "components/Image"
 import LoadingSpinner from "components/LoadingSpinner"
 import InnerImageZoom from "components/InnerImageZoom"
 
@@ -24,6 +26,7 @@ type ProductDetailsProps = {
 	product: Product & SimpleProduct & VariableProduct
 }
 const ProductDetails = ({ product }: ProductDetailsProps) => {
+	const [quantity, setQuantity] = useState(1)
 	const {
 		state: { loading: processing },
 		addToCart,
@@ -76,7 +79,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
 		const input: AddToCartInput = {
 			productId,
-			quantity: 1,
+			quantity,
 			variationId,
 		}
 
@@ -176,7 +179,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 						/>
 					</div>
 
-					<div className="mt-8 lg:col-span-5">
+					<div className="mt-10 lg:col-span-5">
 						<form onSubmit={handleSubmit}>
 							{attributes &&
 								attributes.map((attribute: ProductAttribute) => {
@@ -234,25 +237,88 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 										)
 									)
 								})}
+							<div className="mt-10 grid grid-cols-3 items-center border-t pt-10">
+								<div className="w-20 mx-auto">
+									<Listbox value={quantity} onChange={setQuantity}>
+										{({ open }) => (
+											<div className="relative mr-2">
+												<div className="flex items-center">
+													<Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent sm:text-sm">
+														<span className="block truncate">{quantity}</span>
+														<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+															<ChevronUpDownIcon
+																className="h-5 w-5 text-gray-400"
+																aria-hidden="true"
+															/>
+														</span>
+													</Listbox.Button>
+												</div>
 
-							<div className="mt-10 flex">
-								<button
-									type="submit"
-									className={`relative flex uppercase transition items-center justify-center rounded-sm border border-transparent ${
-										readyToAdd && !processing
-											? "bg-accent hover:bg-highlight"
-											: " bg-gray-300 cursor-not-allowed"
-									} text-white py-3 px-8 text-base font-medium focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-gray-50 w-full`}
-									disabled={!readyToAdd || processing}
-									title={readyToAdd ? "Add to bag" : "Select your options before adding to bag"}
-								>
-									{(loading || processing) && (
-										<div className="absolute left-0 ml-6">
-											<LoadingSpinner size={6} color="white" />
-										</div>
-									)}
-									Add to bag
-								</button>
+												<Transition
+													show={open}
+													as={Fragment}
+													leave="transition ease-in duration-100"
+													leaveFrom="opacity-100"
+													leaveTo="opacity-0"
+												>
+													<Listbox.Options className="absolute z-10 mt-1 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+														{[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((number, i) => (
+															<Listbox.Option
+																key={"quantity" + i}
+																className={({ active }) => `${
+																	active ? "text-white bg-accent" : "text-gray-900"
+																}
+                        relative cursor-default select-none py-2 pl-3 pr-9
+                      `}
+																value={number}
+															>
+																{({ selected, active }) => (
+																	<>
+																		<span
+																			className={`${
+																				selected ? "font-semibold" : "font-normal"
+																			} block truncate`}
+																		>
+																			{number}
+																		</span>
+
+																		{selected ? (
+																			<span
+																				className={`${active ? "text-white" : "text-accent"}
+                              absolute inset-y-0 right-0 flex items-center pr-4`}
+																			>
+																				<CheckIcon className="h-5 w-5" aria-hidden="true" />
+																			</span>
+																		) : null}
+																	</>
+																)}
+															</Listbox.Option>
+														))}
+													</Listbox.Options>
+												</Transition>
+											</div>
+										)}
+									</Listbox>
+								</div>
+								<div className="mr-4 col-span-2">
+									<button
+										type="submit"
+										className={`relative flex uppercase transition items-center justify-center rounded-sm border border-transparent ${
+											readyToAdd && !processing
+												? "bg-accent hover:bg-highlight"
+												: " bg-gray-300 cursor-not-allowed"
+										} text-white py-3 px-8 text-base font-medium focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-gray-50 w-full`}
+										disabled={!readyToAdd || processing}
+										title={readyToAdd ? "Add to bag" : "Select your options before adding to bag"}
+									>
+										{(loading || processing) && (
+											<div className="absolute left-0 ml-6">
+												<LoadingSpinner size={6} color="white" />
+											</div>
+										)}
+										Add to bag
+									</button>
+								</div>
 							</div>
 						</form>
 					</div>
