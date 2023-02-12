@@ -7,30 +7,46 @@ import getTokensServer from "@lib/utils/getTokensServer"
 import OrderConfirmation from "components/OrderConfirmation"
 import UserOrderError from "components/UserOrderError"
 
-const getOrder = async (id: string) => {
+const getOrder = async (orderNumber: string) => {
 	const { tokens } = await getTokensServer()
 
-	const client = getClient(tokens)
+	try {
+		const client = getClient(tokens)
 
-	const orderData = await client.request(GetOrderDataByIdDocument, { id })
+		const orderData = await client.request(GetOrderDataByIdDocument, { id: orderNumber })
 
-	return orderData.order as Order
+		return orderData.order as Order
+	} catch (error) {
+		console.warn("Error fetching order in Thank you page.", error)
+	}
 }
 
-const ThanksPage = async ({ searchParams }: { searchParams?: { id: string } }) => {
-	const order = await getOrder(searchParams.id)
+const ThanksPage = async ({ searchParams }: { searchParams?: { orderNumber: string } }) => {
+	const order = await getOrder(searchParams.orderNumber)
 
 	return (
 		<div className="max-w-7xl mx-auto">
 			<div className="py-8 px-6 w-full h-full">
 				{order ? (
-					<OrderConfirmation order={order} orderNumber={searchParams.id} />
+					<OrderConfirmation order={order} orderNumber={searchParams.orderNumber} />
 				) : (
 					<>
 						<div>
 							<h2 className="text-xl font-extrabold text-gray-400 text-center">
 								<p>Oops, no order found...</p>
-								<p>Please contact us if you think there&apos;s been a mistake.</p>
+								<p>
+									Please{" "}
+									<a
+										href={`mailto:info@eiramknitwear.com?subject=Missing%20Order${
+											searchParams.orderNumber ? `%20%23%20${searchParams.orderNumber}` : ""
+										}`}
+										title="Contact Us"
+										className="text-accent underline hover:text-highlight transition-all"
+									>
+										contact us
+									</a>{" "}
+									if you think there&apos;s been a mistake.
+								</p>
 							</h2>
 						</div>
 						<UserOrderError />
@@ -47,7 +63,7 @@ export default ThanksPage
 
 // @ts-ignore
 export async function generateMetadata({ searchParams }) {
-	const order = await getOrder(searchParams?.id)
+	const order = await getOrder(searchParams?.orderNumber)
 
 	const metaData: Metadata = {
 		title: order?.orderNumber ? `Order #${order.orderNumber} Confirmation` : `Order Confirmation`,
