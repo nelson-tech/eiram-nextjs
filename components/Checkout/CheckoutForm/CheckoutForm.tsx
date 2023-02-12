@@ -1,22 +1,19 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { useElements, useStripe, CardElement } from "@stripe/react-stripe-js"
-import { CreatePaymentMethodCardData } from "@stripe/stripe-js"
+import { CardElement } from "@stripe/react-stripe-js"
+import type { StripeCardElementChangeEvent } from "@stripe/stripe-js"
 import { SubmitHandler, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LockClosedIcon, DocumentDuplicateIcon } from "@heroicons/react/20/solid"
 
-import getClient from "@api/client"
-import { CheckoutDocument, CheckoutInput, Customer, CustomerAddress } from "@api/codegen/graphql"
-import useCart from "@lib/hooks/useCart"
-import useAlerts from "@lib/hooks/useAlerts"
+import { Customer, CustomerAddress } from "@api/codegen/graphql"
+import useCheckout from "@lib/hooks/useCheckout"
 
 import LoadingSpinner from "components/LoadingSpinner"
-// import DocumentDuplicateIcon from "@icons/DocumentDuplicate"
 import schema from "./FormSchema"
 import FormField from "./FormField"
+import useAuth from "@lib/hooks/useAuth"
+import GuestWarning from "../GuestWarning"
 
 // ####
 // #### Types
@@ -39,17 +36,8 @@ type CheckoutFormPropsType = {
 // ####
 
 const CheckoutForm = ({ stripeData, customer }: CheckoutFormPropsType) => {
-	const router = useRouter()
-	const client = getClient()
-
-	const { clearCart } = useCart()
-
-	const { openAlert } = useAlerts()
-
-	const [loading, setLoading] = useState(false)
-
-	const stripe = useStripe()
-	const elements = useElements()
+	const { isAuth, processing } = useAuth()
+	const { loading, submitCheckout } = useCheckout(stripeData)
 
 	const {
 		formState: { errors },
@@ -60,32 +48,9 @@ const CheckoutForm = ({ stripeData, customer }: CheckoutFormPropsType) => {
 	} = useForm<FormDataType>({
 		resolver: zodResolver(schema),
 		defaultValues: {
-			billing: {
-				address1: customer?.billing?.address1,
-				address2: customer?.billing?.address2,
-				city: customer?.billing?.city,
-				company: customer?.billing?.company,
-				country: customer?.billing?.country,
-				postcode: customer?.billing?.postcode,
-				phone: customer?.billing?.phone,
-				email: customer?.billing?.email,
-				state: customer?.billing?.state,
-				firstName: customer?.billing?.firstName,
-				lastName: customer?.billing?.lastName,
-			},
+			billing: customer?.billing,
 			shipToDifferentAddress: false,
-			shipping: {
-				address1: customer?.shipping?.address1,
-				address2: customer?.shipping?.address2,
-				city: customer?.shipping?.city,
-				company: customer?.shipping?.company,
-				country: customer?.shipping?.country,
-				postcode: customer?.shipping?.postcode,
-				email: customer?.shipping?.email,
-				state: customer?.shipping?.state,
-				firstName: customer?.shipping?.firstName,
-				lastName: customer?.shipping?.lastName,
-			},
+			shipping: customer?.shipping,
 		},
 	})
 
@@ -95,124 +60,27 @@ const CheckoutForm = ({ stripeData, customer }: CheckoutFormPropsType) => {
 	})
 
 	const onSubmit: SubmitHandler<FormDataType> = async (formData) => {
-		console.log("Attempting to submit.")
-
-		setLoading(true)
-
-		// Exclude shipping unless billing and shipping should be different
 		const { shipping, shipToDifferentAddress, billing, customerNote } = formData
 
-		const input: CheckoutInput = {
-			billing,
-			customerNote,
-			paymentMethod: "stripe",
-			shipping: shipToDifferentAddress ? shipping : billing,
-			shipToDifferentAddress,
-			isPaid: false,
-		}
-
-		openAlert({
-			kind: "info",
-			primary: "Processing payment.",
-			secondary: "Sending payment request to Stripe...",
-			timeout: 40000,
+		await submitCheckout({
+			CardElement,
+			customerEmail: customer.email,
+			input: {
+				billing,
+				customerNote,
+				paymentMethod: "stripe",
+				shipping: shipToDifferentAddress ? shipping : billing,
+				shipToDifferentAddress,
+				isPaid: false,
+			},
 		})
+	}
 
-		const paymentMethod: Omit<CreatePaymentMethodCardData, "type"> = {
-			card: elements.getElement(CardElement),
-			billing_details: { email: customer.email },
-		}
+	const handleChange = async (event: StripeCardElementChangeEvent) => {
+		// Listen for changes in the CardElement
+		// and display any errors as the customer types their card details
 
-		if (!paymentMethod.card) {
-			setLoading(false)
-			return null
-		}
-
-		// use Stripe client secret to process card payment method
-		const stripeResult = await stripe.confirmCardPayment(stripeData.clientSecret, {
-			payment_method: paymentMethod,
-		})
-		console.log("Stripe Result", stripeResult)
-
-		if (stripeResult.error) {
-			console.warn(stripeResult.error.message)
-			openAlert({
-				kind: "error",
-				primary: "Payment Error",
-				secondary: stripeResult.error.message,
-			})
-		} else {
-			input["metaData"] = [
-				{
-					key: "_stripe_intent_id",
-					value: stripeData.paymentIntentId,
-				},
-			]
-			input["isPaid"] = true
-
-			openAlert({
-				kind: "info",
-				primary: "Processing Order",
-				secondary: "Payment processed. Finalizing order...",
-				timeout: 40000,
-			})
-
-			try {
-				const checkoutData = await client.request(CheckoutDocument, { input })
-
-				console.log("Checkout Data", checkoutData.checkout)
-
-				switch (checkoutData.checkout.result) {
-					case "success":
-						// Payment was successful
-
-						openAlert({
-							kind: "success",
-							primary: "Order Placed Successfully!",
-						})
-
-						break
-					case "PENDING":
-						// Payment requires authorization
-
-						openAlert({
-							kind: "warning",
-							primary: "Payment Incomplete.",
-							timeout: 3000,
-						})
-
-						break
-					case "FAILED":
-						// Payment failed
-
-						openAlert({
-							kind: "error",
-							primary: "Payment Failed.",
-							timeout: 3000,
-						})
-
-						break
-
-					default:
-						break
-				}
-
-				checkoutData.checkout.order.orderNumber &&
-					router.push(
-						`/thanks${
-							checkoutData.checkout.order.orderNumber
-								? `?id=${checkoutData.checkout.order.orderNumber}`
-								: ""
-						}`,
-					)
-
-				await clearCart()
-			} catch (error) {
-				console.warn("Error checking out", error)
-			}
-		}
-
-		setLoading(false)
+		event.error && console.warn("Error in CardElement", event.error.message)
 	}
 
 	const billingValues = useWatch({ control, name: "billing" })
@@ -227,6 +95,7 @@ const CheckoutForm = ({ stripeData, customer }: CheckoutFormPropsType) => {
 			onSubmit={handleSubmit(onSubmit)}
 		>
 			<div className="mx-auto max-w-lg lg:max-w-none">
+				{!isAuth && !processing && <GuestWarning />}
 				<section aria-labelledby="billing-heading">
 					<h2 id="billing-heading" className="text-lg font-medium text-gray-900">
 						Billing details
@@ -510,6 +379,7 @@ const CheckoutForm = ({ stripeData, customer }: CheckoutFormPropsType) => {
 									base: { iconColor: "#8aa29e" },
 								},
 							}}
+							onChange={handleChange}
 							className=" border border-gray-300 focus:ring-accent focus:border-accent p-2 rounded-md"
 						/>
 					</div>

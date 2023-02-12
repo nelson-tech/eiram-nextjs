@@ -4,7 +4,7 @@ import Link from "components/Link"
 
 const GuestWarning = () => {
 	return (
-		<div className="rounded-md bg-yellow-50 p-4">
+		<div className="rounded-md bg-yellow-50 p-4 mb-8">
 			<div className="flex">
 				<div className="flex-shrink-0">
 					<ExclamationCircleIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />

@@ -5,20 +5,18 @@ import { Elements } from "@stripe/react-stripe-js"
 import type { StripeElementsOptions } from "@stripe/stripe-js/types/stripe-js/elements-group"
 
 import { Customer } from "@api/codegen/graphql"
-import useAuth from "@lib/hooks/useAuth"
 import useCart from "@lib/hooks/useCart"
 import getStripe from "@lib/utils/getStripe"
+import getTokensClient from "@lib/utils/getTokensClient"
+import { STRIPE_ENDPOINT } from "@lib/constants"
 
 import Link from "components/Link"
 import LoadingSpinner from "components/LoadingSpinner"
 import CartSummary from "./CartSummary"
 import CheckoutForm from "./CheckoutForm"
 import DiscountForm from "./DiscountForm"
-import GuestWarning from "./GuestWarning"
 import MobileSummary from "./MobileSummary"
 import PricingSummary from "./PricingSummary"
-import getTokensClient from "@lib/utils/getTokensClient"
-import { STRIPE_ENDPOINT } from "@lib/constants"
 
 type CheckoutProps = {
 	hidePrices?: boolean
@@ -33,8 +31,6 @@ const Checkout = ({
 	customer,
 }: CheckoutProps) => {
 	const [stripeData, setStripeData] = useState<STRIPE_PaymentIntentType>(stripeServerData)
-
-	const { isAuth, processing } = useAuth()
 
 	const { cart, loading: cartLoading } = useCart().state
 
@@ -98,7 +94,6 @@ const Checkout = ({
 					<div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-x-16 lg:grid-cols-2 lg:px-8 xl:gap-x-48">
 						<h1 className="sr-only">Checkout | Order information</h1>
 
-						{!isAuth && !processing && <GuestWarning />}
 						<section
 							aria-labelledby="summary-heading"
 							className="bg-gray-50 px-4 pt-16 pb-10 sm:px-6 lg:col-start-2 lg:row-start-1 lg:bg-transparent lg:px-0 lg:pb-16"
