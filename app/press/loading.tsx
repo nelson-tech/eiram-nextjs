@@ -1,4 +1,4 @@
-import LoadingSpinner from "component/LoadingSpinner"
+import LoadingSpinner from "components/LoadingSpinner"
 
 const PressLoading = () => {
 	return (

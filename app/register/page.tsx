@@ -1,5 +1,5 @@
-import AuthChecker from "component/AuthChecker"
-import RegisterForm from "component/RegisterForm"
+import AuthChecker from "components/AuthChecker"
+import RegisterForm from "components/RegisterForm"
 
 const RegisterPage = ({ searchParams }: { searchParams?: { redirect: string } }) => {
 	return (

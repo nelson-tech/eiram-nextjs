@@ -4,9 +4,9 @@ import getClient from "@api/client"
 import { GetOrdersDataDocument, Order } from "@api/codegen/graphql"
 import getTokensServer from "@lib/utils/getTokensServer"
 
-import AuthChecker from "component/AuthChecker"
-import Link from "component/Link"
-import OrderSummary from "component/OrderSummary"
+import AuthChecker from "components/AuthChecker"
+import Link from "components/Link"
+import OrderSummary from "components/OrderSummary"
 
 const getOrders = async () => {
 	try {

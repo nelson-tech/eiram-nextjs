@@ -1,7 +1,7 @@
 import { GetProductsDataQuery, Product } from "@api/codegen/graphql"
 import getCachedQuery from "@lib/server/getCachedQuery"
 
-import ProductGrid from "component/ProductGrid"
+import ProductGrid from "components/ProductGrid"
 
 const ShopPage = async () => {
 	const { data } = await getCachedQuery<GetProductsDataQuery>("getProductsData")

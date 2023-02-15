@@ -1,6 +1,6 @@
-import Image from "component/Image"
+import Image from "components/Image"
 
-import Link from "component/Link"
+import Link from "components/Link"
 import getCollections from "@lib/server/getCollections"
 
 const CollectionsPage = async () => {

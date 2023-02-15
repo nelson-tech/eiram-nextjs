@@ -6,12 +6,12 @@ import { MenuItem, Menu_Sitesettings_Footer_Socialmedia } from "@lib/api/codegen
 import getMenu from "@lib/server/getMenu"
 
 import RootClientContext from "./RootClientContext"
-import Header from "component/Layout/Header"
-import Modals from "component/Layout/Modals"
-import Footer from "component/Layout/Footer"
-import Alerts from "component/Alerts"
-import ScrollToTop from "component/ScrollToTop"
-import Analytics from "component/Analytics"
+import Header from "components/Layout/Header"
+import Modals from "components/Layout/Modals"
+import Footer from "components/Layout/Footer"
+import Alerts from "components/Alerts"
+import ScrollToTop from "components/ScrollToTop"
+import Analytics from "components/Analytics"
 
 const font = localFont({
 	src: "./Karla-Regular.ttf",
