@@ -1,10 +1,10 @@
-import AuthChecker from "components/AuthChecker"
-import RegisterForm from "components/RegisterForm"
+import AuthChecker from "component/AuthChecker"
+import RegisterForm from "component/RegisterForm"
 
 const RegisterPage = ({ searchParams }: { searchParams?: { redirect: string } }) => {
 	return (
 		<>
-			<AuthChecker forceGuest redirect={`/${searchParams.redirect ?? "shop"}`}></AuthChecker>
+			<AuthChecker forceGuest redirect={`/${searchParams?.redirect ?? "shop"}`}></AuthChecker>
 			<RegisterForm />
 		</>
 	)

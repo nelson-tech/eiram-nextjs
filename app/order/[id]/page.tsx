@@ -2,11 +2,10 @@ import { Metadata } from "next/dist/lib/metadata/types/metadata-interface"
 
 import getOrderById from "@lib/server/getOrderById"
 
-import AuthChecker from "components/AuthChecker"
-import Link from "components/Link"
-import OrderDetails from "components/OrderDetails"
-import ArrowLeftIcon from "components/icons/ArrowLeft"
-import { Order } from "@api/codegen/graphql"
+import AuthChecker from "component/AuthChecker"
+import Link from "component/Link"
+import OrderDetails from "component/OrderDetails"
+import ArrowLeftIcon from "component/icons/ArrowLeft"
 
 const OrderPage = async ({ params }: { params: { id: string } }) => {
 	const order = await getOrderById(params.id)
@@ -34,7 +33,7 @@ const OrderPage = async ({ params }: { params: { id: string } }) => {
 					<h2 className="sr-only">Order details</h2>
 
 					<div className="space-y-8">
-						<OrderDetails order={order as Order} />
+						<OrderDetails order={order} />
 					</div>
 				</div>
 			</div>
@@ -48,8 +47,9 @@ export const revalidate = 0 // dynamically serve this page
 
 // @ts-ignore
 export async function generateMetadata({ params }) {
-	const order = await getOrderById(params.id)
+	const order = await getOrderById(params?.id)
 	const metaData: Metadata = {
+		metadataBase: null,
 		title: order?.orderNumber ? `Order #${order.orderNumber}` : "Order Details",
 		robots: {
 			index: false,

@@ -3,7 +3,7 @@ import getCachedQuery from "@lib/server/getCachedQuery"
 import getProductBySlug from "@lib/server/getProductBySlug"
 import parseMetaData from "@lib/utils/parseMetaData"
 
-import ProductDetails from "components/productDetails"
+import ProductDetails from "component/ProductDetails"
 
 type ProductPageParamsType = { params: { slug: string } }
 
@@ -24,16 +24,21 @@ export const revalidate = 60 // revalidate this page every 60 seconds
 export async function generateStaticParams() {
 	const { data } = await getCachedQuery<GetProductsDataQuery>("getProductsData")
 
-	return data?.products?.nodes?.map((product) => ({
-		slug: product.slug,
-	}))
+	return (
+		data?.products?.nodes?.map((product) => ({
+			slug: product.slug,
+		})) ?? []
+	)
 }
 
 // @ts-ignore
 export async function generateMetadata({ params }: ProductPageParamsType) {
-	const product = await getProductBySlug(params.slug)
+	const product = await getProductBySlug(params?.slug)
 
-	const metaData = parseMetaData(product?.seo as RankMathProductTypeSeo, product?.title)
+	const metaData = parseMetaData(
+		product?.seo as RankMathProductTypeSeo,
+		product?.title ? product.title : undefined,
+	)
 
 	return metaData
 }

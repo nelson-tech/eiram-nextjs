@@ -4,9 +4,9 @@ import getClient from "@api/client"
 import { GetOrdersDataDocument, Order } from "@api/codegen/graphql"
 import getTokensServer from "@lib/utils/getTokensServer"
 
-import AuthChecker from "components/AuthChecker"
-import Link from "components/Link"
-import OrderSummary from "components/OrderSummary"
+import AuthChecker from "component/AuthChecker"
+import Link from "component/Link"
+import OrderSummary from "component/OrderSummary"
 
 const getOrders = async () => {
 	try {
@@ -44,7 +44,7 @@ const OrdersPage = async () => {
 						<div className="mx-auto max-w-7xl sm:px-2 lg:px-8">
 							<div className="mx-auto max-w-2xl space-y-8 sm:px-4 lg:max-w-4xl lg:px-0">
 								{orders
-									.filter((order) => order.status.toLowerCase() !== "checkout-draft")
+									.filter((order) => order.status?.toLowerCase() !== "checkout-draft")
 									.map((order) => {
 										return <OrderSummary order={order} detailsLink key={order.id} />
 									})}
@@ -78,6 +78,7 @@ export const revalidate = 0 // dynamically serve this page
 // @ts-ignore
 export async function generateMetadata() {
 	const metaData: Metadata = {
+		metadataBase: null,
 		title: "Orders",
 		robots: {
 			index: false,

@@ -2,17 +2,16 @@ import "../styles/globals.css"
 
 import localFont from "@next/font/local"
 
-import { MenuItem } from "@lib/api/codegen/graphql"
+import { MenuItem, Menu_Sitesettings_Footer_Socialmedia } from "@lib/api/codegen/graphql"
 import getMenu from "@lib/server/getMenu"
 
 import RootClientContext from "./RootClientContext"
-import Header from "components/layout/header"
-import Modals from "components/layout/modals"
-import Footer from "components/layout/footer"
-import Alerts from "components/Alerts"
-import ScrollToTop from "components/ScrollToTop"
-import Analytics from "components/Analytics"
-import { Metadata } from "next/dist/lib/metadata/types/metadata-interface"
+import Header from "component/Layout/Header"
+import Modals from "component/Layout/Modals"
+import Footer from "component/Layout/Footer"
+import Alerts from "component/Alerts"
+import ScrollToTop from "component/ScrollToTop"
+import Analytics from "component/Analytics"
 
 const font = localFont({
 	src: "./Karla-Regular.ttf",
@@ -21,19 +20,24 @@ const font = localFont({
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
 	const { data } = await getMenu()
 
-	const { mainMenu } = data
+	const mainMenu = data?.mainMenu
 
 	return (
 		<html lang="en-us" className={font.className}>
 			<body>
-				<RootClientContext colors={mainMenu.siteSettings.colors}>
+				<RootClientContext colors={mainMenu?.siteSettings?.colors ?? undefined}>
 					<div id="top" />
-					{mainMenu.menuItems.nodes && (
+					{mainMenu?.menuItems?.nodes && (
 						<Header menuItems={mainMenu.menuItems.nodes as MenuItem[]} />
 					)}
 					<div className="min-h-screen bg-white z-0">{children}</div>
-					<Footer socialMedia={mainMenu.siteSettings.footer.socialmedia} />
-					{mainMenu.menuItems.nodes && (
+					<Footer
+						socialMedia={
+							(mainMenu?.siteSettings?.footer
+								?.socialmedia as Menu_Sitesettings_Footer_Socialmedia[]) ?? undefined
+						}
+					/>
+					{mainMenu?.menuItems?.nodes && (
 						<Modals menuItems={mainMenu.menuItems.nodes as MenuItem[]} />
 					)}
 					<Alerts />
@@ -47,30 +51,25 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
 
 export default RootLayout
 
-// @ts-ignore
-export async function generateMetadata() {
-	const metaData: Metadata = {
-		title: {
-			default: "Eiram Knitwear",
-			template: "%s | Eiram Knitwear",
-		},
-		icons: {
-			icon: "/favicon.png",
-		},
-		robots: {
+export const metadata = {
+	title: {
+		default: "Eiram Knitwear",
+		template: "%s | Eiram Knitwear",
+	},
+	icons: {
+		icon: "/favicon.png",
+	},
+	robots: {
+		index: true,
+		follow: true,
+		nocache: false,
+		googleBot: {
 			index: true,
 			follow: true,
-			nocache: false,
-			googleBot: {
-				index: true,
-				follow: true,
-				noimageindex: false,
-				"max-video-preview": -1,
-				"max-image-preview": "large",
-				"max-snippet": -1,
-			},
+			noimageindex: false,
+			"max-video-preview": -1,
+			"max-image-preview": "large",
+			"max-snippet": -1,
 		},
-	}
-
-	return metaData
+	},
 }

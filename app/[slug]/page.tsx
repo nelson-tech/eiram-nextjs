@@ -7,8 +7,8 @@ import getCachedQuery from "@lib/server/getCachedQuery"
 import getPageBySlug from "@lib/server/getPageBySlug"
 import parseMetaData from "@lib/utils/parseMetaData"
 
-import Link from "components/Link"
-import Image from "components/Image"
+import Link from "component/Link"
+import Image from "component/Image"
 
 const OtherPage = async ({ params }: { params: { slug: string } }) => {
 	const { data } = await getPageBySlug(params?.slug)
@@ -58,9 +58,11 @@ export default OtherPage
 export async function generateStaticParams() {
 	const { data } = await getCachedQuery<GetPageSlugsQuery>("getPageSlugs")
 
-	return data?.pages?.nodes?.map((page) => ({
-		slug: page.slug,
-	}))
+	return (
+		data?.pages?.nodes?.map((page) => ({
+			slug: page.slug,
+		})) ?? []
+	)
 }
 
 // @ts-ignore
@@ -70,7 +72,7 @@ export async function generateMetadata({ params }) {
 
 	const seo = pageData?.seo || null
 
-	const metaData = parseMetaData(seo as RankMathPostTypeSeo, pageData?.title)
+	const metaData = parseMetaData(seo as RankMathPostTypeSeo, pageData?.title ?? undefined)
 
 	return metaData
 }

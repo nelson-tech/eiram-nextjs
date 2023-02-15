@@ -1,4 +1,4 @@
-import PressGallery from "components/Press"
+import PressGallery from "component/Press"
 import getPress from "@lib/server/getPress"
 
 const PressPage = async () => {

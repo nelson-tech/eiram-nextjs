@@ -1,5 +1,5 @@
 import getClient from "@api/client"
-import { GetOrderDataByIdDocument } from "@api/codegen/graphql"
+import { GetOrderDataByIdDocument, Order } from "@api/codegen/graphql"
 import getTokensServer from "@lib/utils/getTokensServer"
 
 const getOrderById = async (id: string) => {
@@ -9,7 +9,7 @@ const getOrderById = async (id: string) => {
 
 	const orderData = await client.request(GetOrderDataByIdDocument, { id })
 
-	return orderData.order
+	return orderData.order as Order | null | undefined
 }
 
 export default getOrderById

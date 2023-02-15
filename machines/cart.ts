@@ -130,19 +130,25 @@ export const cartMachine =
 				setLoading: assign((ctx) => ({ ...ctx, loading: true })),
 				setLoaded: assign((ctx) => ({ ...ctx, loading: false })),
 				setUpdateLoading: assign((ctx, { data: { input } }) => {
-					const { key, quantity } = input.items[0]
-					return {
-						...ctx,
-						updateLoading: { itemKey: key, quantity },
-					}
+					// const { key, quantity } = input.items[0]
+					const key = input.items ? input.items[0]?.key : null
+					const quantity = input.items ? input.items[0]?.quantity : null
+					if (key && quantity)
+						return {
+							...ctx,
+							updateLoading: { itemKey: key, quantity },
+						}
+					return ctx
 				}),
 				clearUpdateLoading: assign((ctx) => ({ ...ctx, updateLoading: null })),
 				setRemoveLoading: assign((ctx, { data: { input } }) => {
-					const key = input.keys[0]
-					return {
-						...ctx,
-						removeLoading: { itemKey: key },
-					}
+					const key = input.keys ? input.keys[0] : null
+					if (key)
+						return {
+							...ctx,
+							removeLoading: { itemKey: key },
+						}
+					return ctx
 				}),
 				clearRemoveLoading: assign((ctx) => ({ ...ctx, removeLoading: null })),
 			},
@@ -162,39 +168,49 @@ export const cartMachine =
 
 					event.callback && (await event.callback())
 
-					return cartData.addToCart.cart as Cart
+					return cartData.addToCart?.cart ? (cartData.addToCart.cart as Cart) : null
 				},
 				passUpdateKey: async (ctx, event: UpdateCartItemEventType) => {
 					return { input: event.input }
 				},
 				updateCartItem: async (ctx) => {
-					const { itemKey, quantity } = ctx.updateLoading
+					if (ctx.updateLoading) {
+						const { itemKey, quantity } = ctx.updateLoading
 
-					const client = getClient()
+						const client = getClient()
 
-					const updateCartData = await client.request(UpdateCartItemQuantityDocument, {
-						input: { items: [{ key: itemKey, quantity }] },
-					})
+						const updateCartData = await client.request(UpdateCartItemQuantityDocument, {
+							input: { items: [{ key: itemKey, quantity }] },
+						})
 
-					return updateCartData?.updateItemQuantities?.cart as Cart
+						return updateCartData.updateItemQuantities?.cart
+							? (updateCartData.updateItemQuantities.cart as Cart)
+							: null
+					}
+					return null
 				},
 				passRemoveKey: async (ctx, event: RemoveCartItemEventType) => {
 					return { input: event.input }
 				},
 				removeItem: async (ctx) => {
-					const client = getClient()
+					if (ctx.removeLoading) {
+						const client = getClient()
 
-					const removeItemData = await client.request(RemoveCartItemDocument, {
-						input: { keys: [ctx.removeLoading.itemKey] },
-					})
+						const removeItemData = await client.request(RemoveCartItemDocument, {
+							input: { keys: [ctx.removeLoading.itemKey] },
+						})
 
-					return removeItemData.removeItemsFromCart.cart as Cart
+						return removeItemData.removeItemsFromCart?.cart
+							? (removeItemData.removeItemsFromCart.cart as Cart)
+							: null
+					}
+					return null
 				},
 				clearCart: async () => {
 					const client = getClient()
 
 					const clearCartData = await client.request(ClearCartDocument)
-					return clearCartData.emptyCart.cart as Cart
+					return clearCartData.emptyCart?.cart ? (clearCartData.emptyCart.cart as Cart) : null
 				},
 			},
 		},

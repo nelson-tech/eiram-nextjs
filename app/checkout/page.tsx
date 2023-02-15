@@ -1,5 +1,6 @@
-import Checkout from "components/Checkout"
 import getCheckoutData from "@lib/server/getCheckoutData"
+
+import Checkout from "component/Checkout"
 
 const CheckoutPage = async () => {
 	const { stripeData, customer } = await getCheckoutData()

@@ -11,7 +11,7 @@ const getProductBySlug = async (slug: string) => {
 		`getProductDataBySlug&variables={"id":"${slug}"}`,
 	)
 
-	return data?.product as Product & SimpleProduct & VariableProduct
+	return data?.product as (Product & SimpleProduct & VariableProduct) | null | undefined
 }
 
 export default getProductBySlug

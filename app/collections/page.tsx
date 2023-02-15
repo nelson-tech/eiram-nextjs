@@ -1,6 +1,6 @@
-import Image from "components/Image"
+import Image from "component/Image"
 
-import Link from "components/Link"
+import Link from "component/Link"
 import getCollections from "@lib/server/getCollections"
 
 const CollectionsPage = async () => {
@@ -18,44 +18,45 @@ const CollectionsPage = async () => {
 						{collections.map((collection) => {
 							const coverImage = collection.gallery?.media?.coverimage
 
-							return (
-								<div
-									key={collection.id}
-									className="relative mx-auto cursor-pointer group w-full rounded-sm "
-									style={{ height: "600px" }}
-									title={collection?.title}
-								>
-									<Link
-										href={`/collections/${collection?.slug}`}
-										className="absolute  w-full h-full"
+							if (coverImage?.sourceUrl)
+								return (
+									<div
+										key={collection.id}
+										className="relative mx-auto cursor-pointer group w-full rounded-sm "
+										style={{ height: "600px" }}
+										title={collection?.title ?? ""}
 									>
-										<Image
-											src={coverImage.sourceUrl}
-											alt={coverImage.altText}
-											priority
-											width={464}
-											height={550}
-											// {...(coverImage.mediaDetails.width
-											// 	? {
-											// 			width: coverImage.mediaDetails.width,
-											// 			height: coverImage.mediaDetails.height,
-											// 	  }
-											// 	: { fill: true, sizes: "(max-width: 800px) 100vw,33vw" })}
-											className="absolute object-cover w-full h-full rounded-sm"
-										/>
-										<div className="absolute flex items-center w-full h-full bg-black bg-opacity-80 opacity-0 group-hover:opacity-80 transition-all rounded-sm overflow-hidden z-10">
-											<div
-												className="border border-white my-auto w-full mx-8 flex justify-center items-center"
-												style={{ height: "550px" }}
-											>
-												<h2 className="text-white text-4xl text-center uppercase">
-													{collection?.title}
-												</h2>
+										<Link
+											href={`/collections/${collection.slug}`}
+											className="absolute  w-full h-full"
+										>
+											<Image
+												src={coverImage.sourceUrl}
+												alt={coverImage.altText ?? ""}
+												priority
+												width={464}
+												height={550}
+												// {...(coverImage.mediaDetails.width
+												// 	? {
+												// 			width: coverImage.mediaDetails.width,
+												// 			height: coverImage.mediaDetails.height,
+												// 	  }
+												// 	: { fill: true, sizes: "(max-width: 800px) 100vw,33vw" })}
+												className="absolute object-cover w-full h-full rounded-sm"
+											/>
+											<div className="absolute flex items-center w-full h-full bg-black bg-opacity-80 opacity-0 group-hover:opacity-80 transition-all rounded-sm overflow-hidden z-10">
+												<div
+													className="border border-white my-auto w-full mx-8 flex justify-center items-center"
+													style={{ height: "550px" }}
+												>
+													<h2 className="text-white text-4xl text-center uppercase">
+														{collection?.title}
+													</h2>
+												</div>
 											</div>
-										</div>
-									</Link>
-								</div>
-							)
+										</Link>
+									</div>
+								)
 						})}
 					</div>
 				</>

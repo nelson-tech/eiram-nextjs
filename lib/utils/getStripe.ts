@@ -5,7 +5,7 @@ const getStripe = () => {
 	if (!stripePromise) {
 		const stripePublicKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY
 
-		stripePromise = loadStripe(stripePublicKey)
+		stripePromise = loadStripe(stripePublicKey ?? "")
 	}
 	return stripePromise
 }

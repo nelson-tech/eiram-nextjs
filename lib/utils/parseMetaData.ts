@@ -1,17 +1,19 @@
-import { Metadata } from "next/dist/lib/metadata/types/metadata-interface"
-import { TemplateString } from "next/dist/lib/metadata/types/metadata-types"
+import type { Metadata } from "next/dist/lib/metadata/types/metadata-interface"
+import type { TemplateString } from "next/dist/lib/metadata/types/metadata-types"
+import type { OpenGraph } from "next/dist/lib/metadata/types/opengraph-types"
 
-import { RankMathPostTypeSeo, RankMathProductTypeSeo } from "@api/codegen/graphql"
+import type { RankMathPostTypeSeo, RankMathProductTypeSeo } from "@api/codegen/graphql"
 
 const parseMetaData = (seo: RankMathPostTypeSeo | RankMathProductTypeSeo, title?: string) => {
 	const metaData: Metadata = {
+		metadataBase: null,
 		title: title ?? seo?.title,
 		description: seo?.description,
-		keywords: seo?.focusKeywords,
+		keywords: seo?.focusKeywords as string[] | null | undefined,
 		openGraph: {
-			...seo?.openGraph,
+			...(seo?.openGraph as OpenGraph),
 			title: seo?.openGraph?.title as unknown as TemplateString,
-			type: "website",
+			type: "website" as any,
 		},
 	}
 

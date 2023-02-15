@@ -14,7 +14,7 @@ export type CLIENT_Tokens_Type = {
 }
 
 export type AuthMachine_Type = {
-	tokens: CLIENT_Tokens_Type
+	tokens: CLIENT_Tokens_Type | null
 	customer: Customer | null
 }
 

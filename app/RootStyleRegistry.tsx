@@ -8,7 +8,7 @@ export default function RootStyleRegistry({
 	colors,
 }: {
 	children: React.ReactNode
-	colors: Menu_Sitesettings_Colors
+	colors: Menu_Sitesettings_Colors | undefined
 }) {
 	const hexHueGenerator = (hexColor: string, luminance: number) => {
 		hexColor = hexColor.replace(`#`, ``)

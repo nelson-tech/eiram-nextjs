@@ -19,8 +19,11 @@ export const decodeToken = (token: string) => {
 	return tokenData
 }
 
-export const decodeCustomerToken = (token: string) => {
-	const customerData = jwt_decode<Customer>(token || "")
+export const decodeCustomerToken = (token: string | null | undefined) => {
+	if (token) {
+		const customerData = jwt_decode<Customer>(token || "")
 
-	return customerData
+		return customerData
+	}
+	return null
 }

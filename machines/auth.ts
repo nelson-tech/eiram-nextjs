@@ -166,7 +166,7 @@ export const authMachine = (initialState: string) =>
 
 						return {
 							tokens,
-							customer: decodeCustomerToken(tokens.customer),
+							customer: decodeCustomerToken(tokens?.customer),
 						}
 					}
 
@@ -197,13 +197,13 @@ export const authMachine = (initialState: string) =>
 							// Set customer token's expiration to same as refreshToken
 							setCookie(CUSTOMER_TOKEN_KEY, customerToken, {}, refreshToken)
 
-							event.callback && (await event.callback(true, customer.firstName))
+							event.callback && (await event.callback(true, customer?.firstName))
 
 							const authData: AuthMachine_Type = {
 								tokens: {
 									auth: authToken,
 									refresh: refreshToken,
-									cart: customer.sessionToken,
+									cart: customer?.sessionToken,
 									customer: customerToken,
 								},
 								customer: customer as Customer,
@@ -215,6 +215,8 @@ export const authMachine = (initialState: string) =>
 
 					// Login mutation failed
 					event.callback && event.callback(false, null)
+
+					return { tokens: null, customer: null }
 				},
 				logout: async (_, event: AuthLogoutEvent_Type) => {
 					const client = getClient()
@@ -226,7 +228,7 @@ export const authMachine = (initialState: string) =>
 					deleteCookie(REFRESH_TOKEN_KEY)
 					deleteCookie(CUSTOMER_TOKEN_KEY)
 
-					event.callback && event.callback(logoutData.logout.status === "SUCCESS")
+					event.callback && event.callback(logoutData.logout?.status === "SUCCESS")
 
 					return { tokens: null, customer: null }
 				},
@@ -251,74 +253,79 @@ export const authMachine = (initialState: string) =>
 						// Set customer token's expiration to same as refreshToken
 						setCookie(CUSTOMER_TOKEN_KEY, customerToken, {}, refreshToken)
 
-						event.callback && event.callback(true, customer.firstName)
+						event.callback && event.callback(true, customer?.firstName)
 
 						const authData: AuthMachine_Type = {
 							tokens: {
 								auth: authToken,
 								refresh: refreshToken,
 								customer: customerToken,
-								cart: customer.sessionToken,
+								cart: customer?.sessionToken,
 							},
 							customer: customer as Customer,
 						}
 
 						return authData
 					}
+
+					return { tokens: null, customer: null }
 				},
 				sendResetEmail: async (_, event: AuthSendResetEmailEvent_Type) => {
 					const client = getClient()
 
 					const resetData = await client.request(SendPasswordResetEmailDocument, event.input)
 
-					event.callback && event.callback(resetData.sendPasswordResetEmail.success)
+					event.callback && event.callback(resetData.sendPasswordResetEmail?.success === true)
 				},
 				resetPassword: async (_, event: AuthResetPasswordEvent_Type) => {
 					const client = getClient()
 
 					const { key, login, password } = event.input
 
-					const resetData = await client
-						.request(ResetUserPasswordDocument, { key, login, password })
-						.catch((errors) => {
-							const message = `Error: ${errors.message}`
-						})
+					if (key && login && password) {
+						const resetData = await client
+							.request(ResetUserPasswordDocument, { key, login, password })
+							.catch((errors) => {
+								const message = `Error: ${errors.message}`
+							})
 
-					const user = (resetData && (resetData.resetUserPassword.user as User)) || null
+						const user = (resetData && (resetData.resetUserPassword?.user as User)) || null
 
-					if (user) {
-						const { jwtAuthToken, jwtRefreshToken } = user
+						if (user) {
+							const { jwtAuthToken, jwtRefreshToken } = user
 
-						// Get customer data
-						const customerData = await client.request(GetCustomerDataDocument)
+							// Get customer data
+							const customerData = await client.request(GetCustomerDataDocument)
 
-						// Encode customer into token
-						const customerToken = encodeToken(customerData.customer)
+							// Encode customer into token
+							const customerToken = encodeToken(customerData.customer)
 
-						// Set cookies
-						setCookie(AUTH_TOKEN_KEY, jwtAuthToken)
-						setCookie(REFRESH_TOKEN_KEY, jwtRefreshToken)
-						// Set customer token's expiration to same as refreshToken
-						setCookie(CUSTOMER_TOKEN_KEY, customerToken, {}, jwtRefreshToken)
+							// Set cookies
+							setCookie(AUTH_TOKEN_KEY, jwtAuthToken)
+							setCookie(REFRESH_TOKEN_KEY, jwtRefreshToken)
+							// Set customer token's expiration to same as refreshToken
+							setCookie(CUSTOMER_TOKEN_KEY, customerToken, {}, jwtRefreshToken)
 
-						event.callback && event.callback(true, customerData?.customer?.firstName)
+							event.callback && event.callback(true, customerData?.customer?.firstName)
 
-						const authData: AuthMachine_Type = {
-							tokens: {
-								auth: jwtAuthToken,
-								refresh: jwtRefreshToken,
-								customer: customerToken,
-								cart: customerData.customer.sessionToken,
-							},
-							customer: customerData.customer as Customer,
+							const authData: AuthMachine_Type = {
+								tokens: {
+									auth: jwtAuthToken,
+									refresh: jwtRefreshToken,
+									customer: customerToken,
+									cart: customerData.customer?.sessionToken,
+								},
+								customer: customerData.customer as Customer,
+							}
+
+							return authData
 						}
-
-						return authData
 					}
+					return { tokens: null, customer: null }
 				},
 				updateCustomer: async (_, { customer }: AuthUpdateCustomerEvent_Type) => {
 					// Get refreshToken (for expiration date)
-					const refreshToken = getCookie(REFRESH_TOKEN_KEY).valueOf()
+					const refreshToken = getCookie(REFRESH_TOKEN_KEY)?.valueOf()
 
 					// Encode customer into token
 					const customerToken = encodeToken(customer)

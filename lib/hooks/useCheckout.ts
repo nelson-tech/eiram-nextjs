@@ -15,7 +15,7 @@ import useAuth from "./useAuth"
 
 type ConfirmPaymentPropsType = {
 	CardElement: CardElementComponent
-	customerEmail: string
+	customerEmail: string | null | undefined
 	input: CheckoutInput
 }
 
@@ -95,23 +95,33 @@ const useCheckout = (stripeData: STRIPE_PaymentIntentType) => {
 			timeout: 40000,
 		})
 
-		const paymentMethod: Omit<CreatePaymentMethodCardData, "type"> = {
-			card: elements.getElement(CardElement),
-			billing_details: { email: customerEmail, address: { postal_code: input.billing.postcode } },
+		const cardElement = elements?.getElement(CardElement)
+
+		if (!cardElement) {
+			setLoading(false)
+			return null
 		}
 
-		if (!paymentMethod.card) {
+		const paymentMethod: Omit<CreatePaymentMethodCardData, "type"> = {
+			card: cardElement,
+			billing_details: {
+				email: customerEmail ?? undefined,
+				address: { postal_code: input.billing?.postcode ?? undefined },
+			},
+		}
+
+		if (!paymentMethod.card || !stripeData.clientSecret || !stripeData.paymentIntentId) {
 			setLoading(false)
 			return null
 		}
 
 		// use Stripe client secret to process card payment method
-		const stripeResult = await stripe.confirmCardPayment(stripeData.clientSecret, {
+		const stripeResult = await stripe?.confirmCardPayment(stripeData.clientSecret, {
 			payment_method: paymentMethod,
 		})
 		console.log("Stripe Result", stripeResult)
 
-		if (stripeResult.error) {
+		if (stripeResult?.error) {
 			openAlert({
 				kind: "error",
 				primary: "Error submitting payment to Stripe.",
@@ -121,7 +131,7 @@ const useCheckout = (stripeData: STRIPE_PaymentIntentType) => {
 			setLoading(false)
 		} else {
 			// Handle various states of paymentStatus
-			switch (stripeResult.paymentIntent.status) {
+			switch (stripeResult?.paymentIntent.status) {
 				case "processing":
 					// While for some payment methods (for example, cards) processing can be quick,
 					// other types of payment methods can take up to a few days to process.

@@ -13,11 +13,11 @@ const getCheckoutData = async () => {
 		body: JSON.stringify({ tokens }),
 	})
 
-	const stripeData: STRIPE_PaymentIntentType = await stripeResponse.json()
+	const stripeData: STRIPE_PaymentIntentType | null | undefined = await stripeResponse.json()
 
 	const customerData = await client.request(GetCustomerDataWithAddressesDocument)
 
-	return { stripeData, customer: customerData.customer as Customer }
+	return { stripeData, customer: customerData.customer as Customer | null | undefined }
 }
 
 export default getCheckoutData
