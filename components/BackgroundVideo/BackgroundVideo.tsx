@@ -1,24 +1,24 @@
 "use client"
 
-import { MediaItem } from "@api/codegen/graphql"
+import { MediaItem, Page_Bgvideo_VideoFiles } from "@api/codegen/graphql"
 import isServer from "@lib/utils/isServer"
-import { useEffect } from "react"
 
 type BackgrountVideoInputType = {
-	videoData: MediaItem
+	videoData: Page_Bgvideo_VideoFiles[]
 	placeholderData: MediaItem
 }
 
 const BackgroundVideo = ({ videoData, placeholderData }: BackgrountVideoInputType) => {
 	const getClientSizes = () => {
-		let viewHeight = videoData?.mediaDetails?.height
+		let viewHeight = videoData[0].videoFile?.mediaDetails?.height
 
 		let imageSizing = "width=1920"
 
 		if (!isServer) {
-			const windowScale = window.innerWidth / ((videoData?.mediaDetails?.width as number) || 1)
+			const windowScale =
+				window.innerWidth / ((videoData[0].videoFile?.mediaDetails?.width as number) || 1)
 
-			viewHeight = ((videoData?.mediaDetails?.height as number) || 1) * windowScale
+			viewHeight = ((videoData[0].videoFile?.mediaDetails?.height as number) || 1) * windowScale
 
 			imageSizing =
 				window.innerWidth > window.innerHeight
@@ -30,6 +30,7 @@ const BackgroundVideo = ({ videoData, placeholderData }: BackgrountVideoInputTyp
 	}
 
 	const { imageSizing, viewHeight } = getClientSizes()
+	console.log("Video data", videoData)
 
 	const bgImageURL = `${placeholderData?.sourceUrl}?format=webp&quality=80&${imageSizing}`
 
@@ -41,9 +42,19 @@ const BackgroundVideo = ({ videoData, placeholderData }: BackgrountVideoInputTyp
 				backgroundImage: `url('${bgImageURL}')`,
 			}}
 		>
-			{videoData?.mediaItemUrl && videoData?.mimeType && (
-				<video autoPlay loop muted id="video" className="w-full h-screen object-cover">
-					<source src={videoData.mediaItemUrl} type={videoData.mimeType} />
+			{videoData[0].videoFile?.mediaItemUrl && videoData[0].videoFile.mimeType && (
+				<video
+					autoPlay
+					loop
+					muted
+					id="video"
+					className="w-full h-screen object-cover"
+					poster={bgImageURL}
+				>
+					{videoData.map(({ videoFile }) => {
+						if (videoFile?.mediaItemUrl && videoFile?.mimeType)
+							return <source src={videoFile.mediaItemUrl} type={videoFile.mimeType} />
+					})}
 				</video>
 			)}
 		</div>

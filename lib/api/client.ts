@@ -28,8 +28,6 @@ const requestMiddleware = async (request: any) => {
 	// Strip authorization unless required
 	const { auth, ...headers } = request.headers
 
-	console.log("Request", request)
-
 	// Check if authToken needs refreshing
 	if (!isServer) {
 		const currentAuth = headers["Authorization"]
@@ -58,8 +56,6 @@ const requestMiddleware = async (request: any) => {
 }
 
 const responseMiddleware = async (response: any) => {
-	console.log("Response", response)
-
 	const session = response?.headers?.get(CART_SESSION_HEADER_KEY)
 
 	if (!isServer && session) {

@@ -4,9 +4,11 @@ query GetBackgroundVideo {
 			placeholderimage {
 				...ImageBase
 			}
-			video {
-				...ImageBase
-				mediaItemUrl
+			videoFiles {
+				videoFile {
+					...ImageBase
+					mediaItemUrl
+				}
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-import { MediaItem, RankMathPostTypeSeo } from "@api/codegen/graphql"
+import { MediaItem, Page_Bgvideo_VideoFiles, RankMathPostTypeSeo } from "@api/codegen/graphql"
 import getHomeData from "@lib/server/getHomeData"
 import parseMetaData from "@lib/utils/parseMetaData"
 
@@ -7,18 +7,18 @@ import BackgroundVideo from "components/BackgroundVideo"
 const HomePage = async () => {
 	const home = await getHomeData()
 
-	const video = home?.bgVideo?.video
+	const videoFiles = home?.bgVideo?.videoFiles
 	const placeholderimage = home?.bgVideo?.placeholderimage
-
-	// const { video, placeholderimage } = home?.bgVideo
 
 	return (
 		<>
 			<div>
-				<BackgroundVideo
-					videoData={video as MediaItem}
-					placeholderData={placeholderimage as MediaItem}
-				/>
+				{videoFiles && videoFiles.length > 0 && (
+					<BackgroundVideo
+						videoData={videoFiles as Page_Bgvideo_VideoFiles[]}
+						placeholderData={placeholderimage as MediaItem}
+					/>
+				)}
 			</div>
 		</>
 	)
