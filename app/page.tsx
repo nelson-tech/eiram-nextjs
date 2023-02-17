@@ -1,3 +1,5 @@
+import { Metadata } from "next/types"
+
 import { MediaItem, Page_Bgvideo_VideoFiles, RankMathPostTypeSeo } from "@api/codegen/graphql"
 import getHomeData from "@lib/server/getHomeData"
 import parseMetaData from "@lib/utils/parseMetaData"
@@ -28,8 +30,7 @@ export default HomePage
 
 export const revalidate = 60 // revalidate this page every 60 seconds
 
-// @ts-ignore
-export async function generateMetadata({ params }: ProductPageParamsType) {
+export async function generateMetadata(): Promise<Metadata> {
 	const home = await getHomeData()
 
 	const metaData = parseMetaData({ ...home?.seo, title: null } as RankMathPostTypeSeo)

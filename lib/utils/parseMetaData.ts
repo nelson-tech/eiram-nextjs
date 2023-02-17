@@ -6,7 +6,6 @@ import type { RankMathPostTypeSeo, RankMathProductTypeSeo } from "@api/codegen/g
 
 const parseMetaData = (seo: RankMathPostTypeSeo | RankMathProductTypeSeo, title?: string) => {
 	const metaData: Metadata = {
-		metadataBase: null,
 		title: title ?? seo?.title,
 		description: seo?.description,
 		keywords: seo?.focusKeywords as string[] | null | undefined,

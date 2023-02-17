@@ -1,5 +1,3 @@
-import { Metadata } from "next/dist/lib/metadata/types/metadata-interface"
-
 import getClient from "@api/client"
 import { GetOrdersDataDocument, Order } from "@api/codegen/graphql"
 import getTokensServer from "@lib/utils/getTokensServer"
@@ -75,22 +73,16 @@ export default OrdersPage
 
 export const revalidate = 0 // dynamically serve this page
 
-// @ts-ignore
-export async function generateMetadata() {
-	const metaData: Metadata = {
-		metadataBase: null,
-		title: "Orders",
-		robots: {
+export const metadata = {
+	title: "Orders",
+	robots: {
+		index: false,
+		follow: false,
+		nocache: true,
+		googleBot: {
 			index: false,
 			follow: false,
-			nocache: true,
-			googleBot: {
-				index: false,
-				follow: false,
-				noimageindex: true,
-			},
+			noimageindex: true,
 		},
-	}
-
-	return metaData
+	},
 }

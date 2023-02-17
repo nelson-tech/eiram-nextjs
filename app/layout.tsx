@@ -52,7 +52,7 @@ export default RootLayout
 export const metadata = {
 	title: {
 		default: "Eiram Knitwear",
-		template: "%s | Eiram Knitwear",
+		template: "%s - Eiram Knitwear",
 	},
 	icons: {
 		icon: "/favicon.png",

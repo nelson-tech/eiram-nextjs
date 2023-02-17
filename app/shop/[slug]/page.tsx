@@ -1,3 +1,5 @@
+import type { Metadata } from "next/types"
+
 import getClient from "@api/client"
 import { GetProductsSlugDocument } from "@api/codegen/graphql"
 import type { RankMathProductTypeSeo } from "@api/codegen/graphql"
@@ -34,8 +36,7 @@ export async function generateStaticParams() {
 	)
 }
 
-// @ts-ignore
-export async function generateMetadata({ params }: ProductPageParamsType) {
+export async function generateMetadata({ params }: ProductPageParamsType): Promise<Metadata> {
 	const product = await getProductBySlug(params?.slug)
 
 	const metaData = parseMetaData(
