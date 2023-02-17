@@ -4,15 +4,19 @@ import type { InterpreterFrom } from "xstate"
 import { authMachine } from "./auth"
 
 type AuthProviderInputType = {
-	children: React.ReactNode
+  children: React.ReactNode
 }
 
 export const AuthContext = createContext({
-	authService: {} as InterpreterFrom<typeof authMachine>,
+  authService: {} as InterpreterFrom<typeof authMachine>,
 })
 
 export const AuthProvider = ({ children }: AuthProviderInputType) => {
-	const authService = useInterpret(authMachine("authenticating"))
+  const authService = useInterpret(authMachine("authenticating"))
 
-	return <AuthContext.Provider value={{ authService }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ authService }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }

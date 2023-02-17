@@ -1,94 +1,94 @@
 query GetOrderDataByID($id: ID) {
-	order(id: $id, idType: DATABASE_ID) {
-		id
-		date
-		orderNumber
-		subtotal
-		discountTotal
-		shippingTotal
-		totalTax
-		total
-		status
-		tracking {
-			date
-			fieldGroupName
-			number
-			provider
-			url
-		}
-		hasBillingAddress
-		billing {
-			address1
-			address2
-			city
-			company
-			country
-			email
-			firstName
-			lastName
-			phone
-			postcode
-			state
-		}
-		hasShippingAddress
-		shipping {
-			address1
-			address2
-			city
-			company
-			country
-			email
-			firstName
-			lastName
-			phone
-			postcode
-			state
-		}
-		paymentMethod
-		lineItems {
-			nodes {
-				quantity
-				total
-				variationId
-				variation {
-					node {
-						attributes {
-							nodes {
-								label
-								value
-							}
-						}
-					}
-				}
-				product {
-					node {
-						...ProductMinBase
-						shortDescription
-						image {
-							...ImageBase
-						}
-						... on SimpleProduct {
-							price
-							salePrice
-						}
+  order(id: $id, idType: DATABASE_ID) {
+    id
+    date
+    orderNumber
+    subtotal
+    discountTotal
+    shippingTotal
+    totalTax
+    total
+    status
+    tracking {
+      date
+      fieldGroupName
+      number
+      provider
+      url
+    }
+    hasBillingAddress
+    billing {
+      address1
+      address2
+      city
+      company
+      country
+      email
+      firstName
+      lastName
+      phone
+      postcode
+      state
+    }
+    hasShippingAddress
+    shipping {
+      address1
+      address2
+      city
+      company
+      country
+      email
+      firstName
+      lastName
+      phone
+      postcode
+      state
+    }
+    paymentMethod
+    lineItems {
+      nodes {
+        quantity
+        total
+        variationId
+        variation {
+          node {
+            attributes {
+              nodes {
+                label
+                value
+              }
+            }
+          }
+        }
+        product {
+          node {
+            ...ProductMinBase
+            shortDescription
+            image {
+              ...ImageBase
+            }
+            ... on SimpleProduct {
+              price
+              salePrice
+            }
 
-						... on VariableProduct {
-							price
-							salePrice
-							variations {
-								nodes {
-									...ProductVariationBase
-								}
-							}
-							attributes {
-								nodes {
-									...ProductAttributeBase
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+            ... on VariableProduct {
+              price
+              salePrice
+              variations {
+                nodes {
+                  ...ProductVariationBase
+                }
+              }
+              attributes {
+                nodes {
+                  ...ProductAttributeBase
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

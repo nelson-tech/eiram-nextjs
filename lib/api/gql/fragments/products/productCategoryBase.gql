@@ -1,10 +1,10 @@
 fragment ProductCategoryBase on ProductCategory {
-	name
-	slug
-	id
-	count
-	description
-	image {
-		...ImageBase
-	}
+  name
+  slug
+  id
+  count
+  description
+  image {
+    ...ImageBase
+  }
 }

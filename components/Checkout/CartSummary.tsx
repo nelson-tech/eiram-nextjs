@@ -2,17 +2,17 @@ import { CartItem as CartItemType } from "@api/codegen/graphql"
 import CartItem from "components/ShoppingCart/CartItem"
 
 type CartSummaryProps = {
-	lineItems: CartItemType[]
+  lineItems: CartItemType[]
 }
 const CartSummary = ({ lineItems }: CartSummaryProps) => {
-	return (
-		<>
-			{lineItems &&
-				lineItems.map((lineItem) => (
-					<CartItem lineItem={lineItem} key={lineItem.id + lineItems.length} />
-				))}
-		</>
-	)
+  return (
+    <>
+      {lineItems &&
+        lineItems.map((lineItem) => (
+          <CartItem lineItem={lineItem} key={lineItem.id + lineItems.length} />
+        ))}
+    </>
+  )
 }
 
 export default CartSummary

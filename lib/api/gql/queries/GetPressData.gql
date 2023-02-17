@@ -1,15 +1,15 @@
 query GetPressData {
-	press(first: 100) {
-		nodes {
-			id
-			title
-			content
-			featuredImage {
-				node {
-					...ImageBase
-				}
-			}
-			slug
-		}
-	}
+  press(first: 100) {
+    nodes {
+      id
+      title
+      content
+      featuredImage {
+        node {
+          ...ImageBase
+        }
+      }
+      slug
+    }
+  }
 }

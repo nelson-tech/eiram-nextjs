@@ -1,27 +1,27 @@
 fragment SEOBase on Page {
-	seo {
-		title
-		description
-		focusKeywords
-		openGraph {
-			articleMeta {
-				section
-			}
-			description
-			locale
-			siteName
-			title
-			type
-			url
-			slackEnhancedData {
-				data
-				label
-			}
-			twitterMeta {
-				card
-				description
-				title
-			}
-		}
-	}
+  seo {
+    title
+    description
+    focusKeywords
+    openGraph {
+      articleMeta {
+        section
+      }
+      description
+      locale
+      siteName
+      title
+      type
+      url
+      slackEnhancedData {
+        data
+        label
+      }
+      twitterMeta {
+        card
+        description
+        title
+      }
+    }
+  }
 }

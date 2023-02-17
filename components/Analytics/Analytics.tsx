@@ -3,14 +3,14 @@
 import Script from "next/script"
 
 const Analytics = () => {
-	const gTagId = process.env.NEXT_PUBLIC_GTAG_ID
+  const gTagId = process.env.NEXT_PUBLIC_GTAG_ID
 
-	const analyticsURL = process.env.NEXT_PUBLIC_ANALYTICS_URL
+  const analyticsURL = process.env.NEXT_PUBLIC_ANALYTICS_URL
 
-	return (
-		<>
-			<Script id="matomo" strategy="afterInteractive">
-				{`
+  return (
+    <>
+      <Script id="matomo" strategy="afterInteractive">
+        {`
 					var _paq = window._paq = window._paq || [];
 					/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
 					_paq.push(['trackPageView']);
@@ -24,23 +24,23 @@ const Analytics = () => {
 					})();
 				
 			`}
-			</Script>
-			<Script
-				id="gtag"
-				src={`https://www.googletagmanager.com/gtag/js?id=${gTagId}`}
-				strategy="afterInteractive"
-			/>
-			<Script id="gtag-dataLayer" strategy="afterInteractive">
-				{`
+      </Script>
+      <Script
+        id="gtag"
+        src={`https://www.googletagmanager.com/gtag/js?id=${gTagId}`}
+        strategy="afterInteractive"
+      />
+      <Script id="gtag-dataLayer" strategy="afterInteractive">
+        {`
 						window.dataLayer = window.dataLayer || [];
 						function gtag(){dataLayer.push(arguments);}
 						gtag('js', new Date());
 
 						gtag('config', '${gTagId}');
 				`}
-			</Script>
-		</>
-	)
+      </Script>
+    </>
+  )
 }
 
 export default Analytics

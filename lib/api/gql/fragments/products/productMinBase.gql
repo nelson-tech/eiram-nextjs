@@ -1,7 +1,7 @@
 fragment ProductMinBase on Product {
-	id
-	databaseId
-	name
-	slug
-	type
+  id
+  databaseId
+  name
+  slug
+  type
 }

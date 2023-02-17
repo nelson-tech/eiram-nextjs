@@ -3,17 +3,17 @@ import { GetPageDataBySlugDocument } from "@api/codegen/graphql"
 import type { Page } from "@api/codegen/graphql"
 
 const getPageBySlug = async (slug: string) => {
-	try {
-		const client = getClient()
+  try {
+    const client = getClient()
 
-		const data = await client.request(GetPageDataBySlugDocument, { slug })
+    const data = await client.request(GetPageDataBySlugDocument, { slug })
 
-		return data.page as Page | null | undefined
-	} catch (error) {
-		console.warn("Error in getPageBySlug:", error)
+    return data.page as Page | null | undefined
+  } catch (error) {
+    console.warn("Error in getPageBySlug:", error)
 
-		return null
-	}
+    return null
+  }
 }
 
 export default getPageBySlug

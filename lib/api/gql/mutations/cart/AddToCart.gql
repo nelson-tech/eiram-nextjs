@@ -1,7 +1,7 @@
 mutation AddToCart($input: AddToCartInput!) {
-	addToCart(input: $input) {
-		cart {
-			...CartBase
-		}
-	}
+  addToCart(input: $input) {
+    cart {
+      ...CartBase
+    }
+  }
 }

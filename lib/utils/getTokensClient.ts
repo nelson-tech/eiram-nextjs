@@ -5,11 +5,11 @@ import { getCookie, getCookies } from "cookies-next"
 
 import { RefreshAuthTokenDocument } from "@api/codegen/graphql"
 import {
-	API_URL,
-	AUTH_TOKEN_KEY,
-	CART_TOKEN_KEY,
-	CUSTOMER_TOKEN_KEY,
-	REFRESH_TOKEN_KEY,
+  API_URL,
+  AUTH_TOKEN_KEY,
+  CART_TOKEN_KEY,
+  CUSTOMER_TOKEN_KEY,
+  REFRESH_TOKEN_KEY,
 } from "@lib/constants"
 import type { CLIENT_Tokens_Type } from "@lib/types/auth"
 import { isTokenValid } from "./validateToken"
@@ -21,49 +21,49 @@ import setCookie from "./setCookie"
 // ####
 
 const getTokensClient = async (): Promise<{
-	tokens: CLIENT_Tokens_Type
-	isAuth: boolean
+  tokens: CLIENT_Tokens_Type
+  isAuth: boolean
 }> => {
-	const cookies = getCookies()
-	let authToken = cookies[AUTH_TOKEN_KEY]
-	let refreshToken = cookies[REFRESH_TOKEN_KEY]
-	let customerToken = cookies[CUSTOMER_TOKEN_KEY]
-	let cartToken = cookies[CART_TOKEN_KEY]
+  const cookies = getCookies()
+  let authToken = cookies[AUTH_TOKEN_KEY]
+  let refreshToken = cookies[REFRESH_TOKEN_KEY]
+  let customerToken = cookies[CUSTOMER_TOKEN_KEY]
+  let cartToken = cookies[CART_TOKEN_KEY]
 
-	let isAuth = false
+  let isAuth = false
 
-	// Validate authToken
-	if (isTokenValid(authToken)) {
-		isAuth = true
-	} else if (refreshToken && isTokenValid(refreshToken)) {
-		// Try to refresh
+  // Validate authToken
+  if (isTokenValid(authToken)) {
+    isAuth = true
+  } else if (refreshToken && isTokenValid(refreshToken)) {
+    // Try to refresh
 
-		const client = new GraphQLClient(API_URL ?? "")
-		const refreshData = await client.request(RefreshAuthTokenDocument, {
-			input: { jwtRefreshToken: refreshToken },
-		})
+    const client = new GraphQLClient(API_URL ?? "")
+    const refreshData = await client.request(RefreshAuthTokenDocument, {
+      input: { jwtRefreshToken: refreshToken },
+    })
 
-		const newAuthToken = refreshData.refreshJwtAuthToken?.authToken
+    const newAuthToken = refreshData.refreshJwtAuthToken?.authToken
 
-		if (newAuthToken) {
-			console.log("New authToken generated")
+    if (newAuthToken) {
+      console.log("New authToken generated")
 
-			isAuth = true
-			authToken = newAuthToken
+      isAuth = true
+      authToken = newAuthToken
 
-			!isServer && setCookie(AUTH_TOKEN_KEY, newAuthToken)
-		}
-	}
+      !isServer && setCookie(AUTH_TOKEN_KEY, newAuthToken)
+    }
+  }
 
-	return {
-		tokens: {
-			auth: authToken,
-			refresh: refreshToken,
-			customer: customerToken,
-			cart: cartToken,
-		},
-		isAuth,
-	}
+  return {
+    tokens: {
+      auth: authToken,
+      refresh: refreshToken,
+      customer: customerToken,
+      cart: cartToken,
+    },
+    isAuth,
+  }
 }
 
 export default getTokensClient

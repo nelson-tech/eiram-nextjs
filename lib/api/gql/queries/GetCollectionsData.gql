@@ -1,16 +1,16 @@
 query GetCollectionsData {
-	collections(first: 100) {
-		nodes {
-			id
-			title
-			slug
-			gallery {
-				media {
-					coverimage {
-						...ImageBase
-					}
-				}
-			}
-		}
-	}
+  collections(first: 100) {
+    nodes {
+      id
+      title
+      slug
+      gallery {
+        media {
+          coverimage {
+            ...ImageBase
+          }
+        }
+      }
+    }
+  }
 }

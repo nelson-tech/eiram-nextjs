@@ -4,63 +4,75 @@ import { MediaItem, Page_Bgvideo_VideoFiles } from "@api/codegen/graphql"
 import isServer from "@lib/utils/isServer"
 
 type BackgrountVideoInputType = {
-	videoData: Page_Bgvideo_VideoFiles[]
-	placeholderData: MediaItem
+  videoData: Page_Bgvideo_VideoFiles[]
+  placeholderData: MediaItem
 }
 
-const BackgroundVideo = ({ videoData, placeholderData }: BackgrountVideoInputType) => {
-	const getClientSizes = () => {
-		let viewHeight = videoData[0].videoFile?.mediaDetails?.height
+const BackgroundVideo = ({
+  videoData,
+  placeholderData,
+}: BackgrountVideoInputType) => {
+  const getClientSizes = () => {
+    let viewHeight = videoData[0].videoFile?.mediaDetails?.height
 
-		let imageSizing = "width=1920"
+    let imageSizing = "width=1920"
 
-		if (!isServer) {
-			const windowScale =
-				window.innerWidth / ((videoData[0].videoFile?.mediaDetails?.width as number) || 1)
+    if (!isServer) {
+      const windowScale =
+        window.innerWidth /
+        ((videoData[0].videoFile?.mediaDetails?.width as number) || 1)
 
-			viewHeight = ((videoData[0].videoFile?.mediaDetails?.height as number) || 1) * windowScale
+      viewHeight =
+        ((videoData[0].videoFile?.mediaDetails?.height as number) || 1) *
+        windowScale
 
-			imageSizing =
-				window.innerWidth > window.innerHeight
-					? `width=${window.innerWidth}`
-					: `height=${window.innerHeight}`
-		}
+      imageSizing =
+        window.innerWidth > window.innerHeight
+          ? `width=${window.innerWidth}`
+          : `height=${window.innerHeight}`
+    }
 
-		return { imageSizing, viewHeight }
-	}
+    return { imageSizing, viewHeight }
+  }
 
-	const { imageSizing, viewHeight } = getClientSizes()
-	console.log("Video data", videoData)
+  const { imageSizing, viewHeight } = getClientSizes()
+  console.log("Video data", videoData)
 
-	const bgImageURL = `${placeholderData?.sourceUrl}?format=webp&quality=80&${imageSizing}`
+  const bgImageURL = `${placeholderData?.sourceUrl}?format=webp&quality=80&${imageSizing}`
 
-	return bgImageURL ? (
-		<div
-			id="video-container"
-			className="w-full h-screen"
-			style={{
-				backgroundImage: `url('${bgImageURL}')`,
-			}}
-		>
-			{videoData[0].videoFile?.mediaItemUrl && videoData[0].videoFile.mimeType && (
-				<video
-					autoPlay
-					loop
-					muted
-					id="video"
-					className="w-full h-screen object-cover"
-					poster={bgImageURL}
-				>
-					{videoData.map(({ videoFile }) => {
-						if (videoFile?.mediaItemUrl && videoFile?.mimeType)
-							return <source src={videoFile.mediaItemUrl} type={videoFile.mimeType} />
-					})}
-				</video>
-			)}
-		</div>
-	) : (
-		<div style={{ height: `${viewHeight}px` }} />
-	)
+  return bgImageURL ? (
+    <div
+      id="video-container"
+      className="w-full h-screen"
+      style={{
+        backgroundImage: `url('${bgImageURL}')`,
+      }}
+    >
+      {videoData[0].videoFile?.mediaItemUrl &&
+        videoData[0].videoFile.mimeType && (
+          <video
+            autoPlay
+            loop
+            muted
+            id="video"
+            className="w-full h-screen object-cover"
+            poster={bgImageURL}
+          >
+            {videoData.map(({ videoFile }) => {
+              if (videoFile?.mediaItemUrl && videoFile?.mimeType)
+                return (
+                  <source
+                    src={videoFile.mediaItemUrl}
+                    type={videoFile.mimeType}
+                  />
+                )
+            })}
+          </video>
+        )}
+    </div>
+  ) : (
+    <div style={{ height: `${viewHeight}px` }} />
+  )
 }
 
 export default BackgroundVideo

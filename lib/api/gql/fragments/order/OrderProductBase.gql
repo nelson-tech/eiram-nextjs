@@ -1,19 +1,19 @@
 fragment OrderProductBase on Order {
-	id
-	date
-	orderNumber
-	total
-	status
-	lineItems {
-		nodes {
-			quantity
-			total
-			product {
-				node {
-					...SimpleProductFragment
-					...VariableProductFragment
-				}
-			}
-		}
-	}
+  id
+  date
+  orderNumber
+  total
+  status
+  lineItems {
+    nodes {
+      quantity
+      total
+      product {
+        node {
+          ...SimpleProductFragment
+          ...VariableProductFragment
+        }
+      }
+    }
+  }
 }

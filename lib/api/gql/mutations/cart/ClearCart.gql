@@ -1,7 +1,7 @@
 mutation ClearCart {
-	emptyCart(input: { clearPersistentCart: true }) {
-		cart {
-			...CartBase
-		}
-	}
+  emptyCart(input: { clearPersistentCart: true }) {
+    cart {
+      ...CartBase
+    }
+  }
 }

@@ -1,15 +1,15 @@
 query GetBackgroundVideo {
-	page(id: "home", idType: URI) {
-		bgVideo {
-			placeholderimage {
-				...ImageBase
-			}
-			videoFiles {
-				videoFile {
-					...ImageBase
-					mediaItemUrl
-				}
-			}
-		}
-	}
+  page(id: "home", idType: URI) {
+    bgVideo {
+      placeholderimage {
+        ...ImageBase
+      }
+      videoFiles {
+        videoFile {
+          ...ImageBase
+          mediaItemUrl
+        }
+      }
+    }
+  }
 }

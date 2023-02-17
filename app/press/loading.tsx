@@ -1,13 +1,13 @@
 import LoadingSpinner from "components/LoadingSpinner"
 
 const PressLoading = () => {
-	return (
-		<>
-			<div className="h-screen w-full flex items-center justify-center">
-				<LoadingSpinner size={32} />
-			</div>
-		</>
-	)
+  return (
+    <>
+      <div className="h-screen w-full flex items-center justify-center">
+        <LoadingSpinner size={32} />
+      </div>
+    </>
+  )
 }
 
 export default PressLoading

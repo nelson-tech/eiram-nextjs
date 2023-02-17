@@ -29,7 +29,7 @@ export async function generateStaticParams() {
   const collections = await getCollections()
 
   return (
-    collections?.map(collection => ({
+    collections?.map((collection) => ({
       slug: collection.slug,
     })) ?? []
   )
@@ -44,7 +44,7 @@ export async function generateMetadata({
 
   const metaData = parseMetaData(
     collection?.seo as RankMathPostTypeSeo,
-    collection?.title ?? undefined,
+    collection?.title ?? undefined
   )
 
   return metaData

@@ -1,7 +1,7 @@
 fragment ProductAttributeBase on ProductAttribute {
-	id
-	attributeId
-	name
-	label
-	options
+  id
+  attributeId
+  name
+  label
+  options
 }

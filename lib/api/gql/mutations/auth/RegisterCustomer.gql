@@ -1,9 +1,9 @@
 mutation RegisterCustomer($input: RegisterCustomerInput!) {
-	registerCustomer(input: $input) {
-		customer {
-			...CustomerBase
-		}
-		authToken
-		refreshToken
-	}
+  registerCustomer(input: $input) {
+    customer {
+      ...CustomerBase
+    }
+    authToken
+    refreshToken
+  }
 }

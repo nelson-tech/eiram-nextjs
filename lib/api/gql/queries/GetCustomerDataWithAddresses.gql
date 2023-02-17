@@ -1,6 +1,6 @@
 query GetCustomerDataWithAddresses {
-	customer {
-		...CustomerBase
-		...CustomerAddresses
-	}
+  customer {
+    ...CustomerBase
+    ...CustomerAddresses
+  }
 }

@@ -11,26 +11,26 @@ import getTokensClient from "@lib/utils/getTokensClient"
 import getClient from "@api/client"
 
 type RootClientContextProps = {
-	children: React.ReactNode
-	colors?: Menu_Sitesettings_Colors
+  children: React.ReactNode
+  colors?: Menu_Sitesettings_Colors
 }
 
 const RootClientContext = ({ children, colors }: RootClientContextProps) => {
-	getTokensClient().then(({ tokens }) => {
-		const client = getClient(tokens)
-	})
+  getTokensClient().then(({ tokens }) => {
+    const client = getClient(tokens)
+  })
 
-	return (
-		<AuthProvider>
-			<CartProvider>
-				<AlertsProvider>
-					<ModalsProvider>
-						<RootStyleRegistry colors={colors}>{children}</RootStyleRegistry>
-					</ModalsProvider>
-				</AlertsProvider>
-			</CartProvider>
-		</AuthProvider>
-	)
+  return (
+    <AuthProvider>
+      <CartProvider>
+        <AlertsProvider>
+          <ModalsProvider>
+            <RootStyleRegistry colors={colors}>{children}</RootStyleRegistry>
+          </ModalsProvider>
+        </AlertsProvider>
+      </CartProvider>
+    </AuthProvider>
+  )
 }
 
 export default RootClientContext

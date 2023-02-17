@@ -18,10 +18,10 @@ const OtherPage = async ({ params }: OtherPageParamsType) => {
   const pageData = await getPageBySlug(params?.slug)
 
   const options: HTMLReactParserOptions = {
-    replace: item => {
+    replace: (item) => {
       if (item instanceof Element && item.name === "img") {
         const { loading, ...props } = attributesToProps(
-          item.attribs,
+          item.attribs
         ) as unknown as ImageProps
 
         return <Image {...{ ...props, alt: props.alt ?? "" }} priority />
@@ -72,7 +72,7 @@ export async function generateStaticParams() {
   const data = await client.request(GetPageSlugsDocument)
 
   return (
-    data?.pages?.nodes?.map(page => ({
+    data?.pages?.nodes?.map((page) => ({
       slug: page.slug,
     })) ?? []
   )
