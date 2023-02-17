@@ -1,5 +1,6 @@
-import { GetProductsDataQuery, RankMathProductTypeSeo } from "@api/codegen/graphql"
-import getCachedQuery from "@lib/server/getCachedQuery"
+import getClient from "@api/client"
+import { GetProductsSlugDocument } from "@api/codegen/graphql"
+import type { RankMathProductTypeSeo } from "@api/codegen/graphql"
 import getProductBySlug from "@lib/server/getProductBySlug"
 import parseMetaData from "@lib/utils/parseMetaData"
 
@@ -22,7 +23,9 @@ export default ProductPage
 export const revalidate = 60 // revalidate this page every 60 seconds
 
 export async function generateStaticParams() {
-	const { data } = await getCachedQuery<GetProductsDataQuery>("getProductsData")
+	const client = getClient()
+
+	const data = await client.request(GetProductsSlugDocument)
 
 	return (
 		data?.products?.nodes?.map((product) => ({

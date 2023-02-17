@@ -18,9 +18,7 @@ const font = localFont({
 })
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
-	const { data } = await getMenu()
-
-	const mainMenu = data?.mainMenu
+	const mainMenu = await getMenu()
 
 	return (
 		<html lang="en-us" className={font.className}>

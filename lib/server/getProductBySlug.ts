@@ -1,17 +1,19 @@
-import {
-	GetProductDataBySlugQuery,
-	Product,
-	SimpleProduct,
-	VariableProduct,
-} from "@api/codegen/graphql"
-import getCachedQuery from "./getCachedQuery"
+import getClient from "@api/client"
+import { GetProductDataBySlugDocument } from "@api/codegen/graphql"
+import type { FullProduct } from "@lib/types/products"
 
 const getProductBySlug = async (slug: string) => {
-	const { data } = await getCachedQuery<GetProductDataBySlugQuery>(
-		`getProductDataBySlug&variables={"id":"${slug}"}`,
-	)
+	try {
+		const client = getClient()
 
-	return data?.product as (Product & SimpleProduct & VariableProduct) | null | undefined
+		const data = await client.request(GetProductDataBySlugDocument, { id: slug })
+
+		return data?.product as FullProduct | null | undefined
+	} catch (error) {
+		console.warn("Error in getProductBySlug:", error)
+
+		return null
+	}
 }
 
 export default getProductBySlug

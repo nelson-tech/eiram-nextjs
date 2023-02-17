@@ -3,7 +3,10 @@ import getCheckoutData from "@lib/server/getCheckoutData"
 import Checkout from "components/Checkout"
 
 const CheckoutPage = async () => {
-	const { stripeData, customer } = await getCheckoutData()
+	const data = await getCheckoutData()
+
+	const stripeData = data?.stripeData
+	const customer = data?.customer
 
 	return (
 		<>

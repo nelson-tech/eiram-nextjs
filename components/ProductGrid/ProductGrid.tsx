@@ -1,9 +1,9 @@
-import { Product } from "@api/codegen/graphql"
+import type { FullProduct } from "@lib/types/products"
 
 import ProductCard from "components/ProductCard"
 
 type ProductGridProps = {
-	products: Product[]
+	products: FullProduct[]
 }
 
 const ProductGrid = ({ products }: ProductGridProps) => {

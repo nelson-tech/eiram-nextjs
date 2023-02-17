@@ -1,10 +1,19 @@
-import { GetBackgroundVideoQuery, Page } from "@api/codegen/graphql"
-import getCachedQuery from "./getCachedQuery"
+import getClient from "@api/client"
+import { GetBackgroundVideoDocument } from "@api/codegen/graphql"
+import type { Page } from "@api/codegen/graphql"
 
 const getHomeData = async () => {
-	const { data } = await getCachedQuery<GetBackgroundVideoQuery>("getBackgroundVideo")
+	try {
+		const client = getClient()
 
-	return data?.page as Page | null | undefined
+		const data = await client.request(GetBackgroundVideoDocument)
+
+		return data?.page as Page | null | undefined
+	} catch (error) {
+		console.warn("Error in getHomeData:", error)
+
+		return null
+	}
 }
 
 export default getHomeData

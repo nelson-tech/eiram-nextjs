@@ -3,13 +3,13 @@
 import { useState } from "react"
 import { Transition } from "@headlessui/react"
 
-import { Product, SimpleProduct, VariableProduct } from "@api/codegen/graphql"
+import type { FullProduct } from "@lib/types/products"
 
 import Link from "components/Link"
 import Image from "components/Image"
 
 type ProductCardProps = {
-	product: Product & SimpleProduct & VariableProduct
+	product: FullProduct
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
