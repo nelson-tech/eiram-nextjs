@@ -3,6 +3,8 @@ import type { NextApiHandler } from "next"
 import { exec } from "child_process"
 import crypto from "crypto"
 
+require("dotenv").config()
+
 // Handle GitHub Webhooks
 const GitWebhook: NextApiHandler = async (req, res) => {
 	const webhooksSecret = process.env.WEBHOOKS_SECRET ?? ""
