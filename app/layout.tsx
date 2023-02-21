@@ -56,7 +56,7 @@ export default RootLayout
 export const metadata = {
   title: {
     default: "Eiram Knitwear",
-    template: "%s - Eiram Knitwear",
+    template: "%s",
   },
   icons: {
     icon: "/favicon.png",

@@ -1,7 +1,8 @@
-import Image from "components/Image"
+import getCollections from "@lib/server/getCollections"
+import { SEO_TILE } from "@lib/constants"
 
 import Link from "components/Link"
-import getCollections from "@lib/server/getCollections"
+import Image from "components/Image"
 
 const CollectionsPage = async () => {
   const collections = await getCollections()
@@ -66,7 +67,7 @@ export default CollectionsPage
 export const revalidate = 60 // revalidate this page every 60 seconds
 
 export const metadata = {
-  title: "Collections",
+  title: `Collections ${SEO_TILE}`,
   description:
     "Curated collections of innovative knitwear designs worn by various models in various locations.",
   keywords: [

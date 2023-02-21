@@ -42,10 +42,7 @@ export async function generateMetadata({
     ? await getCollectionBySlug(params.slug)
     : null
 
-  const metaData = parseMetaData(
-    collection?.seo as RankMathPostTypeSeo,
-    collection?.title ?? undefined
-  )
+  const metaData = parseMetaData(collection?.seo as RankMathPostTypeSeo)
 
   return metaData
 }

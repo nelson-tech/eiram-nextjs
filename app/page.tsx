@@ -1,6 +1,6 @@
 import { Metadata } from "next/types"
 
-import {
+import type {
   MediaItem,
   Page_Bgvideo_VideoFiles,
   RankMathPostTypeSeo,
@@ -39,7 +39,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const metaData = parseMetaData({
     ...home?.seo,
-    title: null,
   } as RankMathPostTypeSeo)
 
   return metaData
