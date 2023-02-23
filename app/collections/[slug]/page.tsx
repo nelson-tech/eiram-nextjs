@@ -13,7 +13,9 @@ const CollectionPage = async ({ params }: CollectionPageParamsType) => {
   const collection = await getCollectionBySlug(params.slug)
 
   return collection ? (
-    <Collection collection={collection} />
+    <div>
+      <Collection collection={collection} />
+    </div>
   ) : (
     <>
       <div />

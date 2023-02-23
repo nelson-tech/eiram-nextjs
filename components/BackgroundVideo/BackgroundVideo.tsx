@@ -1,7 +1,9 @@
 "use client"
 
+import { useEffect } from "react"
+
 import { MediaItem, Page_Bgvideo_VideoFiles } from "@api/codegen/graphql"
-import isServer from "@lib/utils/isServer"
+import useClientSizes from "@lib/hooks/useClientSizes"
 
 type BackgrountVideoInputType = {
   videoData: Page_Bgvideo_VideoFiles[]
@@ -12,42 +14,16 @@ const BackgroundVideo = ({
   videoData,
   placeholderData,
 }: BackgrountVideoInputType) => {
-  const getClientSizes = () => {
-    let viewHeight = videoData[0].videoFile?.mediaDetails?.height
+  const { imageSizing, viewHeight, getClientSizes } = useClientSizes()
 
-    let imageSizing = "width=1920"
-
-    if (!isServer) {
-      const windowScale =
-        window.innerWidth /
-        ((videoData[0].videoFile?.mediaDetails?.width as number) || 1)
-
-      viewHeight =
-        ((videoData[0].videoFile?.mediaDetails?.height as number) || 1) *
-        windowScale
-
-      imageSizing =
-        window.innerWidth > window.innerHeight
-          ? `width=${window.innerWidth}`
-          : `height=${window.innerHeight}`
-    }
-
-    return { imageSizing, viewHeight }
-  }
-
-  const { imageSizing, viewHeight } = getClientSizes()
-  console.log("Video data", videoData)
+  useEffect(() => {
+    getClientSizes(videoData[0])
+  }, [videoData, getClientSizes])
 
   const bgImageURL = `${placeholderData?.sourceUrl}?format=webp&quality=80&${imageSizing}`
 
   return bgImageURL ? (
-    <div
-      id="video-container"
-      className="w-full h-screen"
-      style={{
-        backgroundImage: `url('${bgImageURL}')`,
-      }}
-    >
+    <div id="video-container" className="w-full h-screen">
       {videoData[0].videoFile?.mediaItemUrl &&
         videoData[0].videoFile.mimeType && (
           <video
@@ -62,6 +38,7 @@ const BackgroundVideo = ({
               if (videoFile?.mediaItemUrl && videoFile?.mimeType)
                 return (
                   <source
+                    key={videoFile.id}
                     src={videoFile.mediaItemUrl}
                     type={videoFile.mimeType}
                   />
