@@ -1,5 +1,5 @@
 import getProducts from "@lib/server/getProducts"
-import { SEO_TILE } from "@lib/constants"
+import { SEO_TITLE } from "@lib/constants"
 
 import ProductGrid from "components/ProductGrid"
 
@@ -26,7 +26,7 @@ export default ShopPage
 export const revalidate = 60 // revalidate this page every 60 seconds
 
 export const metadata = {
-  title: `Shop ${SEO_TILE}`,
+  title: `Shop ${SEO_TITLE}`,
   description:
     "Browse our collection of knitted sweater, joggers, handbags, scarves, and more!",
   keywords: ["Shop", "Eiram", "Knitwear", "Wool", "Fashion", "Shopping"],

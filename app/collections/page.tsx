@@ -1,5 +1,5 @@
 import getCollections from "@lib/server/getCollections"
-import { SEO_TILE } from "@lib/constants"
+import { SEO_TITLE } from "@lib/constants"
 
 import Link from "components/Link"
 import Image from "components/Image"
@@ -25,7 +25,7 @@ const CollectionsPage = async () => {
                 return (
                   <div
                     key={collection.id}
-                    className="relative mx-auto cursor-pointer group w-full rounded-sm "
+                    className="relative mx-auto cursor-pointer group w-full rounded-lg overflow-hidden"
                     style={{ height: "600px" }}
                     title={collection?.title ?? ""}
                   >
@@ -39,16 +39,18 @@ const CollectionsPage = async () => {
                         priority
                         width={464}
                         height={550}
-                        className="absolute object-cover w-full h-full rounded-sm"
+                        className="object-cover w-full h-full"
                       />
-                      <div className="absolute flex items-center w-full h-full bg-black bg-opacity-80 opacity-0 group-hover:opacity-80 transition-all rounded-sm overflow-hidden z-10">
-                        <div
-                          className="border border-white my-auto w-full mx-8 flex justify-center items-center"
-                          style={{ height: "550px" }}
-                        >
-                          <h2 className="text-white text-4xl text-center uppercase">
-                            {collection?.title}
-                          </h2>
+                      <div className="absolute top-0 left-0 w-full h-full rounded-lg overflow-hidden z-30">
+                        <div className="flex items-center w-full h-full bg-black bg-opacity-80 opacity-0 group-hover:opacity-80 transition-all">
+                          <div
+                            className="border border-white my-auto w-full mx-8 flex justify-center items-center"
+                            style={{ height: "550px" }}
+                          >
+                            <h2 className="text-white text-4xl text-center uppercase">
+                              {collection?.title}
+                            </h2>
+                          </div>
                         </div>
                       </div>
                     </Link>
@@ -67,7 +69,7 @@ export default CollectionsPage
 export const revalidate = 60 // revalidate this page every 60 seconds
 
 export const metadata = {
-  title: `Collections ${SEO_TILE}`,
+  title: `Collections ${SEO_TITLE}`,
   description:
     "Curated collections of innovative knitwear designs worn by various models in various locations.",
   keywords: [

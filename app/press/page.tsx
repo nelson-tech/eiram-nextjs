@@ -1,5 +1,5 @@
 import getPress from "@lib/server/getPress"
-import { SEO_TILE } from "@lib/constants"
+import { SEO_TITLE } from "@lib/constants"
 
 import PressGallery from "components/Press"
 
@@ -30,7 +30,7 @@ export default PressPage
 export const revalidate = 60 // revalidate this page every 60 seconds
 
 export const metadata = {
-  title: `Press ${SEO_TILE}`,
+  title: `Press ${SEO_TITLE}`,
   description:
     "A collection of appearances of Eiram's innovative knitwear in various press articles.",
   keywords: ["Press", "Eiram", "Knitwear", "Wool", "Fashion", "Shopping"],
