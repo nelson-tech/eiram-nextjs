@@ -2,7 +2,7 @@ import { Collection, MediaItem } from "@api/codegen/graphql"
 import CollectionGallery from "./Gallery"
 
 type CollectionInputType = {
-  collection: Collection
+  collection: Collection | null | undefined
 }
 
 const Collection = ({ collection }: CollectionInputType) => {
@@ -13,7 +13,7 @@ const Collection = ({ collection }: CollectionInputType) => {
         {collection?.title}
       </h2>
 
-      {collection.content && (
+      {collection?.content && (
         <div
           className="px-8 mx-8 wp-container"
           dangerouslySetInnerHTML={{ __html: collection?.content }}

@@ -1,9 +1,11 @@
 "use client"
 
 import { useState } from "react"
+
+import type { MediaItem } from "@api/codegen/graphql"
+
 import Image from "components/Image"
 import Lightbox from "components/Lightbox"
-import { MediaItem } from "@api/codegen/graphql"
 
 type LookbookGalleryPropsType = {
   images: MediaItem[] | null | undefined

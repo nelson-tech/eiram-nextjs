@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-import { MediaItem, PressItem } from "@api/codegen/graphql"
+import type { MediaItem, PressItem } from "@api/codegen/graphql"
 
 import Lightbox from "components/Lightbox"
 import Image from "components/Image"
@@ -13,7 +13,7 @@ type PressGalleryPropsType = {
 
 const PressGallery = ({ press }: PressGalleryPropsType) => {
   const [open, setOpen] = useState(true)
-  const [slide, setSlide] = useState<MediaItem>()
+  const [slide, setSlide] = useState<MediaItem | null | undefined>()
 
   const close = () => {
     setOpen(false)
@@ -23,7 +23,7 @@ const PressGallery = ({ press }: PressGalleryPropsType) => {
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mt-8 mx-auto">
         {press.map((press, i) => {
-          const image = press.featuredImage?.node
+          const image: MediaItem | null | undefined = press.featuredImage?.node
 
           return (
             <div

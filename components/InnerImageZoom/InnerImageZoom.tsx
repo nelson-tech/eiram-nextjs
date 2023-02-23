@@ -13,10 +13,12 @@ import React, {
   useRef,
   useState,
 } from "react"
+import { ImageProps } from "next/image"
 
 import Image from "./components/Image"
 import ZoomImage from "./components/ZoomImage"
 import FullscreenPortal from "./components/FullscreenPortal"
+
 import "./styles.min.css"
 
 type InnerImageZoomPropsType = {
@@ -31,7 +33,7 @@ type InnerImageZoomPropsType = {
   width?: number | undefined
   height?: number | undefined
   hasSpacer?: boolean | undefined
-  imgAttributes?: React.ImgHTMLAttributes<HTMLImageElement> | undefined
+  imgAttributes?: ImageProps | undefined
   zoomSrc?: string | undefined
   zoomScale?: number | undefined
   zoomPreload?: boolean | undefined
@@ -79,7 +81,7 @@ const InnerImageZoom = ({
   width,
   height,
   hasSpacer,
-  imgAttributes = {},
+  imgAttributes = { src: "", alt: "" },
   zoomSrc,
   zoomScale = 1,
   zoomPreload,
@@ -500,7 +502,6 @@ const InnerImageZoom = ({
     },
     /*#__PURE__*/ React.createElement(Image, {
       src: src,
-      sources: sources,
       width: width,
       height: height,
       hasSpacer: hasSpacer,
