@@ -1,12 +1,9 @@
-import getClient from "@api/client"
-import { GetPressDataDocument } from "@api/codegen/graphql"
-import type { PressItem } from "@api/codegen/graphql"
+import type { GetPressDataQuery, PressItem } from "@api/codegen/graphql"
+import getCachedQuery from "./getCachedQuery"
 
 const getPress = async () => {
   try {
-    const client = getClient()
-
-    const data = await client.request(GetPressDataDocument)
+    const { data } = await getCachedQuery<GetPressDataQuery>("getPressData")
 
     return data?.press?.nodes as PressItem[] | null | undefined
   } catch (error) {

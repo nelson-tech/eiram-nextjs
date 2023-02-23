@@ -1,12 +1,11 @@
-import getClient from "@api/client"
-import { GetCollectionBySlugDocument } from "@api/codegen/graphql"
-import type { Collection } from "@api/codegen/graphql"
+import type { Collection, GetCollectionBySlugQuery } from "@api/codegen/graphql"
+import getCachedQuery from "./getCachedQuery"
 
 const getCollectionBySlug = async (slug: string) => {
   try {
-    const client = getClient()
-
-    const data = await client.request(GetCollectionBySlugDocument, { slug })
+    const { data } = await getCachedQuery<GetCollectionBySlugQuery>(
+      `getCollectionDataBySlug&variables={"slug":"${slug}"}`
+    )
 
     return data?.collection as Collection | null | undefined
   } catch (error) {

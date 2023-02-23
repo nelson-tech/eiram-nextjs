@@ -1,14 +1,11 @@
-import getClient from "@api/client"
-import { GetMenuDataDocument } from "@api/codegen/graphql"
-import type { Menu } from "@api/codegen/graphql"
+import type { GetMenuDataQuery, Menu } from "@api/codegen/graphql"
+import getCachedQuery from "./getCachedQuery"
 
 const getMenu = async () => {
   try {
-    const client = getClient()
+    const { data } = await getCachedQuery<GetMenuDataQuery>("getMenuData")
 
-    const data = await client.request(GetMenuDataDocument)
-
-    return data.mainMenu as Menu | null | undefined
+    return data?.mainMenu as Menu | null | undefined
   } catch (error) {
     console.warn("Error in getMenu:", error)
 
