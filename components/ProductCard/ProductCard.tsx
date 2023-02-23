@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Transition } from "@headlessui/react"
 
+import type { MediaItem } from "@api/codegen/graphql"
 import type { FullProduct } from "@lib/types/products"
 
 import Link from "components/Link"
@@ -15,20 +16,27 @@ type ProductCardProps = {
 const ProductCard = ({ product }: ProductCardProps) => {
   const [isShowing, setIsShowing] = useState(false)
 
+  const featuredImage: MediaItem | null | undefined =
+    product?.featuredImage?.node
+
+  const altImage: MediaItem | null | undefined = product.galleryImages?.nodes[0]
+
   return (
     <>
-      <div
+      <Link
+        href={`/shop/${product.slug}`}
+        title={product.name || ""}
         className="group relative bg-white border border-gray-200 rounded-md w-full flex flex-col overflow-hidden"
         onMouseEnter={() => setIsShowing((isShowing) => !isShowing)}
         onMouseLeave={() => setIsShowing((isShowing) => !isShowing)}
       >
         {product?.featuredImage?.node?.sourceUrl && (
           <div className=" transition-all h-64">
-            <div className="w-full h-64 object-center object-contain relative">
+            <div className="w-full h-64 relative flex justify-center items-center overflow-hidden">
               <Transition
                 show={!isShowing}
                 as="div"
-                className="unset-img aspect-square h-64 absolute object-contain"
+                className="aspect-square max-h-64"
                 enter="transition-opacity duration-300"
                 enterFrom="opacity-0"
                 enterTo="opacity-100"
@@ -37,18 +45,18 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 leaveTo="opacity-0"
               >
                 <Image
-                  src={product?.featuredImage?.node?.sourceUrl}
-                  alt={product?.featuredImage?.node?.altText || ""}
+                  src={featuredImage?.sourceUrl ?? ""}
+                  alt={featuredImage?.altText || ""}
+                  width={featuredImage?.mediaDetails?.width ?? 0}
+                  height={featuredImage?.mediaDetails?.height ?? 0}
+                  className="object-cover h-full w-full"
                   priority
-                  fill
-                  sizes="(max-width: 400px) 100vw,(max-width: 768px) 50vw,33vw"
-                  className="custom-img aspect-square"
                 />
               </Transition>
               <Transition
                 show={isShowing}
                 as="div"
-                className="unset-img aspect-square h-64 absolute"
+                className="aspect-square h-64 absolute"
                 enter="transition-opacity duration-300"
                 enterFrom="opacity-0"
                 enterTo="opacity-100"
@@ -56,16 +64,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                {product.galleryImages?.nodes[0]?.sourceUrl && (
-                  <Image
-                    src={product.galleryImages.nodes[0].sourceUrl}
-                    alt={product.galleryImages.nodes[0].altText ?? ""}
-                    priority
-                    fill
-                    sizes="(max-width: 400px) 100vw,(max-width: 768px) 50vw,33vw"
-                    className="custom-img"
-                  />
-                )}
+                <Image
+                  src={altImage?.sourceUrl ?? ""}
+                  alt={altImage?.altText ?? ""}
+                  width={altImage?.mediaDetails?.width ?? 0}
+                  height={altImage?.mediaDetails?.height ?? 0}
+                  className="object-cover w-full aspect-square"
+                  priority
+                />
               </Transition>
             </div>
           </div>
@@ -73,14 +79,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
         <div className="flex-1 space-y-2 flex flex-col w-full">
           <h3 className="px-4 py-2 text-gray-900 group-hover:text-accent transition-all text-base sm:text-xl">
-            <Link
-              href={`/shop/${product.slug}`}
-              title={product.name || ""}
-              className="flex"
-            >
+            <div className="flex">
               <span aria-hidden="true" className="absolute inset-0" />
               {product.name}
-            </Link>
+            </div>
           </h3>
           {product.shortDescription && (
             <div
@@ -90,7 +92,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
           )}
 
           <div className="px-4 pb-2 flex-1 flex flex-col justify-end">
-            {/*  <p className="text-sm italic text-gray-500">{product.options}</p> */}
             {product.onSale && (
               <div className="flex">
                 <span className="text-center items-center sm:hidden rounded-md bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800">
@@ -118,7 +119,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             View Product
           </div>
         </div>
-      </div>
+      </Link>
     </>
   )
 }
