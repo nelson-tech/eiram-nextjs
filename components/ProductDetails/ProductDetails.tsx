@@ -5,7 +5,7 @@ import { Listbox, RadioGroup, Tab, Transition } from "@headlessui/react"
 import ChevronUpDownIcon from "@heroicons/react/20/solid/ChevronUpDownIcon"
 import CheckIcon from "@heroicons/react/20/solid/CheckIcon"
 
-import {
+import type {
   AddToCartInput,
   MediaItem,
   Product,
@@ -111,7 +111,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
             <div className="mx-auto mt-6 px-8 sm:px-0 w-full max-w-2xl sm:block lg:max-w-none">
               <Tab.List className="grid grid-cols-3 sm:grid-cols-4 gap-6">
                 {images.map(
-                  (image: MediaItem, i) =>
+                  (image) =>
                     image.sourceUrl && (
                       <Tab
                         key={image.id + "thumbs"}
@@ -145,7 +145,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
               as="div"
             >
               {images.map(
-                (image: MediaItem, i) =>
+                (image, i) =>
                   image.sourceUrl && (
                     <Tab.Panel key={image.id + "main"}>
                       <InnerImageZoom

@@ -1,5 +1,6 @@
+import Image from "next/image"
+
 import Link from "components/Link"
-import Image from "components/Image"
 
 const Logo = ({ mobile }: { mobile?: boolean }) => {
   if (mobile) {
