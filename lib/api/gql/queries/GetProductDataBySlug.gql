@@ -1,5 +1,5 @@
-query GetProductDataBySlug($id: ID!) {
-  product(id: $id, idType: SLUG) {
+query GetProductDataBySlug($slug: ID!) {
+  product(id: $slug, idType: SLUG) {
     ...VariableProductFragment
     ...SimpleProductFragment
     seo {
