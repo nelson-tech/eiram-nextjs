@@ -25,8 +25,6 @@ const PressGallery = ({ press }: PressGalleryPropsType) => {
         {press.map((press, i) => {
           const image: MediaItem | null | undefined = press.featuredImage?.node
 
-          console.log("Press item", press)
-
           return (
             <div
               key={press.id}
