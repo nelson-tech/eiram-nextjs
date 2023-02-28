@@ -46,18 +46,17 @@ const PressGallery = ({ press }: PressGalleryPropsType) => {
                   className=" object-cover align-middle rounded-sm"
                 />
               )}
-
-              <div className="absolute inset-0 flex items-center w-full h-full bg-black bg-opacity-80 opacity-0 group-hover:opacity-80 transition-all rounded-sm overflow-hidden z-10">
-                <div className="w-full flex justify-center items-center">
-                  <h2 className="text-white text-xl text-center">
-                    {press.content && (
+              {press.content && (
+                <div className="absolute inset-0 flex items-center w-full h-full bg-black bg-opacity-80 opacity-0 group-hover:opacity-80 transition-all rounded-sm overflow-hidden z-10">
+                  <div className="w-full flex justify-center items-center">
+                    <h2 className="text-white text-xl text-center">
                       <div
                         dangerouslySetInnerHTML={{ __html: press.content }}
                       />
-                    )}
-                  </h2>
+                    </h2>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           )
         })}
