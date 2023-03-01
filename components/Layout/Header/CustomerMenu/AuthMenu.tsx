@@ -9,11 +9,12 @@ import customerMenu from "@lib/customerMenu"
 import Link from "components/Link"
 import LogoutIcon from "components/icons/Logout"
 
-const AuthMenu = () => {
+const AuthMenu = ({ close }: { close?: () => void }) => {
   const { logout, context } = useAuth()
   const router = useRouter()
 
   const handleLogout = async () => {
+    close && close()
     await logout()
   }
 
@@ -44,14 +45,13 @@ const AuthMenu = () => {
         )
       })}
       <div>
-        <Popover.Button
-          as="button"
+        <div
           className="transition flex cursor-pointer w-full items-center outline-none ring-transparent text-red-main px-4 py-2 text-sm hover:bg-red-main hover:text-white"
           onClick={handleLogout}
         >
           <LogoutIcon size={4} styling="mr-1.5" />
           <div className="target">Log out</div>
-        </Popover.Button>
+        </div>
       </div>
     </>
   )

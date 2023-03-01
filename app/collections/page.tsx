@@ -41,7 +41,7 @@ const CollectionsPage = async () => {
                         height={550}
                         className="object-cover w-full h-full"
                       />
-                      <div className="absolute top-0 left-0 w-full h-full rounded-lg overflow-hidden z-30">
+                      <div className="absolute top-0 left-0 w-full h-full rounded-lg overflow-hidden z-10">
                         <div className="flex items-center w-full h-full bg-black bg-opacity-80 opacity-0 group-hover:opacity-80 transition-all">
                           <div
                             className="border border-white my-auto w-full mx-8 flex justify-center items-center"
