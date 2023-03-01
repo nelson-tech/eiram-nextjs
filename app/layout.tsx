@@ -14,7 +14,7 @@ import Modals from "components/Layout/Modals"
 import Footer from "components/Layout/Footer"
 import Alerts from "components/Alerts"
 import ScrollToTop from "components/ScrollToTop"
-import Analytics from "components/Analytics"
+// import Analytics from "components/Analytics"
 
 const font = localFont({
   src: "./Karla-Regular.ttf",
@@ -44,7 +44,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
           )}
           <Alerts />
           <ScrollToTop />
-          <Analytics />
+          {/* <Analytics /> */}
         </RootClientContext>
       </body>
     </html>
