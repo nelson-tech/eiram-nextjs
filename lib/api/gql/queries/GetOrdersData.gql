@@ -1,0 +1,63 @@
+query GetOrdersData {
+  orders {
+    nodes {
+      id
+      date
+      orderNumber
+      total
+      status
+      tracking {
+        date
+        fieldGroupName
+        number
+        provider
+        url
+      }
+      lineItems {
+        nodes {
+          quantity
+          total
+          variationId
+          variation {
+            node {
+              attributes {
+                nodes {
+                  label
+                  value
+                }
+              }
+            }
+          }
+          product {
+            node {
+              ...ProductMinBase
+              shortDescription
+              image {
+                ...ImageBase
+              }
+              ... on SimpleProduct {
+                price
+                salePrice
+              }
+
+              ... on VariableProduct {
+                price
+                salePrice
+                variations {
+                  nodes {
+                    ...ProductVariationBase
+                  }
+                }
+                attributes {
+                  nodes {
+                    ...ProductAttributeBase
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

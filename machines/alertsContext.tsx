@@ -4,11 +4,15 @@ import type { InterpreterFrom } from "xstate"
 import { alertsMachine } from "./alerts"
 
 export const AlertsContext = createContext({
-	alertsService: {} as InterpreterFrom<typeof alertsMachine>,
+  alertsService: {} as InterpreterFrom<typeof alertsMachine>,
 })
 
 export const AlertsProvider = ({ children }: { children: JSX.Element }) => {
-	const alertsService = useInterpret(alertsMachine)
+  const alertsService = useInterpret(alertsMachine)
 
-	return <AlertsContext.Provider value={{ alertsService }}>{children}</AlertsContext.Provider>
+  return (
+    <AlertsContext.Provider value={{ alertsService }}>
+      {children}
+    </AlertsContext.Provider>
+  )
 }

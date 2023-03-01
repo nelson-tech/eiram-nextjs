@@ -1,66 +1,109 @@
-import OrderLineItem from "@components/OrderLineItem"
-import OrderSummary from "@components/OrderSummary"
+import { LineItem, Order } from "@api/codegen/graphql"
+
+import OrderLineItem from "components/OrderLineItem"
+import OrderStatus from "../OrderStatus"
 
 type OrderDetailsInputType = {
-	order: WC_Order
+  order: Order | null | undefined
 }
 
 const OrderDetails = ({ order }: OrderDetailsInputType) => {
-	const orderDate = order?.date_created ? new Date(order.date_created).toLocaleDateString() : null
-	return (
-		<div>
-			<h3 className="sr-only">
-				Order placed on <time dateTime={order.date_created || ""}>{orderDate}</time>
-			</h3>
+  return (
+    <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <OrderStatus order={order} />
 
-			<div className="overflow-hidden bg-white shadow sm:rounded-md">
-				<ul role="list" className="divide-y divide-gray-200">
-					<OrderSummary order={order} />
-				</ul>
-			</div>
+      <div className="mt-10 border-t border-gray-200">
+        <h2 className="sr-only">Your order</h2>
 
-			<div className="overflow-hidden bg-white shadow sm:rounded-md mt-8">
-				<ul role="list" className="divide-y divide-gray-200">
-					{order.line_items.map((lineItem) => (
-						<OrderLineItem lineItem={lineItem} key={lineItem.id} />
-					))}
-				</ul>
-			</div>
+        <h3 className="sr-only">Items</h3>
+        <div className="border-b  border-gray-200">
+          {order?.lineItems?.nodes.map((lineItem: LineItem) => (
+            <OrderLineItem
+              key={lineItem.product?.node.id}
+              lineItem={lineItem}
+            />
+          ))}
+        </div>
 
-			{/* <table className="mt-4 w-full text-gray-500 sm:mt-6">
-				<caption className="sr-only">Products</caption>
-				<thead className="sr-only text-sm text-gray-500 text-left sm:not-sr-only">
-					<tr>
-						<th scope="col" className="pr-8 py-3 font-normal">
-							{" "}
-							Product{" "}
-						</th>
-						<th scope="col" className="hidden w-1/5 pr-8 py-3 font-normal sm:table-cell">
-							{" "}
-							Price{" "}
-						</th>
-						<th scope="col" className="hidden pr-8 py-3 font-normal sm:table-cell">
-							{" "}
-							Qty{" "}
-						</th>
-						<th scope="col" className="hidden pr-8 py-3 font-normal sm:table-cell">
-							{" "}
-							Total{" "}
-						</th>
-						<th scope="col" className="w-0 py-3 font-normal text-right">
-							{" "}
-							Link{" "}
-						</th>
-					</tr>
-				</thead>
-				<tbody className="border-b border-gray-200 divide-y divide-gray-200 text-sm sm:border-t">
-					{order.line_items.map((lineItem) => (
-						<OrderLineItem lineItem={lineItem} />
-					))}
-				</tbody>
-			</table> */}
-		</div>
-	)
+        <div className="sm:ml-40 sm:pl-6">
+          <h3 className="sr-only">Your information</h3>
+
+          <h4 className="sr-only">Addresses</h4>
+          <dl className="grid grid-cols-2 gap-x-6 py-10 text-sm">
+            {order?.hasShippingAddress && (
+              <div>
+                <dt className="font-medium text-gray-900">Shipping address</dt>
+                <dd className="mt-2 text-gray-700">
+                  <address className="not-italic">
+                    <span className="block">
+                      {order?.shipping?.firstName} {order?.shipping?.lastName}
+                    </span>
+                    <span className="block">{order?.shipping?.address1}</span>
+                    {order?.shipping?.address2 && (
+                      <span className="block">{order?.shipping.address2}</span>
+                    )}
+                    <span className="block">
+                      {order?.shipping?.city}, {order?.shipping?.state}{" "}
+                      {order?.shipping?.country} {order?.shipping?.postcode}
+                    </span>
+                  </address>
+                </dd>
+              </div>
+            )}
+            {order?.hasBillingAddress && (
+              <div>
+                <dt className="font-medium text-gray-900">
+                  {order?.hasShippingAddress
+                    ? "Billing address"
+                    : "Billing and Shipping address"}
+                </dt>
+                <dd className="mt-2 text-gray-700">
+                  <address className="not-italic">
+                    <span className="block">{`${order?.billing?.firstName} ${order?.billing?.lastName}`}</span>
+                    <span className="block">{order?.billing?.address1}</span>
+                    {order?.billing?.address2 && (
+                      <span className="block">{order?.billing.address2}</span>
+                    )}
+                    <span className="block">
+                      {order?.billing?.city}, {order?.billing?.state}{" "}
+                      {order?.billing?.country} {order?.billing?.postcode}
+                    </span>
+                  </address>
+                </dd>
+              </div>
+            )}
+          </dl>
+
+          <h3 className="sr-only">Summary</h3>
+
+          <dl className="space-y-6 border-t border-gray-200 pt-10 text-sm">
+            {order?.subtotal !== order?.total && (
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-900">Subtotal</dt>
+                <dd className="text-gray-700">{order?.subtotal}</dd>
+              </div>
+            )}
+            {order?.discountTotal !== "$0.00" && (
+              <div className="flex justify-between">
+                <dt className="flex font-medium text-gray-900">Discount</dt>
+                <dd className="text-gray-700">{order?.discountTotal}</dd>
+              </div>
+            )}
+            {order?.shippingTotal !== "$0.00" && (
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-900">Shipping</dt>
+                <dd className="text-gray-700">{order?.shippingTotal}</dd>
+              </div>
+            )}
+            <div className="flex justify-between">
+              <dt className="font-medium text-gray-900">Total</dt>
+              <dd className="text-gray-900">{order?.total}</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default OrderDetails

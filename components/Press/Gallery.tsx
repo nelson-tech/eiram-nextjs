@@ -1,70 +1,68 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 
-import Link from "@components/Link"
-import Lightbox from "@components/Lightbox"
+import type { MediaItem, PressItem } from "@api/codegen/graphql"
+
+import Lightbox from "components/Lightbox"
+import Image from "components/Image"
 
 type PressGalleryPropsType = {
-	press: WP_PressType[]
+  press: PressItem[]
 }
 
 const PressGallery = ({ press }: PressGalleryPropsType) => {
-	const [open, setOpen] = useState(true)
-	const [slide, setSlide] = useState<WP_PressType["_embedded"]["wp:featuredmedia"][0]>()
+  const [open, setOpen] = useState(true)
+  const [slide, setSlide] = useState<MediaItem | null | undefined>()
 
-	const close = () => {
-		setOpen(false)
-	}
+  const close = () => {
+    setOpen(false)
+  }
 
-	return (
-		<>
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-2 md:mx-8 lg:mx-16 mt-12">
-				{press.map((press) => {
-					const image = press._embedded["wp:featuredmedia"][0]
+  return (
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mt-8 mx-auto">
+        {press.map((press, i) => {
+          const image: MediaItem | null | undefined = press.featuredImage?.node
 
-					return (
-						<div
-							key={press.id}
-							onClick={() => {
-								setSlide(image)
-								setOpen(true)
-							}}
-							className=" mx-auto cursor-pointer group w-full rounded-sm "
-							title={press?.title.rendered}
-						>
-							<div className=" relative" style={{ height: "600px" }}>
-								<Image
-									src={image.source_url}
-									alt={image.alt_text}
-									fill
-									sizes="(max-width: 800px) 100vw,33vw"
-									className=" object-contain w-full h-full rounded-sm"
-								/>
-							</div>
-							{/* <div className="absolute flex items-center w-full h-full bg-black bg-opacity-80 opacity-0 group-hover:opacity-80 transition-all rounded-sm overflow-hidden z-10">
-								<div
-									className="my-auto w-full flex justify-center items-center"
-									style={{ height: "550px" }}
-								>
-									<h2 className="text-white text-4xl text-center uppercase font-sans">
-										<div dangerouslySetInnerHTML={{ __html: press.content.rendered }} />
-									</h2>
-								</div>
-							</div> */}
-							<div
-								dangerouslySetInnerHTML={{ __html: press.content.rendered }}
-								className="text-gray-600 text-center pt-4 pb-8"
-							/>
-						</div>
-					)
-				})}
-			</div>
+          return (
+            <div
+              key={press.id}
+              onClick={() => {
+                setSlide(image)
+                setOpen(true)
+              }}
+              className="w-full aspect-[8.5/11] relative align-middle break-after-avoid break-inside-avoid group rounded-sm text-center cursor-pointer overflow-hidden"
+            >
+              {image?.sourceUrl && (
+                <Image
+                  src={image.sourceUrl}
+                  alt={image.altText ?? ""}
+                  priority
+                  fill
+                  sizes="(max-width: 400px) 100vw,(max-width: 768px) 50vw,33vw"
+                  className=" object-cover align-middle rounded-sm"
+                />
+              )}
+              {press.content && (
+                <div className="absolute inset-0 flex items-center w-full h-full bg-black bg-opacity-80 opacity-0 group-hover:opacity-80 transition-all rounded-sm overflow-hidden z-10">
+                  <div className="w-full flex justify-center items-center">
+                    <h2 className="text-white text-xl text-center">
+                      <div
+                        dangerouslySetInnerHTML={{ __html: press.content }}
+                      />
+                    </h2>
+                  </div>
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
 
-			<Lightbox open={open} close={close} slide={slide} />
-		</>
-	)
+      <Lightbox open={open} close={close} slide={slide} />
+    </>
+  )
 }
 
 export default PressGallery

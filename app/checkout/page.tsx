@@ -1,34 +1,34 @@
-import { STRIPE_ENDPOINT } from "@lib/constants"
-import getTokens from "@lib/utils/getTokens"
-import getMenu from "@lib/server/getMenu"
+import getCheckoutData from "@lib/server/getCheckoutData"
 
-import Checkout from "@components/checkout"
-
-const getStripeData = async () => {
-	const { tokens } = getTokens()
-
-	const response = await fetch(STRIPE_ENDPOINT, {
-		method: "POST",
-		body: JSON.stringify({ tokens }),
-	})
-	const paymentIntentResponse: STRIPE_PaymentIntentType = await response?.json()
-
-	return paymentIntentResponse
-}
+import Checkout from "components/Checkout"
 
 const CheckoutPage = async () => {
-	const stripePromise = getStripeData()
-	const menuPromise = getMenu()
+  const data = await getCheckoutData()
 
-	const [stripeData, menuData] = await Promise.all([stripePromise, menuPromise])
+  const stripeData = data?.stripeData
+  const customer = data?.customer
 
-	const { colors } = menuData
-
-	return (
-		<>
-			<Checkout stripeData={stripeData} colors={colors} />
-		</>
-	)
+  return (
+    <>
+      <Checkout stripeData={stripeData} customer={customer} />
+    </>
+  )
 }
 
 export default CheckoutPage
+
+export const revalidate = 0 // dynamically serve this page
+
+export const metadata = {
+  title: "Checkout",
+  description:
+    "Checkout form to complete your purchase and finalize your payment to get wearing your new knitwear as soon as possible.",
+  keywords: [
+    "Checkout",
+    "Purchase",
+    "Eiram",
+    "Knitwear",
+    "Fashion",
+    "Shopping",
+  ],
+}

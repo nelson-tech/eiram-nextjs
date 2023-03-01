@@ -1,35 +1,42 @@
-import ResetPasswordForm from "@components/ResetPasswordForm"
-import { REFRESH_TOKEN_KEY, REST_AUTH_URI, REST_BASE } from "@lib/constants"
-import getTokens from "@lib/utils/getTokens"
+import getClient from "@api/client"
+import { GetCustomerDataDocument } from "@api/codegen/graphql"
+import getTokensServer from "@lib/utils/getTokensServer"
 
-const getUserEmail = async () => {
-	const { tokens } = getTokens()
+import ResetPasswordForm from "components/ResetPasswordForm"
 
-	if (tokens.refresh) {
-		const body = JSON.stringify({ [REFRESH_TOKEN_KEY]: tokens.refresh })
+const getCustomerEmail = async () => {
+  const { tokens } = await getTokensServer()
 
-		const customerResponse = await fetch(REST_AUTH_URI, {
-			headers: { Authorization: `Bearer ${tokens.auth}`, "content-type": "application/json" },
-			method: "POST",
-			body,
-		})
+  const client = getClient(tokens)
 
-		const customerData: WP_AUTH_LoginResponseType = await customerResponse.json()
+  const customerData = await client.request(GetCustomerDataDocument)
 
-		return customerData?.data?.email
-	}
-
-	return null
+  return customerData.customer?.email
 }
 
 const ResetPasswordPage = async () => {
-	const detectedEmail = await getUserEmail()
+  const detectedEmail = await getCustomerEmail()
 
-	return (
-		<>
-			<ResetPasswordForm detectedEmail={detectedEmail} />
-		</>
-	)
+  return (
+    <>
+      <ResetPasswordForm detectedEmail={detectedEmail} />
+    </>
+  )
 }
 
 export default ResetPasswordPage
+
+export const metadata = {
+  title: "Reset Password",
+  description:
+    "Reset your password easily with your email address if you've forgotten it.",
+  keywords: [
+    "Reset Password",
+    "Account",
+    "Shop",
+    "Eiram",
+    "Knitwear",
+    "Wool",
+    "Fashion",
+  ],
+}

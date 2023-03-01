@@ -1,0 +1,47 @@
+query GetProductsData {
+  products(first: 200) {
+    nodes {
+      id
+      databaseId
+      name
+      slug
+      type
+      onSale
+      shortDescription
+      featuredImage {
+        node {
+          id
+          databaseId
+          altText
+          sourceUrl
+          mediaDetails {
+            height
+            width
+          }
+        }
+      }
+      galleryImages {
+        nodes {
+          id
+          databaseId
+          altText
+          sourceUrl
+          mediaDetails {
+            height
+            width
+          }
+        }
+      }
+      ... on SimpleProduct {
+        price
+        regularPrice
+        salePrice
+      }
+      ... on VariableProduct {
+        price
+        regularPrice
+        salePrice
+      }
+    }
+  }
+}

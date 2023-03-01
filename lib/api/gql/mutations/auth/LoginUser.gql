@@ -1,0 +1,9 @@
+mutation LoginUser($input: LoginInput!) {
+  login(input: $input) {
+    customer {
+      ...CustomerBase
+    }
+    authToken
+    refreshToken
+  }
+}

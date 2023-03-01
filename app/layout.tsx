@@ -1,64 +1,77 @@
-import "./globals.css"
+import "../styles/globals.css"
 
-import localFont from "@next/font/local"
+import localFont from "next/font/local"
 
-import getTokens from "@lib/utils/getTokens"
+import {
+  MenuItem,
+  Menu_Sitesettings_Footer_Socialmedia,
+} from "@lib/api/codegen/graphql"
 import getMenu from "@lib/server/getMenu"
-import { AUTH_ENDPOINT } from "@lib/constants"
 
 import RootClientContext from "./RootClientContext"
-import Header from "@components/layout/header"
-import Modals from "@components/layout/modals"
-import Footer from "@components/layout/footer"
-import Alerts from "@components/Alerts"
-import ScrollToTop from "@components/ScrollToTop"
-import Analytics from "@components/Analytics"
-
-const getAuthData = async (): Promise<API_AuthResponseType> => {
-	const { tokens } = getTokens()
-
-	try {
-		const body: API_AuthInputType = { action: "INIT", tokens }
-		const authResponse = await fetch(AUTH_ENDPOINT, {
-			method: "POST",
-			body: JSON.stringify(body),
-		})
-
-		const authData: API_AuthResponseType = await authResponse.json()
-
-		return authData
-	} catch (error) {
-		return { isAuth: false, needsRefresh: null }
-	}
-}
+import Header from "components/Layout/Header"
+import Modals from "components/Layout/Modals"
+import Footer from "components/Layout/Footer"
+import Alerts from "components/Alerts"
+import ScrollToTop from "components/ScrollToTop"
+import Analytics from "components/Analytics"
 
 const font = localFont({
-	src: "./Karla-Regular.ttf",
+  src: "./Karla-Regular.ttf",
 })
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-	const menuPromise = getMenu()
+const RootLayout = async ({ children }: { children: React.ReactNode }) => {
+  const mainMenu = await getMenu()
 
-	const authPromise = getAuthData()
+  return (
+    <html lang="en-us" className={font.className}>
+      <body>
+        <RootClientContext colors={mainMenu?.siteSettings?.colors ?? undefined}>
+          <div id="top" />
+          {mainMenu?.menuItems?.nodes && (
+            <Header menuItems={mainMenu.menuItems.nodes as MenuItem[]} />
+          )}
+          <div className="min-h-screen bg-white z-0">{children}</div>
+          <Footer
+            socialMedia={
+              (mainMenu?.siteSettings?.footer
+                ?.socialmedia as Menu_Sitesettings_Footer_Socialmedia[]) ??
+              undefined
+            }
+          />
+          {mainMenu?.menuItems?.nodes && (
+            <Modals menuItems={mainMenu.menuItems.nodes as MenuItem[]} />
+          )}
+          <Alerts />
+          <ScrollToTop />
+          <Analytics />
+        </RootClientContext>
+      </body>
+    </html>
+  )
+}
 
-	const [menuData, authData] = await Promise.all([menuPromise, authPromise])
+export default RootLayout
 
-	const { colors, menuItems, socialMedia } = menuData
-
-	return (
-		<html lang="en-us" className={font.className}>
-			<RootClientContext colors={colors} authData={authData}>
-				<body>
-					<div id="top" />
-					<Header menuItems={menuItems} />
-					<div className="min-h-screen bg-white z-0">{children}</div>
-					<Footer socialMedia={socialMedia} />
-					<Modals menuItems={menuItems} />
-					<Alerts />
-					<ScrollToTop />
-					<Analytics />
-				</body>
-			</RootClientContext>
-		</html>
-	)
+export const metadata = {
+  title: {
+    default: "Eiram Knitwear",
+    template: "%s",
+  },
+  icons: {
+    icon: "/favicon.png",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 }

@@ -1,0 +1,44 @@
+query GetCollectionBySlug($slug: ID!) {
+  collection(id: $slug, idType: SLUG) {
+    id
+    title
+    slug
+    content
+    seo {
+      title
+      description
+      focusKeywords
+      openGraph {
+        articleMeta {
+          section
+        }
+        description
+        locale
+        siteName
+        title
+        type
+        url
+        slackEnhancedData {
+          data
+          label
+        }
+        twitterMeta {
+          card
+          description
+          title
+        }
+      }
+    }
+    gallery {
+      media {
+        video {
+          ...ImageBase
+          mediaItemUrl
+        }
+        images {
+          ...ImageBase
+        }
+      }
+    }
+  }
+}

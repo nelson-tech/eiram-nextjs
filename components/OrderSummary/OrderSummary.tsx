@@ -1,103 +1,110 @@
 "use client"
 
-import Link from "@components/Link"
-import { CalendarIcon, ChevronRightIcon } from "@heroicons/react/20/solid"
+import { LineItem, Order } from "@api/codegen/graphql"
+
+import Link from "components/Link"
+import OrderLineItem from "components/OrderLineItem"
 
 type OrderSummaryInputType = {
-	order: WC_Order
-	detailsLink?: boolean
+  order: Order
+  detailsLink?: boolean
 }
 
-const OrderSummary = ({ order, detailsLink = false }: OrderSummaryInputType) => {
-	const orderDate = order?.date_created ? new Date(order.date_created).toLocaleDateString() : null
+const OrderSummary = ({
+  order,
+  detailsLink = false,
+}: OrderSummaryInputType) => {
+  const orderDate = order?.date
+    ? new Date(order.date).toLocaleDateString()
+    : null
 
-	const LinkOrDiv = ({ children }) => {
-		return detailsLink ? (
-			<Link href={`/order/${order.number}`} className="block hover:bg-gray-50">
-				{children}
-			</Link>
-		) : (
-			<div className="block">{children}</div>
-		)
-	}
+  const titleCase = (str: string) => {
+    let splitStr = str.toLowerCase().split(" ")
+    for (let i = 0; i < splitStr.length; i++) {
+      // You do not need to check if i is larger than splitStr length, as your for does that for you
+      // Assign it back to the array
+      splitStr[i] =
+        splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1)
+    }
+    // Directly return the joined string
+    return splitStr.join(" ")
+  }
 
-	const OrderStatus = () => {
-		const status = order.status.toLowerCase()
-		return (
-			<div className="flex -space-x-1 justify-center items-center h-full text-sm text-gray-500 overflow-hidden mr-8">
-				<p
-					className={`inline-flex rounded-full ml-2 px-2 text-xs font-semibold text-gray-500 leading-5 ${
-						status === "processing"
-							? "bg-green-100"
-							: status === "pending"
-							? "bg-yellow-100"
-							: status === "failed"
-							? "bg-red-100"
-							: ""
-					}`}
-				>
-					{status.toUpperCase()}
-				</p>
-			</div>
-		)
-	}
+  const OrderStatus = () => {
+    return (
+      <div className="mr-4">
+        <p
+          className={`inline-flex rounded-md ml-2 px-4 py-2 text-sm text-gray-900 leading-5 ${
+            order.status === "PROCESSING"
+              ? "bg-green-100"
+              : order.status === "PENDING"
+              ? "bg-yellow-100"
+              : order.status === "FAILED"
+              ? "bg-red-100"
+              : ""
+          }`}
+        >
+          {order.status && titleCase(order.status)}
+        </p>
+      </div>
+    )
+  }
 
-	return (
-		<li className="font-karla">
-			<LinkOrDiv>
-				<div className="flex items-center px-4 py-4 sm:px-6">
-					<div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
-						<div className="truncate">
-							<div className="flex text-sm">
-								<p className="truncate font-medium text-accent">Order #: {order.number}</p>
+  return (
+    <div className=" border-gray-200 bg-white shadow-sm rounded-lg border">
+      <h3 className="sr-only">
+        Order placed on <time dateTime={order.date ?? ""}>{orderDate}</time>
+      </h3>
 
-								<div className="ml-4 flex text-gray-500">
-									<div className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400">
-										<svg
-											fill="none"
-											stroke="currentColor"
-											viewBox="0 0 24 24"
-											xmlns="http://www.w3.org/2000/svg"
-										>
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												strokeWidth="2"
-												d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-											></path>
-										</svg>
-									</div>
-									Items: {order.line_items.length}
-								</div>
-							</div>
-							<div className="mt-4 flex items-center">
-								<div className="flex items-center text-sm text-gray-500">
-									<CalendarIcon
-										className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-										aria-hidden="true"
-									/>
-									<p>
-										<time dateTime={order.date_created}>{orderDate}</time>
-									</p>
-								</div>
-								<div className=" sm:hidden">
-									<OrderStatus />
-								</div>
-							</div>
-						</div>
-						<div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5 hidden sm:block">
-							<OrderStatus />
-						</div>
-					</div>
-					{detailsLink && (
-						<div className="ml-5 flex-shrink-0">
-							<ChevronRightIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-						</div>
-					)}
-				</div>
-			</LinkOrDiv>
-		</li>
-	)
+      <div className="group relative flex items-center border-b border-gray-200 p-4 sm:grid sm:grid-cols-4 sm:gap-x-6 sm:p-6">
+        <dl className="grid flex-1 grid-cols-2 gap-x-6 text-sm sm:col-span-3 sm:grid-cols-3 lg:col-span-2">
+          <div>
+            <dt className="font-medium text-gray-900">Order number</dt>
+            <dd className="mt-1 text-gray-500">{order.orderNumber}</dd>
+          </div>
+          <div className="hidden sm:block">
+            <dt className="font-medium text-gray-900">Date placed</dt>
+            <dd className="mt-1 text-gray-500">
+              <time dateTime={order.date ?? ""}>{orderDate}</time>
+            </dd>
+          </div>
+          <div>
+            <dt className="font-medium text-gray-900">Total amount</dt>
+            <dd className="mt-1 font-medium text-gray-900">{order.total}</dd>
+          </div>
+        </dl>
+
+        <Link
+          className=" flex justify-end lg:hidden"
+          href={`/order/${order.orderNumber}}`}
+        >
+          <span aria-hidden="true" className="absolute inset-0" />
+          <OrderStatus />
+        </Link>
+
+        <div className="hidden lg:col-span-2 lg:flex lg:items-center lg:justify-end lg:space-x-4">
+          <OrderStatus />
+          <Link
+            href={`/order/${order.orderNumber}`}
+            className="flex items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            <span>View Order</span>
+            <span className="sr-only">{order.orderNumber}</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* Products */}
+      <h4 className="sr-only">Items</h4>
+      <ul role="list" className="divide-y divide-gray-200">
+        {order.lineItems?.nodes.map((lineItem: LineItem) => (
+          <li key={lineItem.id} className="p-4 sm:p-6">
+            <OrderLineItem lineItem={lineItem} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }
 
 export default OrderSummary

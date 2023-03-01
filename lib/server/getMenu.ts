@@ -1,23 +1,16 @@
-import { REST_MENU } from "@lib/constants"
+import type { GetMenuDataQuery, Menu } from "@api/codegen/graphql"
+import getCachedQuery from "./getCachedQuery"
 
 const getMenu = async () => {
-	try {
-		const url = REST_MENU + "/menus/main"
+  try {
+    const { data } = await getCachedQuery<GetMenuDataQuery>("getMenuData")
 
-		const response = await fetch(url)
+    return data?.mainMenu as Menu | null | undefined
+  } catch (error) {
+    console.warn("Error in getMenu:", error)
 
-		const data: WP_MENU = await response?.json()
-
-		const colors = data?.acf?.colors ?? null
-		const menuItems = data?.items ?? null
-		const socialMedia = data?.acf?.footer?.socialMedia ?? null
-
-		return { colors, menuItems, socialMedia }
-	} catch (error) {
-		console.warn("Error fetching menu", error)
-
-		return null
-	}
+    return null
+  }
 }
 
 export default getMenu

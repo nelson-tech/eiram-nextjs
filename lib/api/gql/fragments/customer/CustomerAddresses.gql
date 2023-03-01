@@ -1,0 +1,28 @@
+fragment CustomerAddresses on Customer {
+  billing {
+    address1
+    address2
+    city
+    company
+    country
+    email
+    firstName
+    lastName
+    phone
+    postcode
+    state
+  }
+  shipping {
+    address1
+    address2
+    city
+    company
+    country
+    email
+    firstName
+    lastName
+    phone
+    postcode
+    state
+  }
+}

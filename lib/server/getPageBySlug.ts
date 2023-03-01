@@ -1,22 +1,18 @@
-import { REST_WP } from "@lib/constants"
+import type { GetPageDataBySlugQuery, Page } from "@api/codegen/graphql"
+import getCachedQuery from "./getCachedQuery"
 
 const getPageBySlug = async (slug: string) => {
-	const url = REST_WP + "/pages?slug=" + slug
+  try {
+    const { data } = await getCachedQuery<GetPageDataBySlugQuery>(
+      `getPageDataBySlug&variables={"slug":"${slug}"}`
+    )
 
-	const headers = { "content-type": "application/json" }
+    return data?.page as Page | null | undefined
+  } catch (error) {
+    console.warn("Error in getPageBySlug:", error)
 
-	const fetchArgs: RequestInit = {
-		method: "GET",
-		headers,
-	}
-
-	const response = await fetch(url, {
-		...fetchArgs,
-	})
-
-	const data: WP_REST_API_Post[] = await response.json()
-
-	return data && data.length > 0 ? data[0] : null
+    return null
+  }
 }
 
 export default getPageBySlug

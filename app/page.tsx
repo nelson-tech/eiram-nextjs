@@ -1,27 +1,45 @@
-import { REST_WP } from "@lib/constants"
-import BackgroundVideo from "@components/BackgroundVideo"
+import { Metadata } from "next/types"
 
-const getBackgroundVideo = async () => {
-	const res = await fetch(REST_WP + "/pages?slug=home&acf_format=standard")
+import type {
+  MediaItem,
+  Page_Bgvideo_VideoFiles,
+  RankMathPostTypeSeo,
+} from "@api/codegen/graphql"
+import getHomeData from "@lib/server/getHomeData"
+import parseMetaData from "@lib/utils/parseMetaData"
 
-	const data = await res.json()
-
-	const acf = data[0]?.acf
-
-	const videoData: WP_ImageArrayType = acf?.video
-	const placeholderData: WP_ImageArrayType = acf?.placeholderImage
-
-	return { data, acf, videoData, placeholderData }
-}
+import BackgroundVideo from "components/BackgroundVideo"
 
 const HomePage = async () => {
-	const { videoData, placeholderData } = await getBackgroundVideo()
+  const home = await getHomeData()
 
-	return (
-		<>
-			<BackgroundVideo videoData={videoData} placeholderData={placeholderData} />
-		</>
-	)
+  const videoFiles = home?.bgVideo?.videoFiles
+  const placeholderimage = home?.bgVideo?.placeholderimage
+
+  return (
+    <>
+      <div>
+        {videoFiles && videoFiles.length > 0 && (
+          <BackgroundVideo
+            videoData={videoFiles as Page_Bgvideo_VideoFiles[]}
+            placeholderData={placeholderimage as MediaItem}
+          />
+        )}
+      </div>
+    </>
+  )
 }
 
 export default HomePage
+
+export const revalidate = 60 // revalidate this page every 60 seconds
+
+export async function generateMetadata(): Promise<Metadata> {
+  const home = await getHomeData()
+
+  const metaData = parseMetaData({
+    ...home?.seo,
+  } as RankMathPostTypeSeo)
+
+  return metaData
+}

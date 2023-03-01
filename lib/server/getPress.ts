@@ -1,17 +1,16 @@
-import { REST_WP } from "@lib/constants"
+import type { GetPressDataQuery, PressItem } from "@api/codegen/graphql"
+import getCachedQuery from "./getCachedQuery"
 
 const getPress = async () => {
-	const url = REST_WP + "/press?_embed"
-	// const headers = { "content-type": "application/json" }
+  try {
+    const { data } = await getCachedQuery<GetPressDataQuery>("getPressData")
 
-	const response: Response = await fetch(url, {
-		method: "GET",
-		// headers,
-	})
+    return data?.press?.nodes as PressItem[] | null | undefined
+  } catch (error) {
+    console.warn("Error in getPress:", error)
 
-	const pressData: WP_PressType[] = await response?.json()
-
-	return pressData
+    return null
+  }
 }
 
 export default getPress
