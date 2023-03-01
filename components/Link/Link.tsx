@@ -1,4 +1,4 @@
-import { forwardRef } from "react"
+import { forwardRef, Ref } from "react"
 import NextLink from "next/link"
 import type { LinkProps } from "next/link"
 
@@ -18,9 +18,18 @@ export type LinkPropsType = Omit<
 // #### Component
 // ####
 
-const Link = forwardRef(({ children, ...linkProps }: LinkPropsType) => {
-  return <NextLink {...linkProps}>{children}</NextLink>
-})
+const Link = forwardRef(
+  (
+    { children, ...linkProps }: LinkPropsType,
+    ref: Ref<HTMLAnchorElement> | undefined
+  ) => {
+    return (
+      <NextLink {...linkProps} ref={ref}>
+        {children}
+      </NextLink>
+    )
+  }
+)
 
 Link.displayName = "CustomLink"
 

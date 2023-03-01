@@ -41,6 +41,7 @@ const Lightbox = ({ open, close, slide }: LightboxPropsType) => {
             className="object-contain rounded-lg overflow-hidden"
             fill
             sizes="100vw"
+            unoptimized
           />
         ) : (
           slide.sourceUrl && (
@@ -52,6 +53,7 @@ const Lightbox = ({ open, close, slide }: LightboxPropsType) => {
                 height:
                   slide.mediaDetails?.height ?? parseInt(modalSize.height),
               }}
+              unoptimized
               className="rounded-2xl overflow-hidden"
             />
           )

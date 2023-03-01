@@ -11,7 +11,7 @@ const Footer = ({ socialMedia }: FooterProps) => {
   const CDN_URL = process.env.NEXT_PUBLIC_CDN_BASE_URL
 
   return (
-    <div className="mt-8 p-8 text-center bg-gray-100 opacity-70">
+    <div className="p-8 text-center bg-gray-100 opacity-70">
       {socialMedia && (
         <div className="flex space-x-8 mb-8 justify-center items-center">
           {socialMedia.map((social) => {
