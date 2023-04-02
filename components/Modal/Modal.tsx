@@ -59,8 +59,8 @@ const Modal = ({
             >
               <Dialog.Panel
                 className={
-                  panelStyle ??
-                  "inline-block min-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                  "inline-block min-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl " +
+                  panelStyle
                 }
                 style={panelCSS}
               >
