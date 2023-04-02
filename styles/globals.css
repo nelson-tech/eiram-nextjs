@@ -70,6 +70,7 @@
   margin-top: 1rem;
   line-height: 2rem;
   font-size: 1.5rem;
+  padding-left: 1rem;
 }
 
 .wp-container p {
@@ -77,6 +78,10 @@
   line-height: 2rem;
   font-size: 1rem;
   padding: 1rem;
+}
+
+.wp-container .wp-element-caption {
+  margin-top: 0.75rem;
 }
 
 .wp-container ul {
