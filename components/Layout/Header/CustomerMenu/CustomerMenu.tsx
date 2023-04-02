@@ -39,7 +39,9 @@ const UserMenu = () => {
           className="origin-top-right absolute -right-16 pt-2 w-40 z-40"
         >
           <Popover.Panel className="relative rounded-sm bg-gray-50 outline-none overflow-hidden shadow-lg ring-transparent z-40">
-            {isAuth ? <AuthMenu /> : <GuestMenu />}
+            {({ close }) =>
+              isAuth ? <AuthMenu close={close} /> : <GuestMenu />
+            }
           </Popover.Panel>
         </Transition>
       </Popover>

@@ -14,7 +14,7 @@ import Modals from "components/Layout/Modals"
 import Footer from "components/Layout/Footer"
 import Alerts from "components/Alerts"
 import ScrollToTop from "components/ScrollToTop"
-import Analytics from "components/Analytics"
+// import Analytics from "components/Analytics"
 
 const font = localFont({
   src: "./Karla-Regular.ttf",
@@ -44,7 +44,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
           )}
           <Alerts />
           <ScrollToTop />
-          <Analytics />
+          {/* <Analytics /> */}
         </RootClientContext>
       </body>
     </html>
@@ -59,8 +59,14 @@ export const metadata = {
     template: "%s",
   },
   icons: {
-    icon: "/favicon.png",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
+  manifest: "/site.webmanifest",
   robots: {
     index: true,
     follow: true,
