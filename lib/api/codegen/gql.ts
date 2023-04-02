@@ -116,6 +116,8 @@ const documents = {
     types.GetProductsSlugDocument,
   "query GetProductsWithCategories {\n  products(first: 200) {\n    nodes {\n      ...ProductBase\n      ...SimpleProductFragment\n      ...VariableProductFragment\n      productCategories {\n        nodes {\n          ...ProductCategoryBase\n          ancestors {\n            nodes {\n              name\n              slug\n            }\n          }\n        }\n      }\n    }\n  }\n}":
     types.GetProductsWithCategoriesDocument,
+  "query GetViewer {\n  viewer {\n    id\n    roles {\n      nodes {\n        name\n      }\n    }\n  }\n}":
+    types.GetViewerDocument,
   "query QuickSearch($search: String) {\n  products(where: {search: $search}) {\n    nodes {\n      id\n      slug\n      name\n      productCategories {\n        nodes {\n          slug\n        }\n      }\n    }\n  }\n}":
     types.QuickSearchDocument,
 }
@@ -446,6 +448,12 @@ export function graphql(
 export function graphql(
   source: "query GetProductsWithCategories {\n  products(first: 200) {\n    nodes {\n      ...ProductBase\n      ...SimpleProductFragment\n      ...VariableProductFragment\n      productCategories {\n        nodes {\n          ...ProductCategoryBase\n          ancestors {\n            nodes {\n              name\n              slug\n            }\n          }\n        }\n      }\n    }\n  }\n}"
 ): (typeof documents)["query GetProductsWithCategories {\n  products(first: 200) {\n    nodes {\n      ...ProductBase\n      ...SimpleProductFragment\n      ...VariableProductFragment\n      productCategories {\n        nodes {\n          ...ProductCategoryBase\n          ancestors {\n            nodes {\n              name\n              slug\n            }\n          }\n        }\n      }\n    }\n  }\n}"]
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "query GetViewer {\n  viewer {\n    id\n    roles {\n      nodes {\n        name\n      }\n    }\n  }\n}"
+): (typeof documents)["query GetViewer {\n  viewer {\n    id\n    roles {\n      nodes {\n        name\n      }\n    }\n  }\n}"]
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

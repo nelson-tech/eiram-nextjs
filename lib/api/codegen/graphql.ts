@@ -32438,6 +32438,20 @@ export type GetProductsWithCategoriesQuery = {
   } | null
 }
 
+export type GetViewerQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetViewerQuery = {
+  __typename?: "RootQuery"
+  viewer?: {
+    __typename?: "User"
+    id: string
+    roles?: {
+      __typename?: "UserToUserRoleConnection"
+      nodes: Array<{ __typename?: "UserRole"; name?: string | null }>
+    } | null
+  } | null
+}
+
 export type QuickSearchQueryVariables = Exact<{
   search?: InputMaybe<Scalars["String"]>
 }>
@@ -41761,6 +41775,53 @@ export const GetProductsWithCategoriesDocument = {
   GetProductsWithCategoriesQuery,
   GetProductsWithCategoriesQueryVariables
 >
+export const GetViewerDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetViewer" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "viewer" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "roles" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "nodes" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "name" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetViewerQuery, GetViewerQueryVariables>
 export const QuickSearchDocument = {
   kind: "Document",
   definitions: [

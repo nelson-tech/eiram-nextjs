@@ -1,0 +1,10 @@
+query GetViewer {
+  viewer {
+    id
+    roles {
+      nodes {
+        name
+      }
+    }
+  }
+}
