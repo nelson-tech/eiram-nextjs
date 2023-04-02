@@ -9,6 +9,7 @@ const getCachedQuery = async <T extends unknown>(
 ): Promise<DynamicReturnType<T>> => {
   const cachedResponse = await fetch(API_URL + `?queryId=${queryId}`, {
     headers: { "content-type": "application/json" },
+    next: { revalidate: 60 },
   })
 
   const { data } = await cachedResponse.json()
