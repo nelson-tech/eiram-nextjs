@@ -14,13 +14,13 @@ const BackgroundVideo = ({
   videoData,
   placeholderData,
 }: BackgrountVideoInputType) => {
-  const { imageSizing, viewHeight, getClientSizes } = useClientSizes()
+  const { viewHeight, getClientSizes } = useClientSizes()
 
   useEffect(() => {
     getClientSizes(videoData[0])
   }, [videoData, getClientSizes])
 
-  const bgImageURL = `${placeholderData?.sourceUrl}?format=webp&quality=80&${imageSizing}`
+  const bgImageURL = `${placeholderData?.sourceUrl}?format=webp&quality=80`
 
   return bgImageURL ? (
     <div id="video-container" className="w-full h-screen">

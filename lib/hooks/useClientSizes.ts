@@ -7,7 +7,6 @@ import isServer from "@lib/utils/isServer"
 
 const useClientSizes = () => {
   const [viewHeight, setViewHeight] = useState<number | null | undefined>()
-  const [imageSizing, setImageSizing] = useState<string | null | undefined>()
 
   const getClientSizes = useCallback(
     (videoData: Page_Bgvideo_VideoFiles | null | undefined) => {
@@ -20,22 +19,14 @@ const useClientSizes = () => {
           ((videoData?.videoFile?.mediaDetails?.height as number) || 1) *
             windowScale
         )
-
-        setImageSizing(
-          window.innerWidth > window.innerHeight
-            ? `width=${window.innerWidth}`
-            : `height=${window.innerHeight}`
-        )
       } else {
         setViewHeight(videoData?.videoFile?.mediaDetails?.height)
-
-        setImageSizing("width=1920")
       }
     },
     []
   )
 
-  return { imageSizing, viewHeight, getClientSizes }
+  return { viewHeight, getClientSizes }
 }
 
 export default useClientSizes
