@@ -102,20 +102,20 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
   ] as MediaItem[]
 
   return (
-    <div className="mx-auto max-w-2xl lg:max-w-none">
+    <div className="max-w-2xl mx-auto lg:max-w-none">
       <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
         {/* <!-- Image Gallery --> */}
         {images && (
           <Tab.Group as="div" className="flex flex-col-reverse">
             {/* <!-- Image selector --> */}
-            <div className="mx-auto mt-6 px-8 sm:px-0 w-full max-w-2xl sm:block lg:max-w-none">
-              <Tab.List className="grid grid-cols-3 sm:grid-cols-4 gap-6">
+            <div className="w-full max-w-2xl px-8 mx-auto mt-6 sm:px-0 sm:block lg:max-w-none">
+              <Tab.List className="grid grid-cols-3 gap-6 sm:grid-cols-4">
                 {images.map(
                   (image) =>
                     image.sourceUrl && (
                       <Tab
                         key={image.id + "thumbs"}
-                        className="relative flex h-24 aspect-square cursor-pointer items-center justify-center rounded-md focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-accent focus:ring-offset-4"
+                        className="relative flex items-center justify-center h-24 rounded-md cursor-pointer aspect-square focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-accent focus:ring-offset-4"
                       >
                         <span className="sr-only"> {image.altText} </span>
                         <span className="absolute inset-0 overflow-hidden rounded-md">
@@ -124,7 +124,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
                             alt={image.altText ?? ""}
                             fill
                             sizes="33vw"
-                            className="h-full w-full object-cover object-center"
+                            className="object-cover object-center w-full h-full"
                           />
                         </span>
                         <span
@@ -141,7 +141,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
             </div>
 
             <Tab.Panels
-              className=" aspect-square object-contain w-full relative"
+              className="relative object-contain w-full aspect-square"
               as="div"
             >
               {images.map(
@@ -164,7 +164,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
         )}
 
         {/* <!-- Product Info --> */}
-        <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+        <div className="px-4 mt-10 sm:mt-16 sm:px-0 lg:mt-0">
           {product.onSale && (
             <span className="inline-flex items-center rounded-md bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800">
               SALE!
@@ -174,10 +174,10 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
             {product.name}
           </h1>
 
-          <div className="mt-3 flex items-center">
+          <div className="flex items-center mt-3">
             <h2 className="sr-only">Product information</h2>
             {product.onSale && (
-              <p className="text-2xl tracking-tight text-gray-400 line-through mr-2">
+              <p className="mr-2 text-2xl tracking-tight text-gray-400 line-through">
                 {product.regularPrice}
               </p>
             )}
@@ -191,183 +191,191 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
             {product.description && (
               <div
-                className="space-y-6 text-base text-gray-700 wp-container border-b pb-8 border-gray-200"
+                className="pb-8 space-y-6 text-base text-gray-700 border-b border-gray-200 wp-container"
                 dangerouslySetInnerHTML={{ __html: product.description }}
               />
             )}
           </div>
 
           <div className="mt-10 lg:col-span-5">
-            <form onSubmit={handleSubmit}>
-              {attributes &&
-                attributes.map((attribute: ProductAttribute) => {
-                  return (
-                    attribute.name && (
-                      <div
-                        className="mb-8"
-                        key={attribute.name + attribute.id + "attribute"}
-                      >
-                        <div className="flex items-center justify-between">
-                          <h2 className="text-sm font-medium text-gray-900">
-                            {attribute.name}
-                          </h2>
-                          {["size", "sizes"].includes(
-                            attribute.name.toLowerCase()
-                          ) && (
-                            <Link
-                              href="/size-conversion"
-                              className="text-sm font-medium text-accent-dark hover:text-accent"
-                            >
-                              See sizing chart
-                            </Link>
-                          )}
-                        </div>
-
-                        <RadioGroup
-                          value={selectedAttributes[attribute.name]}
-                          onChange={(e: string) =>
-                            setSelectedAttributes({
-                              ...selectedAttributes,
-                              [attribute.name as string]: e,
-                            })
-                          }
-                          className="mt-2"
+            {product.stockStatus === "OUT_OF_STOCK" ? (
+              <>
+                <p className="pl-4 mb-8 italic lg:mb-64">
+                  Temporarily out of stock. Please check back later.
+                </p>
+              </>
+            ) : (
+              <form onSubmit={handleSubmit}>
+                {attributes &&
+                  attributes.map((attribute: ProductAttribute) => {
+                    return (
+                      attribute.name && (
+                        <div
+                          className="mb-8"
+                          key={attribute.name + attribute.id + "attribute"}
                         >
-                          <RadioGroup.Label className="sr-only">
-                            Choose a {attribute.name}
-                          </RadioGroup.Label>
-                          <div className="flex items-center space-x-3">
-                            {attribute.options &&
-                              attribute.options.length > 0 &&
-                              attribute.options.map((option, i) => (
-                                <RadioGroup.Option
-                                  key={attribute.id + i + option + "option"}
-                                  value={option}
-                                  className={({ active, checked }) =>
-                                    classs(
-                                      true
-                                        ? "cursor-pointer focus:outline-none"
-                                        : "opacity-25 cursor-not-allowed",
-                                      checked
-                                        ? "bg-accent-dark border-transparent text-white hover:bg-accent-dark"
-                                        : "bg-white border-gray-200 text-gray-900 hover:bg-accent hover:text-white",
-                                      "border rounded-sm py-3 px-3 flex items-center justify-center transition text-sm font-medium uppercase flex-1"
-                                    )
-                                  }
-                                  disabled={false}
-                                >
-                                  <RadioGroup.Label as="span">
-                                    {option}
-                                  </RadioGroup.Label>
-                                </RadioGroup.Option>
-                              ))}
+                          <div className="flex items-center justify-between">
+                            <h2 className="text-sm font-medium text-gray-900">
+                              {attribute.name}
+                            </h2>
+                            {["size", "sizes"].includes(
+                              attribute.name.toLowerCase()
+                            ) && (
+                              <Link
+                                href="/size-conversion"
+                                className="text-sm font-medium text-accent-dark hover:text-accent"
+                              >
+                                See sizing chart
+                              </Link>
+                            )}
                           </div>
-                        </RadioGroup>
-                      </div>
-                    )
-                  )
-                })}
-              <div className="mt-10 grid grid-cols-3 items-center border-t pt-10">
-                <div className="w-20 mx-auto">
-                  <Listbox value={quantity} onChange={setQuantity}>
-                    {({ open }) => (
-                      <div className="relative mr-2">
-                        <div className="flex items-center">
-                          <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent sm:text-sm">
-                            <span className="block truncate">{quantity}</span>
-                            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                              <ChevronUpDownIcon
-                                className="h-5 w-5 text-gray-400"
-                                aria-hidden="true"
-                              />
-                            </span>
-                          </Listbox.Button>
-                        </div>
 
-                        <Transition
-                          show={open}
-                          as={Fragment}
-                          leave="transition ease-in duration-100"
-                          leaveFrom="opacity-100"
-                          leaveTo="opacity-0"
-                        >
-                          <Listbox.Options className="absolute z-10 mt-1 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
-                              (number, i) => (
-                                <Listbox.Option
-                                  key={"quantity" + i}
-                                  className={({ active }) => `${
-                                    active
-                                      ? "text-white bg-accent"
-                                      : "text-gray-900"
-                                  }
+                          <RadioGroup
+                            value={selectedAttributes[attribute.name]}
+                            onChange={(e: string) =>
+                              setSelectedAttributes({
+                                ...selectedAttributes,
+                                [attribute.name as string]: e,
+                              })
+                            }
+                            className="mt-2"
+                          >
+                            <RadioGroup.Label className="sr-only">
+                              Choose a {attribute.name}
+                            </RadioGroup.Label>
+                            <div className="flex items-center space-x-3">
+                              {attribute.options &&
+                                attribute.options.length > 0 &&
+                                attribute.options.map((option, i) => (
+                                  <RadioGroup.Option
+                                    key={attribute.id + i + option + "option"}
+                                    value={option}
+                                    className={({ active, checked }) =>
+                                      classs(
+                                        true
+                                          ? "cursor-pointer focus:outline-none"
+                                          : "opacity-25 cursor-not-allowed",
+                                        checked
+                                          ? "bg-accent-dark border-transparent text-white hover:bg-accent-dark"
+                                          : "bg-white border-gray-200 text-gray-900 hover:bg-accent hover:text-white",
+                                        "border rounded-sm py-3 px-3 flex items-center justify-center transition text-sm font-medium uppercase flex-1"
+                                      )
+                                    }
+                                    disabled={false}
+                                  >
+                                    <RadioGroup.Label as="span">
+                                      {option}
+                                    </RadioGroup.Label>
+                                  </RadioGroup.Option>
+                                ))}
+                            </div>
+                          </RadioGroup>
+                        </div>
+                      )
+                    )
+                  })}
+                <div className="grid items-center grid-cols-3 pt-10 mt-10 border-t">
+                  <div className="w-20 mx-auto">
+                    <Listbox value={quantity} onChange={setQuantity}>
+                      {({ open }) => (
+                        <div className="relative mr-2">
+                          <div className="flex items-center">
+                            <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left bg-white border border-gray-300 rounded-md shadow-sm cursor-default focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent sm:text-sm">
+                              <span className="block truncate">{quantity}</span>
+                              <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                <ChevronUpDownIcon
+                                  className="w-5 h-5 text-gray-400"
+                                  aria-hidden="true"
+                                />
+                              </span>
+                            </Listbox.Button>
+                          </div>
+
+                          <Transition
+                            show={open}
+                            as={Fragment}
+                            leave="transition ease-in duration-100"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                          >
+                            <Listbox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-36 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
+                                (number, i) => (
+                                  <Listbox.Option
+                                    key={"quantity" + i}
+                                    className={({ active }) => `${
+                                      active
+                                        ? "text-white bg-accent"
+                                        : "text-gray-900"
+                                    }
                         relative cursor-default select-none py-2 pl-3 pr-9
                       `}
-                                  value={number}
-                                >
-                                  {({ selected, active }) => (
-                                    <>
-                                      <span
-                                        className={`${
-                                          selected
-                                            ? "font-semibold"
-                                            : "font-normal"
-                                        } block truncate`}
-                                      >
-                                        {number}
-                                      </span>
-
-                                      {selected ? (
+                                    value={number}
+                                  >
+                                    {({ selected, active }) => (
+                                      <>
                                         <span
                                           className={`${
-                                            active
-                                              ? "text-white"
-                                              : "text-accent"
-                                          }
-                              absolute inset-y-0 right-0 flex items-center pr-4`}
+                                            selected
+                                              ? "font-semibold"
+                                              : "font-normal"
+                                          } block truncate`}
                                         >
-                                          <CheckIcon
-                                            className="h-5 w-5"
-                                            aria-hidden="true"
-                                          />
+                                          {number}
                                         </span>
-                                      ) : null}
-                                    </>
-                                  )}
-                                </Listbox.Option>
-                              )
-                            )}
-                          </Listbox.Options>
-                        </Transition>
-                      </div>
-                    )}
-                  </Listbox>
+
+                                        {selected ? (
+                                          <span
+                                            className={`${
+                                              active
+                                                ? "text-white"
+                                                : "text-accent"
+                                            }
+                              absolute inset-y-0 right-0 flex items-center pr-4`}
+                                          >
+                                            <CheckIcon
+                                              className="w-5 h-5"
+                                              aria-hidden="true"
+                                            />
+                                          </span>
+                                        ) : null}
+                                      </>
+                                    )}
+                                  </Listbox.Option>
+                                )
+                              )}
+                            </Listbox.Options>
+                          </Transition>
+                        </div>
+                      )}
+                    </Listbox>
+                  </div>
+                  <div className="col-span-2 mr-4">
+                    <button
+                      type="submit"
+                      className={`relative flex uppercase transition items-center justify-center rounded-sm border border-transparent ${
+                        readyToAdd && !processing
+                          ? "bg-accent hover:bg-highlight"
+                          : " bg-gray-300 cursor-not-allowed"
+                      } text-white py-3 px-8 text-base font-medium focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-gray-50 w-full`}
+                      disabled={!readyToAdd || processing}
+                      title={
+                        readyToAdd
+                          ? "Add to bag"
+                          : "Select your options before adding to bag"
+                      }
+                    >
+                      {(loading || processing) && (
+                        <div className="absolute left-0 ml-6">
+                          <LoadingSpinner size={6} color="white" />
+                        </div>
+                      )}
+                      Add to bag
+                    </button>
+                  </div>
                 </div>
-                <div className="mr-4 col-span-2">
-                  <button
-                    type="submit"
-                    className={`relative flex uppercase transition items-center justify-center rounded-sm border border-transparent ${
-                      readyToAdd && !processing
-                        ? "bg-accent hover:bg-highlight"
-                        : " bg-gray-300 cursor-not-allowed"
-                    } text-white py-3 px-8 text-base font-medium focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-gray-50 w-full`}
-                    disabled={!readyToAdd || processing}
-                    title={
-                      readyToAdd
-                        ? "Add to bag"
-                        : "Select your options before adding to bag"
-                    }
-                  >
-                    {(loading || processing) && (
-                      <div className="absolute left-0 ml-6">
-                        <LoadingSpinner size={6} color="white" />
-                      </div>
-                    )}
-                    Add to bag
-                  </button>
-                </div>
-              </div>
-            </form>
+              </form>
+            )}
           </div>
         </div>
       </div>
